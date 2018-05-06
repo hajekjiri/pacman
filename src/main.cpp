@@ -1,12 +1,24 @@
-#include <iostream>
-
-using namespace std;
-
 /**
  * @file main.cpp
- * sample description of the main function
  */
+
+#include <iostream>
+#include <ncurses.h>
+
 int main() {
-  cout << "Hello World!" << endl;
+  //cout << "Hello World!" << endl;
+  initscr();
+  printw( "Hello World!" );
+  refresh();
+
+  int k = getch();
+
+  move( 1, 0 );
+
+  printw( "Key code: %d", k );
+
+  getch();
+
+  endwin();
   return 0;
 }
