@@ -11,15 +11,20 @@
 
 class Portal : public SolidGameObject {
   public:
+    /// Constructor
     Portal();
 
+    /// Destructor
     ~Portal();
 
-    void Interact( MovingGameObject & o );
-    void Interact( Pacman & o );
+    void Interact( MovingGameObject & o ) override;
+
+    void Interact( Ghost & o ) override;
+
+    void Interact( Pacman & o ) override;
 
   private:
-    int m_Score;
+    // TODO
 };
 
 #endif // PORTAL_H

@@ -16,3 +16,15 @@ Game::Game() {
 Game::~Game() {
   // TODO
 }
+
+void Game::Init( const std::string & pathToConfig ) {
+  // TODO
+}
+
+void Game::Run() {
+  // TODO
+}
+
+void Game::ChangeState( const int & state ) {
+  // TODO
+}

@@ -12,6 +12,9 @@
 
 class Menu {
   public:
+    static const bool DIRECTION_UP;
+    static const bool DIRECTION_DOWN;
+
     /// Constructor
     /**
      * Create Menu, set highlighted index to -1
@@ -33,6 +36,7 @@ class Menu {
 
     /// Get highlighted element's type
     const int & GetElem() const;
+
 
     void MoveUp();
 
@@ -57,7 +61,7 @@ class Menu {
 
     /// Move in the menu
     /**
-     * @param direction true => down, false => up
+     * @param direction DIRECTION_UP or DIRECTION_DOWN
      */
     void Move( const bool & direction );
 };

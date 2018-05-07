@@ -5,7 +5,7 @@
 
 #include "Ghost.h"
 
-Ghost::Ghost() {
+Ghost::Ghost( const int & speed, const bool & lethal ) {
   // TODO
 }
 

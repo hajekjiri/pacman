@@ -1,21 +1,19 @@
-/// Wall class
+/// Blank class
 /**
- * @file Wall.h
- * Represents a wall.
+ * @file Blank.h
+ * Represents an empty field.
  */
 
-#ifndef WALL_H
-#define WALL_H
+#ifndef BLANK_H
+#define BLANK_H
 
 #include "SolidGameObject.h"
 
-class Wall : public SolidGameObject {
+class Blank : public SolidGameObject {
   public:
-    /// Constructor
-    Wall();
+    Blank();
 
-    /// Destructor
-    ~Wall();
+    ~Blank();
 
     void Interact( MovingGameObject & o ) override;
 
@@ -27,4 +25,4 @@ class Wall : public SolidGameObject {
     // TODO
 };
 
-#endif // WALL_H
+#endif // BLANK_H

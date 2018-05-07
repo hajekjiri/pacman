@@ -9,16 +9,25 @@
 
 #include "GameObject.h"
 #include "MovingGameObject.h"
+#include "Ghost.h"
 #include "Pacman.h"
 
 class SolidGameObject : public GameObject {
   public:
+    /// Constructor
     SolidGameObject();
 
-    ~SolidGameObject() = 0;
+    /// Destructor
+    virtual ~SolidGameObject() = 0;
 
+    /// Interact with moving object
     virtual void Interact( MovingGameObject & o ) = 0;
-    virtual void Interact( Pacman & o ) = 0;
+
+    /// Interact with Pacman
+    virtual void Interact( Ghost & o );
+
+    /// Interact with a ghost
+    virtual void Interact( Pacman & o );
 
   protected:
 };

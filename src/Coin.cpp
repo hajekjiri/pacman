@@ -17,6 +17,10 @@ void Coin::Interact( MovingGameObject & o ) {
   // TODO
 }
 
+void Coin::Interact( Ghost & o ) {
+  // TODO
+}
+
 void Coin::Interact( Pacman & o ) {
   // TODO
 }

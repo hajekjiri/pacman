@@ -5,6 +5,9 @@
 
 #include "Menu.h"
 
+const bool Menu::DIRECTION_UP = false;
+const bool Menu::DIRECTION_DOWN = true;
+
 Menu::Menu( const int & preset )
           : m_Preset( preset ),
             m_Window( nullptr ),

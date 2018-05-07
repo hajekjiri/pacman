@@ -20,16 +20,17 @@ class Game {
     static const int STATE_PAUSED;
     static const int STATE_MENU;
 
+    /// Constructor
     Game();
 
+    /// Destructor
     ~Game();
 
     /**
-     * Load map and difficulty settings from file(s),
-     * use empty string(s) ( "" ) for default settings/map.
+     * Load settings from file,
+     * use empty string(s) ( "" ) for default settings.
      */
-    void Init( const std::string & pathToConfig,
-               const std::string & pathToMap );
+    void Init( const std::string & pathToConfig );
 
     // Run game
     void Run();

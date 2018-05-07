@@ -15,6 +15,7 @@ class GameObject {
     /// Destructor
     virtual ~GameObject() = 0;
 
+    /// return display char
     operator char ();
 
   protected:

@@ -5,7 +5,7 @@
 
 #include "Pacman.h"
 
-Pacman::Pacman() {
+Pacman::Pacman( const int & speed, const bool & lethal ) {
   // TODO
 }
 
