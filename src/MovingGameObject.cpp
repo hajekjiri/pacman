@@ -5,7 +5,8 @@
 
 #include "MovingGameObject.h"
 
-MovingGameObject::MovingGameObject() {
+MovingGameObject::MovingGameObject( const int & speed,
+                                    const bool & lethal ) {
   // TODO
 }
 

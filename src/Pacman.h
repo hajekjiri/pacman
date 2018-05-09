@@ -12,7 +12,8 @@
 class Pacman : public MovingGameObject {
   public:
     /// Constructor
-    Pacman( const int & speed, const bool & lethal );
+    Pacman( const int & speed = 100,
+            const bool & lethal = false );
 
     /// Destructor
     ~Pacman();

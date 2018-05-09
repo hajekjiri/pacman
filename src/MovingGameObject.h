@@ -18,7 +18,8 @@ class MovingGameObject : public GameObject {
     static const int DIRECTION_DOWN;
 
     /// Constructor
-    MovingGameObject();
+    MovingGameObject( const int & speed,
+                      const bool & lethal );
 
     /// Destructor
     virtual ~MovingGameObject() = 0;

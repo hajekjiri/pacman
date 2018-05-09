@@ -12,7 +12,8 @@
 class Ghost : public MovingGameObject {
   public:
     /// Constructor
-    Ghost( const int & speed, const bool & lethal );
+    Ghost( const int & speed = 100,
+           const bool & lethal = true );
 
     /// Destructor
     ~Ghost();

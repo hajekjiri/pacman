@@ -5,7 +5,9 @@
 
 #include "Pacman.h"
 
-Pacman::Pacman( const int & speed, const bool & lethal ) {
+Pacman::Pacman( const int & speed,
+                const bool & lethal )
+              : MovingGameObject( speed, lethal ) {
   // TODO
 }
 

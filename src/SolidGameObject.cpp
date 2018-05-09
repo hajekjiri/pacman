@@ -12,3 +12,7 @@ SolidGameObject::SolidGameObject() {
 SolidGameObject::~SolidGameObject() {
   // TODO
 }
+
+void SolidGameObject::Interact( MovingGameObject & o ) {
+  return;
+}

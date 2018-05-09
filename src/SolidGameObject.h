@@ -21,13 +21,13 @@ class SolidGameObject : public GameObject {
     virtual ~SolidGameObject() = 0;
 
     /// Interact with moving object
-    virtual void Interact( MovingGameObject & o ) = 0;
+    virtual void Interact( MovingGameObject & o );
 
     /// Interact with Pacman
-    virtual void Interact( Ghost & o );
+    virtual void Interact( Ghost & o ) = 0;
 
     /// Interact with a ghost
-    virtual void Interact( Pacman & o );
+    virtual void Interact( Pacman & o ) = 0;
 
   protected:
 };
