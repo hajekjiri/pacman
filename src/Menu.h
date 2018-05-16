@@ -8,7 +8,8 @@
 
 #include <ncurses.h>
 #include <vector>
-#include "MenuElement.h"
+
+class MenuElement;
 
 class Menu {
   public:
@@ -36,11 +37,6 @@ class Menu {
 
     /// Clear menu
     void Clear();
-
-    /// Get highlighted element's type
-    const int & GetElem() const;
-
-    friend class Game;
 
     friend class Game;
 

@@ -7,27 +7,12 @@
 #include "Game.h"
 
 int main() {
-  //cout << "Hello World!" << endl;
-/*
   initscr();
-  printw( "Hello World!" );
-  refresh();
-
-  int k = getch();
-
-  move( 1, 0 );
-
-  printw( "Key code: %d", k );
-
-  getch();
-
-  endwin();
-*/
-
+  noecho();
   Game * g = new Game();
   g->Init( "../examples/settings.cfg" );
   g->Run();
-
-
+  delete g;
+  endwin();
   return 0;
 }

@@ -4,6 +4,7 @@
  */
 
 #include "Menu.h"
+#include "MenuElement.h"
 
 const bool Menu::DIRECTION_UP = false;
 const bool Menu::DIRECTION_DOWN = true;
@@ -14,23 +15,36 @@ Menu::Menu()
 }
 
 Menu::~Menu() {
-  // do nothing
+  delwin( m_Window );
 }
 
 void Menu::Init( const int & preset ) {
   m_Preset = preset;
   switch ( m_Preset ) {
     case 1:
-      Add( MenuElement( MenuElement::ELEMENT_PLAY ) );
-      Add( MenuElement( MenuElement::ELEMENT_HELP ) );
-      Add( MenuElement( MenuElement::ELEMENT_EXIT ) );
+      Add( MenuElement( "Play",
+                         []( Game * g ) {
+                           g->ChangeState( Game::STATE_RUNNING );
+                         } ) );
+      Add( MenuElement( "Reload cfg",
+                        []( Game * g ) {
+
+                        } ) );
+      Add( MenuElement( "Help",
+                        []( Game * g ) {
+                          g->ChangeState( Game::STATE_HELP );
+                        } ) );
+      Add( MenuElement( "Exit",
+                        []( Game * g ) {
+                          throw 1;
+                        } ) );
       break;
 
     default:
       break;
   }
   m_Window = newwin( ( 3 * m_Options.size() ) + 2,
-                     20, 0, 0 );
+                     20, 4, 10 );
   keypad( m_Window, true );
 }
 
@@ -72,14 +86,7 @@ void Menu::Clear() {
    * TODO
    * - clear menu
    */
-}
-
-const int & Menu::GetElem() const {
-  if ( m_HighlightedIdx < 0 ||
-       m_HighlightedIdx >= static_cast<int>( m_Options.size() ) ) {
-    return MenuElement::ELEMENT_INVALID;
-  }
-  return m_Options[ m_HighlightedIdx ].GetType();
+  werase( m_Window );
 }
 
 void Menu::Move( const bool & direction ) {

@@ -10,34 +10,31 @@
 #include <string>
 #include <functional>
 
+class Game;
+
 class MenuElement {
   public:
-    static const int ELEMENT_INVALID;
-    static const int ELEMENT_PLAY;
-    static const int ELEMENT_HELP;
-    static const int ELEMENT_EXIT;
-
     /// Constructor
     /**
      * Create an instance of MenuElement,
      * set element's type, and name
      */
-    MenuElement( const int & type );
+    MenuElement( const std::string & name,
+                 const std::function<void( Game * )> & f );
 
     /// Destructor
     ~MenuElement();
 
-    /// Get element's type
-    const int & GetType() const;
+    void Action( Game * g ) const;
 
     friend class Menu;
 
   private:
-    /// Element's type
-    int m_Type;
-
     /// Element's name
     std::string m_Name;
+
+    /// Element's action
+    std::function<void( Game * )> m_Action;
 };
 
 #endif // MENU_ELEMENT_H

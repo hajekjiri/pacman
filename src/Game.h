@@ -8,10 +8,12 @@
 #define GAME_H
 
 #include <ncurses.h>
+#include <string>
 #include "Menu.h"
 #include "Map.h"
 #include "Pacman.h"
-#include "Ghost.h"
+
+class Ghost;
 
 class Game {
   public:
@@ -19,6 +21,7 @@ class Game {
     static const int STATE_RUNNING;
     static const int STATE_PAUSED;
     static const int STATE_MENU;
+    static const int STATE_HELP;
 
     /// Constructor
     Game();
@@ -32,8 +35,14 @@ class Game {
      */
     void Init( const std::string & pathToConfig );
 
-    // Run game
+    /// Run game
     void Run();
+
+    /// Start playing the game
+    void Play();
+
+    /// Change state of game
+    void ChangeState( const int & state );
 
   private:
     int m_GameState;
@@ -42,9 +51,6 @@ class Game {
     Menu m_Menu;
     std::vector<Ghost> m_Ghosts;
     Pacman m_Pacman;
-
-    // Change state of game
-    void ChangeState( const int & state );
 };
 
 #endif // GAME_H
