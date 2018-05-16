@@ -28,7 +28,7 @@ class Game {
 
     /**
      * Load settings from file,
-     * use empty string(s) ( "" ) for default settings.
+     * use empty string(s) ( "" ) for default settings. (?)
      */
     void Init( const std::string & pathToConfig );
 

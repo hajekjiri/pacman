@@ -2,9 +2,9 @@ all: doc compile
 
 compile:
 	# compile, save output to '<login>'
-	g++ -Wall -pedantic -Wno-long-long -O0 -ggdb -o hajekj29  \
-	  ./src/*.h                                               \
-	  ./src/*.cpp                                             \
+	g++ -Wall -pedantic -Wno-long-long -O0 -ggdb -std=c++14 -o hajekj29  \
+	  ./src/*.h                                                          \
+	  ./src/*.cpp                                                        \
 	  -lncurses
 
 run:

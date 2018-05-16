@@ -30,6 +30,8 @@ class MenuElement {
     /// Get element's type
     const int & GetType() const;
 
+    friend class Menu;
+
   private:
     /// Element's type
     int m_Type;

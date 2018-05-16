@@ -20,10 +20,13 @@ class Menu {
      * Create Menu, set highlighted index to -1
      * @param preset menu preset
      */
-    Menu( const int & preset = 1 );
+    Menu();
 
     /// Destructor
     ~Menu();
+
+    /// Initialize menu
+    void Init( const int & preset = 1 );
 
     /// Add element to menu
     void Add( const MenuElement & e );
@@ -37,10 +40,9 @@ class Menu {
     /// Get highlighted element's type
     const int & GetElem() const;
 
+    friend class Game;
 
-    void MoveUp();
-
-    void MoveDown();
+    friend class Game;
 
   private:
     /// Container for menu elements
@@ -64,6 +66,10 @@ class Menu {
      * @param direction DIRECTION_UP or DIRECTION_DOWN
      */
     void Move( const bool & direction );
+
+    void MoveUp();
+
+    void MoveDown();
 };
 
 #endif // MENU_H

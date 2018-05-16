@@ -23,6 +23,9 @@ MenuElement::MenuElement( const int & type )
     case ELEMENT_EXIT:
       m_Name = "Exit";
       break;
+    default:
+      m_Type = -1;
+      m_Name = "Invalid element";
   }
 }
 
