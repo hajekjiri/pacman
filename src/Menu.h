@@ -21,13 +21,13 @@ class Menu {
      * Create Menu, set highlighted index to -1
      * @param preset menu preset
      */
-    Menu();
+    Menu( const int & preset = 1 );
 
     /// Destructor
     ~Menu();
 
     /// Initialize menu
-    void Init( const int & preset = 1 );
+    void Init();
 
     /// Add element to menu
     void Add( const MenuElement & e );

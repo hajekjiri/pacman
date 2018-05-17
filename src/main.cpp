@@ -11,7 +11,13 @@ int main() {
   noecho();
   Game * g = new Game();
   g->Init( "../examples/settings.cfg" );
-  g->Run();
+  try {
+    g->Run();
+  } catch ( ... ) {
+    delete g;
+    endwin();
+    return 1;
+  }
   delete g;
   endwin();
   return 0;

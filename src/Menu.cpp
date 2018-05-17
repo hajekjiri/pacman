@@ -9,17 +9,10 @@
 const bool Menu::DIRECTION_UP = false;
 const bool Menu::DIRECTION_DOWN = true;
 
-Menu::Menu()
-          : m_Window( nullptr ),
+Menu::Menu( const int & preset )
+          : m_Preset( preset ),
+            m_Window( nullptr ),
             m_HighlightedIdx( -1 ) {
-}
-
-Menu::~Menu() {
-  delwin( m_Window );
-}
-
-void Menu::Init( const int & preset ) {
-  m_Preset = preset;
   switch ( m_Preset ) {
     case 1:
       Add( MenuElement( "Play",
@@ -43,6 +36,13 @@ void Menu::Init( const int & preset ) {
     default:
       break;
   }
+}
+
+Menu::~Menu() {
+  delwin( m_Window );
+}
+
+void Menu::Init() {
   m_Window = newwin( ( 3 * m_Options.size() ) + 2,
                      20, 4, 10 );
   keypad( m_Window, true );

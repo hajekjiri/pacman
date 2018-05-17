@@ -41,13 +41,18 @@ class Game {
     /// Start playing the game
     void Play();
 
+    /// Reset game
+    void Reset();
+
     /// Change state of game
     void ChangeState( const int & state );
 
   private:
     int m_GameState;
     Map m_Map;
+    int m_Height;
     WINDOW * m_Window;
+    WINDOW * m_PauseWin;
     Menu m_Menu;
     std::vector<Ghost> m_Ghosts;
     Pacman m_Pacman;
