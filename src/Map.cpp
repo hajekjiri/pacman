@@ -3,6 +3,7 @@
  * @file Map.cpp
  */
 
+ #include <iostream>
 #include "Map.h"
 
 Map::Map() {
@@ -18,10 +19,6 @@ void Resize( const int & height, const int & width ) {
 }
 
 void Draw( WINDOW * w ) {
- // TODO
-}
-
-void LoadFromFile( const std::string & path ) {
  // TODO
 }
 

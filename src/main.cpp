@@ -10,7 +10,7 @@ int main() {
   initscr();
   noecho();
   Game * g = new Game();
-  g->Init( "../examples/settings.cfg" );
+  g->Init( "settings.cfg" );
   try {
     g->Run();
   } catch ( ... ) {

@@ -26,14 +26,10 @@ class Map {
     /// Draw map in a window
     void Draw( WINDOW * w );
 
-    /// Load map from file
-    void LoadFromFile( const std::string & path );
-
-    /// Load default map
-    void LoadDefault();
+    friend class Game;
 
   private:
-    std::vector<std::vector<GameObject*> > m_Map;
+    std::vector<std::vector<GameObject*> > m_Data;
     int m_Height;
     int m_Width;
 };

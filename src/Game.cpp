@@ -2,12 +2,13 @@
 /**
  * @file Game.cpp
  */
-
- // TODO: 2x back to menu from game => crash
-
+#include <iostream>
+#include <fstream>
+#include <vector>
 #include "Game.h"
 #include "Ghost.h"
 #include "MenuElement.h"
+#include "CommonFunctions.cpp"
 
 const int Game::STATE_RUNNING = 0;
 const int Game::STATE_PAUSED = 1;
@@ -24,7 +25,103 @@ Game::~Game() {
   delwin( m_Window );
 }
 
-void Game::Init( const std::string & pathToConfig ) {
+void Game::LoadCfg( const std::string & pathToCfg ) {
+  std::ifstream is;
+  is.open( ( "./src/cfg/" + pathToCfg ).data() );
+  if ( ! is ) {
+    // unable to open file
+    throw 3;
+  }
+  while ( true ) {
+    std::string type;
+    int pos = is.tellg();
+    std::cout << "pos: " << pos << std::endl;
+    std::getline( is, type );
+    if ( is.eof() ) {
+      break;
+    }
+    strLTrim( type );
+    if  ( ( type.data() )[ 0 ] == '#' ) {
+      // line is a comment
+      continue;
+    } else {
+      is.seekg( pos, is.beg );
+    }
+    std::getline( is, type, ':' );
+    strTrim( type );
+    if ( is.eof() ) {
+      break;
+    }
+    std::string value;
+    std::getline( is, value );
+    strTrim( value );
+    if ( is.eof() ) {
+      // syntax error
+      throw 4;
+      break;
+    }
+
+    // push setting to 'm_Settings'
+    m_Settings.insert( { type, value } );
+  }
+}
+
+void Game::LoadMapFromFile( const std::string & path ) {
+ std::ifstream is;
+ is.open( ( "./src/cfg/" + path ).data() );
+ if ( ! is ) {
+   // map file does not exist
+   throw 3;
+ }
+ char c;
+ int row = 0;
+ m_Map.m_Data.push_back( std::vector<GameObject*>() );
+ while ( ! is.eof() ) {
+   is.get( c );
+   if ( c == '\n' ) {
+     ++row;
+     m_Map.m_Data.push_back( std::vector<GameObject*>() );
+   }
+   GameObject * o;
+   if ( c == '-' ) {
+     // coin
+     return;
+   }
+
+   if ( c == '#' ) {
+     // wall
+     return;
+   }
+
+   if ( c == '*' ) {
+     // bonus
+     return;
+   }
+
+   if ( c == ' ' ) {
+     // blank
+     return;
+   }
+
+   if ( c >= 'A' && c <= 'C' ) {
+     // ghost
+     return;
+   }
+
+   if ( c >= '0' && c <= '9' ) {
+     // portal
+     return;
+   }
+
+   if ( c == 'P' ) {
+     // pacman
+     return;
+   }
+   ( m_Map.m_Data )[ row ].push_back( o );
+ }
+}
+
+void Game::Init( const std::string & pathToCfg ) {
   curs_set( 0 );
   m_Menu.Init();
   m_Height = 10;
@@ -37,7 +134,13 @@ void Game::Init( const std::string & pathToConfig ) {
    * - ghost & pacman coords
    * - load map file from some 'pathToMap' attribute
    */
-  // do sth
+  LoadCfg( pathToCfg );
+  auto it = m_Settings.find( "map" );
+  if ( it == m_Settings.cend() ) {
+    // map missing in settings.cfg
+    throw 5;
+  }
+  LoadMapFromFile( it->second );
 }
 
 void Game::Run() {
@@ -109,12 +212,12 @@ void Game::Run() {
         text = "* Run away from ghosts";
         mvwprintw( w, posY, posX, text.data() );
         posY += 2;
-        text = "* Press 'q' to go back";
+        text = "* Press 'm' to go back to menu";
         mvwprintw( w, posY, posX, text.data() );
 
         while ( true ) {
           int k = wgetch( w );
-          if ( k == 'q' ) {
+          if ( k == 'm' ) {
             werase( w );
             wrefresh( w );
             delwin( w );

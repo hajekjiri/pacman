@@ -9,6 +9,7 @@
 
 #include <ncurses.h>
 #include <string>
+#include <map>
 #include "Menu.h"
 #include "Map.h"
 #include "Pacman.h"
@@ -33,7 +34,7 @@ class Game {
      * Load settings from file,
      * use empty string(s) ( "" ) for default settings. (?)
      */
-    void Init( const std::string & pathToConfig );
+    void Init( const std::string & pathToCfg );
 
     /// Run game
     void Run();
@@ -56,6 +57,11 @@ class Game {
     Menu m_Menu;
     std::vector<Ghost> m_Ghosts;
     Pacman m_Pacman;
+    std::map<std::string, std::string> m_Settings;
+
+    void LoadCfg( const std::string & pathToCfg );
+
+    void LoadMapFromFile( const std::string & path );
 };
 
 #endif // GAME_H
