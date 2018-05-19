@@ -8,14 +8,8 @@
 #include <string>
 #include "MyException.h"
 #include "Game.h"
-#include "Ghost.h"
 #include "MenuElement.h"
 #include "CommonFunctions.cpp"
-#include "Blank.h"
-#include "BonusCoin.h"
-#include "Coin.h"
-#include "Portal.h"
-#include "Wall.h"
 
 const int Game::STATE_RUNNING = 0;
 const int Game::STATE_PAUSED = 1;
@@ -40,7 +34,7 @@ void Game::LoadCfg( const std::string & pathToCfg ) {
   is.open( ( "./src/cfg/" + pathToCfg ).data() );
   if ( ! is ) {
     // unable to open file
-    throw MyException( std::string( "[Game::LoadCfg@43] Unable to open cfg file" ) );
+    throw MyException( std::string( "Unable to open cfg file" ) );
   }
   while ( true ) {
     std::string type;
@@ -66,129 +60,13 @@ void Game::LoadCfg( const std::string & pathToCfg ) {
     strTrim( value );
     if ( is.eof() ) {
       // syntax error
-      throw MyException( std::string( "[Game::LoadCfg@69] Syntax error in cfg file '" )
+      throw MyException( std::string( "Syntax error in cfg file '" )
                          + pathToCfg + "'" );
       break;
     }
 
     // push setting to 'm_Settings'
     m_Settings.insert( { type, value } );
-  }
-}
-
-void Game::LoadMapFromFile( const std::string & path ) {
-  std::ifstream is;
-  is.open( ( "./src/cfg/" + path ).data() );
-  if ( ! is ) {
-    // map file does not exist
-    throw MyException( std::string( "[Game::LoadMapFromFile@84] Map file '" )
-                       + path + "' does not exist" );
-  }
-  char c;
-  int row = 0;
-  int col = 0;
-  bool newLine = true;
-  while ( ! is.eof() ) {
-    is.get( c );
-    if ( c == '\n' ) {
-      ++row;
-      col = 0;
-      newLine = true;
-      continue;
-    }
-    GameObject * o;
-    bool valid = false;
-    if ( c == '-' ) {
-      // coin
-      o = new Coin();
-      valid = true;
-    }
-
-    if ( c == '#' ) {
-      // wall
-      o = new Wall();
-      if ( valid ) {
-        throw MyException( std::string( "[Game::LoadMapFromFile@111] Invalid character '" ) + c + "' in map @ "
-                           + std::to_string( row ) + "," + std::to_string( col ) );
-      }
-      valid = true;
-    }
-
-    if ( c == '*' ) {
-      // bonus coin
-      o = new BonusCoin();
-      if ( valid ) {
-        throw MyException( std::string( "[Game::LoadMapFromFile@121] Invalid character '" ) + c + "' in map @ "
-                           + std::to_string( row ) + "," + std::to_string( col ) );
-      }
-      valid = true;
-    }
-
-    if ( c == ' ' ) {
-      // blank
-      o = new Blank();
-      if ( valid ) {
-        throw MyException( std::string( "[Game::LoadMapFromFile@131] Invalid character '" ) + c + "' in map @ "
-                           + std::to_string( row ) + "," + std::to_string( col ) );
-      }
-      valid = true;
-    }
-
-    if ( c >= 'A' && c <= 'C' ) {
-      // ghost
-      o = new Ghost( c );
-      if ( valid ) {
-        throw MyException( std::string( "[Game::LoadMapFromFile@141] Invalid character '" ) + c + "' in map @ "
-                           + std::to_string( row ) + "," + std::to_string( col ) );
-      }
-      valid = true;
-    }
-
-    if ( c >= '0' && c <= '9' ) {
-      // portal
-      o = new Portal( c - 48 );
-      if ( valid ) {
-        throw MyException( std::string( "[Game::LoadMapFromFile@151] Invalid character '" ) + c + "' in map @ "
-                           + std::to_string( row ) + "," + std::to_string( col ) );
-      }
-      valid = true;
-    }
-
-    if ( c == 'P' ) {
-      // pacman
-      o = new Pacman();
-      if ( valid ) {
-        throw MyException( std::string( "[Game::LoadMapFromFile@161] Invalid character '" ) + c + "' in map @ "
-                           + std::to_string( row ) + "," + std::to_string( col ) );
-      }
-      valid = true;
-    }
-    if ( ! valid ) {
-      throw MyException( std::string( "[Game::LoadMapFromFile@167] Invalid character '" ) + c + "' in map @ "
-                         + std::to_string( row ) + "," + std::to_string( col ) );
-    }
-
-    if ( newLine ) {
-      m_Map.m_Data.push_back( std::vector<GameObject*>() );
-      newLine = false;
-    }
-    ( m_Map.m_Data )[ row ].push_back( o );
-    ++col;
-  }
-
-  {
-    int row = 0;
-    auto it = m_Map.m_Data.begin();
-    size_t size = it->size();
-    for ( ; it != m_Map.m_Data.end(); ++it, ++row ) {
-      if ( it->size() != size ) {
-        throw MyException( std::string( "[Game::LoadMapFromFile@185] Invalid map. Rows 0 and " )
-                           + std::to_string( row )
-                           + " are not the same length ( "
-                           + std::to_string( size ) + " x "
-                           + std::to_string( it->size() ) + " )" );
-      }
-    }
   }
 }
 
@@ -208,11 +86,10 @@ void Game::Init( const std::string & pathToCfg ) {
   auto it = m_Settings.find( "map" );
   if ( it == m_Settings.cend() ) {
     // map missing in settings.cfg
-    throw MyException( std::string( "[Game::Init@211] Map settings missing in cfg file '" )
+    throw MyException( std::string( "Map settings missing in cfg file '" )
                        + pathToCfg + "'" );
   }
-  LoadMapFromFile( it->second );
-  m_MapHeight = m_Map.m_Data.size();
+  m_Map.LoadFromFile( it->second );
 }
 
 void Game::Run() {
@@ -223,7 +100,9 @@ void Game::Run() {
         break;
       case Game::STATE_PAUSED: {
         nodelay( stdscr, false );
-        m_PauseWin = newwin( 11, 30, m_MapHeight + 4, 0 );
+        m_PauseWin = newwin( 11, 30,
+                             ( m_Map.m_Height - 11 ) / 2,
+                             m_Map.m_Width + 10 );
         box( m_PauseWin, 0, 0 );
         mvwprintw( m_PauseWin, 2, 2, "Game paused" );
         mvwprintw( m_PauseWin, 4, 2, "* press 'c' to continue" );
@@ -308,7 +187,7 @@ void Game::Play() {
   nodelay( stdscr, true );
   wrefresh( m_Window );
   m_Map.Draw( m_Window );
-  mvprintw( m_MapHeight+1, 0, "Press 'p' to pause the game"  );
+  mvprintw( m_Map.m_Height+1, 0, "Press 'p' to pause the game"  );
   refresh();
   while ( true ) {
     int k = wgetch( m_Window );
@@ -332,7 +211,7 @@ void Game::Reset() {
 
 void Game::ChangeState( const int & state ) {
   if ( state < 0 || state > 3 ) {
-    throw MyException( std::string( "[Game::ChangeState@335] Invalid game state parameter ( " )
+    throw MyException( std::string( "Invalid game state parameter ( " )
                        + std::to_string( state ) + " )" );
   }
 
@@ -363,7 +242,7 @@ void Game::ChangeState( const int & state ) {
       m_Menu.Init();
       break;
     case Game::STATE_RUNNING:
-      m_Window = newwin( m_MapHeight, 20, 0, 0 );
+      m_Window = newwin( m_Map.m_Height, 20, 0, 0 );
       break;
   }
 

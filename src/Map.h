@@ -30,6 +30,10 @@ class Map {
 
   private:
     std::vector<std::vector<GameObject*> > m_Data;
+    int m_Height;
+    int m_Width;
+
+    void LoadFromFile( const std::string & path );
 };
 
 #endif // MAP_H

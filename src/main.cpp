@@ -15,10 +15,10 @@ int main() {
   try {
     g->Run();
   } catch ( const std::exception & e ) {
-    std::cout << "Exception thrown:\n"
-              << e.what() << std::endl;
     delete g;
     endwin();
+    std::cout << "Exception thrown:\n"
+              << e.what() << std::endl;
     return 1;
   }
   delete g;
