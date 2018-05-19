@@ -12,7 +12,7 @@
 class Portal : public SolidGameObject {
   public:
     /// Constructor
-    Portal();
+    Portal( const int & id );
 
     /// Destructor
     ~Portal();
@@ -24,7 +24,7 @@ class Portal : public SolidGameObject {
     void Interact( Pacman & o ) override;
 
   private:
-    // TODO
+    int m_Id;
 };
 
 #endif // PORTAL_H

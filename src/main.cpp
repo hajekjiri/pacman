@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <ncurses.h>
+#include <exception>
 #include "Game.h"
 
 int main() {
@@ -13,7 +14,9 @@ int main() {
   g->Init( "settings.cfg" );
   try {
     g->Run();
-  } catch ( ... ) {
+  } catch ( const std::exception & e ) {
+    std::cout << "Exception thrown:\n"
+              << e.what() << std::endl;
     delete g;
     endwin();
     return 1;

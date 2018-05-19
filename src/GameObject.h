@@ -10,13 +10,13 @@
 class GameObject {
   public:
     /// Constructor
-    GameObject();
+    GameObject( const char & c );
 
     /// Destructor
     virtual ~GameObject() = 0;
 
     /// return display char
-    operator char ();
+    const char & Char() const;
 
   protected:
     char m_Char;

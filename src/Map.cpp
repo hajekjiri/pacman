@@ -11,17 +11,26 @@ Map::Map() {
 }
 
 Map::~Map() {
+  for ( const auto & outsideElem : m_Data ) {
+    for ( const auto & insideElem : outsideElem ) {
+      delete insideElem;
+    }
+  }
+}
+
+void Map::Resize( const int & height, const int & width ) {
   // TODO
 }
 
-void Resize( const int & height, const int & width ) {
-  // TODO
-}
-
-void Draw( WINDOW * w ) {
- // TODO
-}
-
-void LoadDefault() {
- // TODO
+void Map::Draw( WINDOW * w ) {
+  int i = 0;
+  int j = 0;
+  for ( const auto & outsideElem : m_Data ) {
+    for ( const auto & insideElem : outsideElem ) {
+      mvwprintw( w, i, j, &( insideElem->Char() ) );
+      ++j;
+    }
+    ++i;
+    j = 0;
+  }
 }

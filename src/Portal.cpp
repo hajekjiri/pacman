@@ -5,8 +5,13 @@
 
 #include "Portal.h"
 
-Portal::Portal() {
-  // TODO
+Portal::Portal( const int & id )
+              : SolidGameObject( '@' ),
+                m_Id( id ) {
+  /*
+   * TODO:
+   * - pair portal
+   */
 }
 
 Portal::~Portal() {

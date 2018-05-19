@@ -18,7 +18,8 @@ class MovingGameObject : public GameObject {
     static const int DIRECTION_DOWN;
 
     /// Constructor
-    MovingGameObject( const int & speed,
+    MovingGameObject( const char & c,
+                      const int & speed,
                       const bool & lethal );
 
     /// Destructor

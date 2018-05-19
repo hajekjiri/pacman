@@ -30,8 +30,6 @@ class Map {
 
   private:
     std::vector<std::vector<GameObject*> > m_Data;
-    int m_Height;
-    int m_Width;
 };
 
 #endif // MAP_H

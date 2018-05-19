@@ -5,8 +5,10 @@
 
 #include "MovingGameObject.h"
 
-MovingGameObject::MovingGameObject( const int & speed,
-                                    const bool & lethal ) {
+MovingGameObject::MovingGameObject( const char & c,
+                                    const int & speed,
+                                    const bool & lethal )
+                                  : GameObject( c ) {
   // TODO
 }
 

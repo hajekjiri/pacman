@@ -7,7 +7,7 @@
 
 Pacman::Pacman( const int & speed,
                 const bool & lethal )
-              : MovingGameObject( speed, lethal ) {
+              : MovingGameObject( 'P', speed, lethal ) {
   // TODO
 }
 

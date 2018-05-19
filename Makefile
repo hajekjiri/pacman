@@ -6,12 +6,14 @@ all: doc compile
 compile: ./src/main.o ./src/Blank.o ./src/Game.o ./src/Ghost.o \
          ./src/MenuElement.o ./src/MovingGameObject.o ./src/Portal.o \
          ./src/Wall.o ./src/Coin.o ./src/GameObject.o ./src/Map.o \
-         ./src/Menu.o ./src/Pacman.o ./src/SolidGameObject.o
+         ./src/Menu.o ./src/Pacman.o ./src/SolidGameObject.o \
+         ./src/MyException.o ./src/BonusCoin.o
 	# link, save output to '<login>'
 	g++ -o hajekj29 ./src/main.o ./src/Blank.o ./src/Game.o ./src/Ghost.o \
 	                ./src/MenuElement.o ./src/MovingGameObject.o ./src/Portal.o \
 	                ./src/Wall.o ./src/Coin.o ./src/GameObject.o ./src/Map.o \
-	                ./src/Menu.o ./src/Pacman.o ./src/SolidGameObject.o -lncurses
+	                ./src/Menu.o ./src/Pacman.o ./src/SolidGameObject.o \
+	                ./src/MyException.o ./src/BonusCoin.o -lncurses
 
 run:
 	# run
@@ -51,3 +53,5 @@ r: compile run
 ./src/Portal.o: ./src/Portal.cpp ./src/Portal.h
 ./src/SolidGameObject.o: ./src/SolidGameObject.cpp ./src/SolidGameObject.h
 ./src/Wall.o: ./src/Wall.cpp ./src/Wall.h
+./src/MyException.o: ./src/MyException.cpp ./src/MyException.h
+./src/BonusCoin.o: ./src/BonusCoin.cpp ./src/BonusCoin.h

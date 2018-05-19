@@ -15,7 +15,7 @@
 class SolidGameObject : public GameObject {
   public:
     /// Constructor
-    SolidGameObject();
+    SolidGameObject( const char & c );
 
     /// Destructor
     virtual ~SolidGameObject() = 0;

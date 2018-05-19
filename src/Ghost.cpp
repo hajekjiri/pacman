@@ -5,9 +5,10 @@
 
 #include "Ghost.h"
 
-Ghost::Ghost( const int & speed,
+Ghost::Ghost( const char & c,
+              const int & speed,
               const bool & lethal )
-            : MovingGameObject( speed, lethal ) {
+            : MovingGameObject( c, speed, lethal ) {
   // TODO
 }
 

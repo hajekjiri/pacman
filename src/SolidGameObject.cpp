@@ -5,7 +5,8 @@
 
 #include "SolidGameObject.h"
 
-SolidGameObject::SolidGameObject() {
+SolidGameObject::SolidGameObject( const char & c )
+                                : GameObject( c ) {
   // TODO
 }
 

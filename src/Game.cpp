@@ -5,10 +5,17 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <string>
+#include "MyException.h"
 #include "Game.h"
 #include "Ghost.h"
 #include "MenuElement.h"
 #include "CommonFunctions.cpp"
+#include "Blank.h"
+#include "BonusCoin.h"
+#include "Coin.h"
+#include "Portal.h"
+#include "Wall.h"
 
 const int Game::STATE_RUNNING = 0;
 const int Game::STATE_PAUSED = 1;
@@ -17,12 +24,15 @@ const int Game::STATE_HELP = 3;
 
 Game::Game()
           : m_GameState( Game::STATE_MENU ),
-            m_Menu( 1 ) {
+            m_Menu( 1 ),
+            m_Pacman( nullptr ) {
   // do sth
 }
 
 Game::~Game() {
   delwin( m_Window );
+  delwin( m_PauseWin );
+  delete m_Pacman;
 }
 
 void Game::LoadCfg( const std::string & pathToCfg ) {
@@ -30,12 +40,11 @@ void Game::LoadCfg( const std::string & pathToCfg ) {
   is.open( ( "./src/cfg/" + pathToCfg ).data() );
   if ( ! is ) {
     // unable to open file
-    throw 3;
+    throw MyException( std::string( "[Game::LoadCfg@43] Unable to open cfg file" ) );
   }
   while ( true ) {
     std::string type;
     int pos = is.tellg();
-    std::cout << "pos: " << pos << std::endl;
     std::getline( is, type );
     if ( is.eof() ) {
       break;
@@ -57,7 +66,8 @@ void Game::LoadCfg( const std::string & pathToCfg ) {
     strTrim( value );
     if ( is.eof() ) {
       // syntax error
-      throw 4;
+      throw MyException( std::string( "[Game::LoadCfg@69] Syntax error in cfg file '" )
+                         + pathToCfg + "'" );
       break;
     }
 
@@ -67,64 +77,124 @@ void Game::LoadCfg( const std::string & pathToCfg ) {
 }
 
 void Game::LoadMapFromFile( const std::string & path ) {
- std::ifstream is;
- is.open( ( "./src/cfg/" + path ).data() );
- if ( ! is ) {
-   // map file does not exist
-   throw 3;
- }
- char c;
- int row = 0;
- m_Map.m_Data.push_back( std::vector<GameObject*>() );
- while ( ! is.eof() ) {
-   is.get( c );
-   if ( c == '\n' ) {
-     ++row;
-     m_Map.m_Data.push_back( std::vector<GameObject*>() );
-   }
-   GameObject * o;
-   if ( c == '-' ) {
-     // coin
-     return;
-   }
+  std::ifstream is;
+  is.open( ( "./src/cfg/" + path ).data() );
+  if ( ! is ) {
+    // map file does not exist
+    throw MyException( std::string( "[Game::LoadMapFromFile@84] Map file '" )
+                       + path + "' does not exist" );
+  }
+  char c;
+  int row = 0;
+  int col = 0;
+  bool newLine = true;
+  while ( ! is.eof() ) {
+    is.get( c );
+    if ( c == '\n' ) {
+      ++row;
+      col = 0;
+      newLine = true;
+      continue;
+    }
+    GameObject * o;
+    bool valid = false;
+    if ( c == '-' ) {
+      // coin
+      o = new Coin();
+      valid = true;
+    }
 
-   if ( c == '#' ) {
-     // wall
-     return;
-   }
+    if ( c == '#' ) {
+      // wall
+      o = new Wall();
+      if ( valid ) {
+        throw MyException( std::string( "[Game::LoadMapFromFile@111] Invalid character '" ) + c + "' in map @ "
+                           + std::to_string( row ) + "," + std::to_string( col ) );
+      }
+      valid = true;
+    }
 
-   if ( c == '*' ) {
-     // bonus
-     return;
-   }
+    if ( c == '*' ) {
+      // bonus coin
+      o = new BonusCoin();
+      if ( valid ) {
+        throw MyException( std::string( "[Game::LoadMapFromFile@121] Invalid character '" ) + c + "' in map @ "
+                           + std::to_string( row ) + "," + std::to_string( col ) );
+      }
+      valid = true;
+    }
 
-   if ( c == ' ' ) {
-     // blank
-     return;
-   }
+    if ( c == ' ' ) {
+      // blank
+      o = new Blank();
+      if ( valid ) {
+        throw MyException( std::string( "[Game::LoadMapFromFile@131] Invalid character '" ) + c + "' in map @ "
+                           + std::to_string( row ) + "," + std::to_string( col ) );
+      }
+      valid = true;
+    }
 
-   if ( c >= 'A' && c <= 'C' ) {
-     // ghost
-     return;
-   }
+    if ( c >= 'A' && c <= 'C' ) {
+      // ghost
+      o = new Ghost( c );
+      if ( valid ) {
+        throw MyException( std::string( "[Game::LoadMapFromFile@141] Invalid character '" ) + c + "' in map @ "
+                           + std::to_string( row ) + "," + std::to_string( col ) );
+      }
+      valid = true;
+    }
 
-   if ( c >= '0' && c <= '9' ) {
-     // portal
-     return;
-   }
+    if ( c >= '0' && c <= '9' ) {
+      // portal
+      o = new Portal( c - 48 );
+      if ( valid ) {
+        throw MyException( std::string( "[Game::LoadMapFromFile@151] Invalid character '" ) + c + "' in map @ "
+                           + std::to_string( row ) + "," + std::to_string( col ) );
+      }
+      valid = true;
+    }
 
-   if ( c == 'P' ) {
-     // pacman
-     return;
-   }
-   ( m_Map.m_Data )[ row ].push_back( o );
- }
+    if ( c == 'P' ) {
+      // pacman
+      o = new Pacman();
+      if ( valid ) {
+        throw MyException( std::string( "[Game::LoadMapFromFile@161] Invalid character '" ) + c + "' in map @ "
+                           + std::to_string( row ) + "," + std::to_string( col ) );
+      }
+      valid = true;
+    }
+    if ( ! valid ) {
+      throw MyException( std::string( "[Game::LoadMapFromFile@167] Invalid character '" ) + c + "' in map @ "
+                         + std::to_string( row ) + "," + std::to_string( col ) );
+    }
+
+    if ( newLine ) {
+      m_Map.m_Data.push_back( std::vector<GameObject*>() );
+      newLine = false;
+    }
+    ( m_Map.m_Data )[ row ].push_back( o );
+    ++col;
+  }
+
+  {
+    int row = 0;
+    auto it = m_Map.m_Data.begin();
+    size_t size = it->size();
+    for ( ; it != m_Map.m_Data.end(); ++it, ++row ) {
+      if ( it->size() != size ) {
+        throw MyException( std::string( "[Game::LoadMapFromFile@185] Invalid map. Rows 0 and " )
+                           + std::to_string( row )
+                           + " are not the same length ( "
+                           + std::to_string( size ) + " x "
+                           + std::to_string( it->size() ) + " )" );
+      }
+    }
+  }
 }
 
 void Game::Init( const std::string & pathToCfg ) {
   curs_set( 0 );
   m_Menu.Init();
-  m_Height = 10;
   /*
    * TODO:
    * - parse file @ 'pathToConfig'
@@ -138,9 +208,11 @@ void Game::Init( const std::string & pathToCfg ) {
   auto it = m_Settings.find( "map" );
   if ( it == m_Settings.cend() ) {
     // map missing in settings.cfg
-    throw 5;
+    throw MyException( std::string( "[Game::Init@211] Map settings missing in cfg file '" )
+                       + pathToCfg + "'" );
   }
   LoadMapFromFile( it->second );
+  m_MapHeight = m_Map.m_Data.size();
 }
 
 void Game::Run() {
@@ -151,7 +223,7 @@ void Game::Run() {
         break;
       case Game::STATE_PAUSED: {
         nodelay( stdscr, false );
-        m_PauseWin = newwin( 11, 30, m_Height + 4, 0 );
+        m_PauseWin = newwin( 11, 30, m_MapHeight + 4, 0 );
         box( m_PauseWin, 0, 0 );
         mvwprintw( m_PauseWin, 2, 2, "Game paused" );
         mvwprintw( m_PauseWin, 4, 2, "* press 'c' to continue" );
@@ -235,18 +307,12 @@ void Game::Run() {
 void Game::Play() {
   nodelay( stdscr, true );
   wrefresh( m_Window );
-  box( m_Window, 0, 0 );
-  mvprintw( m_Height+1, 0, "Press 'p' to pause the game"  );
+  m_Map.Draw( m_Window );
+  mvprintw( m_MapHeight+1, 0, "Press 'p' to pause the game"  );
   refresh();
   while ( true ) {
-    mvwprintw( m_Window, 0, 0, "A" );
-    wrefresh( m_Window );
-    mvwprintw( m_Window, 0, 0, "B" );
-    wrefresh( m_Window );
-
     int k = wgetch( m_Window );
-    mvwprintw( m_Window, 0, 0, "C" );
-    wrefresh( m_Window );
+    // do sth
     switch ( k ) {
       case 'p':
         ChangeState( Game::STATE_PAUSED );
@@ -266,7 +332,8 @@ void Game::Reset() {
 
 void Game::ChangeState( const int & state ) {
   if ( state < 0 || state > 3 ) {
-    throw 2;
+    throw MyException( std::string( "[Game::ChangeState@335] Invalid game state parameter ( " )
+                       + std::to_string( state ) + " )" );
   }
 
   switch ( m_GameState ) {
@@ -296,7 +363,7 @@ void Game::ChangeState( const int & state ) {
       m_Menu.Init();
       break;
     case Game::STATE_RUNNING:
-      m_Window = newwin( m_Height, 20, 0, 0 );
+      m_Window = newwin( m_MapHeight, 20, 0, 0 );
       break;
   }
 

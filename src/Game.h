@@ -51,12 +51,12 @@ class Game {
   private:
     int m_GameState;
     Map m_Map;
-    int m_Height;
+    int m_MapHeight;
     WINDOW * m_Window;
     WINDOW * m_PauseWin;
     Menu m_Menu;
     std::vector<Ghost> m_Ghosts;
-    Pacman m_Pacman;
+    Pacman * m_Pacman;
     std::map<std::string, std::string> m_Settings;
 
     void LoadCfg( const std::string & pathToCfg );

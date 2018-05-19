@@ -5,7 +5,8 @@
 
 #include "Coin.h"
 
-Coin::Coin() {
+Coin::Coin()
+          : SolidGameObject( '-' ) {
   // TODO
 }
 
