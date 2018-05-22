@@ -15,10 +15,10 @@ class Ghost;
 
 class MovingGameObject : public GameObject {
   public:
-    static const int DIRECTION_LEFT;
-    static const int DIRECTION_RIGHT;
     static const int DIRECTION_UP;
+    static const int DIRECTION_LEFT;
     static const int DIRECTION_DOWN;
+    static const int DIRECTION_RIGHT;
 
     /// Constructor
     MovingGameObject( const char & c,
@@ -37,7 +37,7 @@ class MovingGameObject : public GameObject {
 
     const bool IsLethal() const;
 
-    void Move( const int & direction );
+    virtual void Move( const int & direction ) = 0;
 
   protected:
     /**

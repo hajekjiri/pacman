@@ -51,6 +51,8 @@ class Game {
     /// Change state of game
     void ChangeState( const int & state );
 
+    friend class Map;
+
   private:
     int m_GameState;
     Map m_Map;

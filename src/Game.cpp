@@ -90,7 +90,7 @@ void Game::Init( const std::string & pathToCfg ) {
     throw MyException( std::string( "Map settings missing in cfg file '" )
                        + pathToCfg + "'" );
   }
-  m_Map.LoadFromFile( it->second );
+  m_Map.LoadFromFile( it->second, *this );
 }
 
 void Game::Run() {
@@ -215,7 +215,7 @@ void Game::Play() {
 }
 
 void Game::Turn( const int & k ) {
-
+  m_Pacman->Move( k );
 }
 
 void Game::Reset() {

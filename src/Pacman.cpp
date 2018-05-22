@@ -23,3 +23,7 @@ void Pacman::Interact( Ghost & o ) {
 void Pacman::Interact( Pacman & o ) {
   // TODO
 }
+
+void Pacman::Move( const int & direction ) {
+  // TODO
+}

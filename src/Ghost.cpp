@@ -24,3 +24,7 @@ void Ghost::Interact( Ghost & o ) {
 void Ghost::Interact( Pacman & o ) {
   // TODO
 }
+
+void Ghost::Move( const int & direction ) {
+  // TODO
+}

@@ -11,6 +11,8 @@
 #include "Blank.h"
 #include "BonusCoin.h"
 #include "Coin.h"
+#include "Game.h"
+#include "GameObject.h"
 #include "Ghost.h"
 #include "Pacman.h"
 #include "Portal.h"
@@ -45,7 +47,7 @@ void Map::Draw( WINDOW * w ) {
   }
 }
 
-void Map::LoadFromFile( const std::string & path ) {
+void Map::LoadFromFile( const std::string & path, Game & game ) {
   std::ifstream is;
   is.open( ( "./src/cfg/" + path ).data() );
   if ( ! is ) {
@@ -109,7 +111,9 @@ void Map::LoadFromFile( const std::string & path ) {
 
     if ( c >= 'A' && c <= 'C' ) {
       // ghost
-      o = new Ghost( c, { row, col } );
+      Ghost * ptr = new Ghost( c, { row, col } );
+      o = ptr;
+      game.m_Ghosts.push_back( ptr );
       if ( valid ) {
         throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
                            + std::to_string( row ) + "," + std::to_string( col ) );
@@ -149,7 +153,8 @@ void Map::LoadFromFile( const std::string & path ) {
 
     if ( c == 'P' ) {
       // pacman
-      o = new Pacman( { row, col } );
+      Pacman * ptr = new Pacman( { row, col } );
+      o = ptr;
       if ( valid ) {
         throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
                            + std::to_string( row ) + "," + std::to_string( col ) );

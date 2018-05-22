@@ -10,7 +10,9 @@
 #include <string>
 #include <vector>
 #include <ncurses.h>
-#include "GameObject.h"
+
+class GameObject;
+class Game;
 
 class Map {
   public:
@@ -34,7 +36,7 @@ class Map {
     int m_Height;
     int m_Width;
 
-    void LoadFromFile( const std::string & path );
+    void LoadFromFile( const std::string & path, Game & game );
 };
 
 #endif // MAP_H

@@ -7,6 +7,11 @@
 #include "Ghost.h"
 #include "Pacman.h"
 
+const int MovingGameObject::DIRECTION_UP = 'w';
+const int MovingGameObject::DIRECTION_LEFT = 'a';
+const int MovingGameObject::DIRECTION_DOWN = 's';
+const int MovingGameObject::DIRECTION_RIGHT = 'd';
+
 MovingGameObject::MovingGameObject( const char & c,
                                     const std::pair<int, int> & coords,
                                     const int & speed,
@@ -21,8 +26,4 @@ MovingGameObject::~MovingGameObject() {
 
 const bool MovingGameObject::IsLethal() const {
   return m_Lethal;
-}
-
-void MovingGameObject::Move( const int & direction ) {
-  // TODO
 }
