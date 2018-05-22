@@ -15,7 +15,8 @@
 class SolidGameObject : public GameObject {
   public:
     /// Constructor
-    SolidGameObject( const char & c );
+    SolidGameObject( const char & c,
+                     const std::pair<int, int> & coords );
 
     /// Destructor
     virtual ~SolidGameObject() = 0;

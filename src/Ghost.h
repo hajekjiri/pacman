@@ -13,6 +13,7 @@ class Ghost : public MovingGameObject {
   public:
     /// Constructor
     Ghost( const char & c,
+           const std::pair<int, int> & coords,
            const int & speed = 100,
            const bool & lethal = true );
 

@@ -12,7 +12,8 @@
 class Pacman : public MovingGameObject {
   public:
     /// Constructor
-    Pacman( const int & speed = 100,
+    Pacman( const std::pair<int, int> & coords,
+            const int & speed = 100,
             const bool & lethal = false );
 
     /// Destructor

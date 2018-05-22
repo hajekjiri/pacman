@@ -5,8 +5,8 @@
 
 #include "Wall.h"
 
-Wall::Wall()
-          : SolidGameObject( '#' ) {
+Wall::Wall( const std::pair<int, int> & coords )
+          : SolidGameObject( '#', coords ) {
   // TODO
 }
 

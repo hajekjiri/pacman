@@ -5,8 +5,10 @@
 
  #include "GameObject.h"
 
-GameObject::GameObject( const char & c )
-                      : m_Char( c ) {
+GameObject::GameObject( const char & c,
+                        const std::pair<int, int> & coords )
+                      : m_Char( c ),
+                        m_Coords( coords ) {
   // TODO
 }
 

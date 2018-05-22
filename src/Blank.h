@@ -11,7 +11,7 @@
 
 class Blank : public SolidGameObject {
   public:
-    Blank();
+    Blank( const std::pair<int, int> & coords );
 
     ~Blank();
 

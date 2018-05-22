@@ -5,8 +5,8 @@
 
 #include "Coin.h"
 
-Coin::Coin()
-          : SolidGameObject( '-' ) {
+Coin::Coin( const std::pair<int, int> & coords )
+          : SolidGameObject( '-', coords ) {
   // TODO
 }
 

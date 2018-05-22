@@ -24,15 +24,15 @@ Portal::~Portal() {
   // TODO
 }
 
-void Portal::InteractDefault( MovingGameObject & o, Map & map ) {
+void Portal::Interact( MovingGameObject & o ) {
   // TODO
 }
 
-void Portal::Interact( Ghost & o, Map & map ) {
+void Portal::Interact( Ghost & o ) {
   // TODO
 }
 
-void Portal::Interact( Pacman & o, Map & map ) {
+void Portal::Interact( Pacman & o ) {
   // TODO
 }
 

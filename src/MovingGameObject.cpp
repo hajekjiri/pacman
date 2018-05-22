@@ -6,9 +6,10 @@
 #include "MovingGameObject.h"
 
 MovingGameObject::MovingGameObject( const char & c,
+                                    const std::pair<int, int> & coords,
                                     const int & speed,
                                     const bool & lethal )
-                                  : GameObject( c ) {
+                                  : GameObject( c, coords ) {
   // TODO
 }
 

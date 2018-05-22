@@ -5,9 +5,10 @@
 
 #include "Pacman.h"
 
-Pacman::Pacman( const int & speed,
+Pacman::Pacman( const std::pair<int, int> & coords,
+                const int & speed,
                 const bool & lethal )
-              : MovingGameObject( 'P', speed, lethal ) {
+              : MovingGameObject( 'P', coords, speed, lethal ) {
   // TODO
 }
 

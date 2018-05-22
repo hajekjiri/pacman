@@ -12,7 +12,7 @@
 class Wall : public SolidGameObject {
   public:
     /// Constructor
-    Wall();
+    Wall( const std::pair<int, int> & coords );
 
     /// Destructor
     ~Wall();

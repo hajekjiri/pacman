@@ -7,10 +7,13 @@
 #ifndef GAME_OBJECT_H
 #define GAME_OBJECT_H
 
+#include <utility>
+
 class GameObject {
   public:
     /// Constructor
-    GameObject( const char & c );
+    GameObject( const char & c,
+                const std::pair<int, int> & coords );
 
     /// Destructor
     virtual ~GameObject() = 0;
@@ -20,6 +23,7 @@ class GameObject {
 
   protected:
     char m_Char;
+    std::pair<int, int> m_Coords;
 };
 
 #endif // GAME_OBJECT_H

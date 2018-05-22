@@ -11,7 +11,7 @@
 
 class Coin : public SolidGameObject {
   public:
-    Coin();
+    Coin( const std::pair<int, int> & coords );
 
     ~Coin();
 

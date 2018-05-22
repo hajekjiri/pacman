@@ -19,6 +19,7 @@ class MovingGameObject : public GameObject {
 
     /// Constructor
     MovingGameObject( const char & c,
+                      const std::pair<int, int> & coords,
                       const int & speed,
                       const bool & lethal );
 

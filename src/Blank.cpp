@@ -5,8 +5,8 @@
 
 #include "Blank.h"
 
-Blank::Blank()
-            : SolidGameObject( ' ' ) {
+Blank::Blank( const std::pair<int, int> & coords )
+            : SolidGameObject( ' ', coords ) {
   // TODO
 }
 

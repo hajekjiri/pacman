@@ -5,8 +5,8 @@
 
 #include "BonusCoin.h"
 
-BonusCoin::BonusCoin()
-                    : SolidGameObject( '*' ) {
+BonusCoin::BonusCoin( const std::pair<int, int> & coords )
+                    : SolidGameObject( '*', coords ) {
   // do nothing
 }
 

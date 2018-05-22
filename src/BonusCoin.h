@@ -10,7 +10,7 @@
 
 class BonusCoin : public SolidGameObject {
   public:
-    BonusCoin();
+    BonusCoin( const std::pair<int, int> & coords );
 
     ~BonusCoin();
 
