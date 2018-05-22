@@ -14,10 +14,6 @@ BonusCoin::~BonusCoin() {
   // TODO
 }
 
-void BonusCoin::Interact( MovingGameObject & o ) {
-  // TODO
-}
-
 void BonusCoin::Interact( Ghost & o ) {
   // TODO
 }

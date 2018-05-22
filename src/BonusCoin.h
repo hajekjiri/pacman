@@ -14,8 +14,6 @@ class BonusCoin : public SolidGameObject {
 
     ~BonusCoin();
 
-    void Interact( MovingGameObject & o ) override;
-
     void Interact( Ghost & o ) override;
 
     void Interact( Pacman & o ) override;

@@ -21,9 +21,6 @@ class SolidGameObject : public GameObject {
     /// Destructor
     virtual ~SolidGameObject() = 0;
 
-    /// Interact with moving object
-    virtual void Interact( MovingGameObject & o );
-
     /// Interact with Pacman
     virtual void Interact( Ghost & o ) = 0;
 

@@ -14,10 +14,6 @@ Blank::~Blank() {
   // TODO
 }
 
-void Blank::Interact( MovingGameObject & o ) {
-  // TODO
-}
-
 void Blank::Interact( Ghost & o ) {
   // TODO
 }

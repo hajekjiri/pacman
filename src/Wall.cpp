@@ -14,10 +14,6 @@ Wall::~Wall() {
   // TODO
 }
 
-void Wall::Interact( MovingGameObject & o ) {
-  // TODO
-}
-
 void Wall::Interact( Ghost & o ) {
   // TODO
 }

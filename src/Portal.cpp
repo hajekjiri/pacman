@@ -24,10 +24,6 @@ Portal::~Portal() {
   // TODO
 }
 
-void Portal::Interact( MovingGameObject & o ) {
-  // TODO
-}
-
 void Portal::Interact( Ghost & o ) {
   // TODO
 }

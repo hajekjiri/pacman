@@ -14,10 +14,6 @@ Coin::~Coin() {
   // TODO
 }
 
-void Coin::Interact( MovingGameObject & o ) {
-  // TODO
-}
-
 void Coin::Interact( Ghost & o ) {
   // TODO
 }

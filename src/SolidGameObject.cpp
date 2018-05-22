@@ -14,7 +14,3 @@ SolidGameObject::SolidGameObject( const char & c,
 SolidGameObject::~SolidGameObject() {
   // TODO
 }
-
-void SolidGameObject::Interact( MovingGameObject & o ) {
-  return;
-}
