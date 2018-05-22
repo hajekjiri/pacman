@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <vector>
 #include "MyException.h"
 #include "Map.h"
 #include "Blank.h"
@@ -56,6 +57,7 @@ void Map::LoadFromFile( const std::string & path ) {
   int row = 0;
   int col = 0;
   bool newLine = true;
+  std::vector<Portal*> portalsLfPair;
   while ( ! is.eof() ) {
     is.get( c );
     if ( is.bad() ) {
@@ -117,7 +119,27 @@ void Map::LoadFromFile( const std::string & path ) {
 
     if ( c >= '0' && c <= '9' ) {
       // portal
-      o = new Portal( c - 48 );
+      Portal * ptr =  new Portal( c - 48, { row, col } );
+      o = ptr;
+      bool found = false;
+      auto it = portalsLfPair.begin();
+      for ( ;
+            it != portalsLfPair.end();
+            ++it ) {
+        if ( ( *it )->GetId() == ptr->GetId() ) {
+          found = true;
+          break;
+        }
+      }
+
+      if ( found ) {
+        ptr->SetPair( *it );
+        ( *it )->SetPair( ptr );
+        portalsLfPair.erase( it );
+      } else {
+        portalsLfPair.push_back( ptr );
+      }
+
       if ( valid ) {
         throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
                            + std::to_string( row ) + "," + std::to_string( col ) );
@@ -159,6 +181,9 @@ void Map::LoadFromFile( const std::string & path ) {
                            + std::to_string( size ) + " x "
                            + std::to_string( it->size() ) + " )" );
       }
+    }
+    if ( portalsLfPair.size() != 0 ) {
+      throw MyException( std::string( "Some portals are missing a pair" ) );
     }
     m_Width = ( --it )->size();
     m_Height = row;
