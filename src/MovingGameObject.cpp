@@ -4,8 +4,6 @@
  */
 
 #include "MovingGameObject.h"
-#include "Ghost.h"
-#include "Pacman.h"
 
 const int MovingGameObject::DIRECTION_UP = 'w';
 const int MovingGameObject::DIRECTION_LEFT = 'a';

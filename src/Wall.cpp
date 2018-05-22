@@ -4,6 +4,7 @@
  */
 
 #include "Wall.h"
+#include "Map.h"
 
 Wall::Wall( const std::pair<int, int> & coords )
           : SolidGameObject( '#', coords ) {
@@ -14,10 +15,10 @@ Wall::~Wall() {
   // TODO
 }
 
-void Wall::Interact( Ghost & o ) {
+void Wall::Interact( Ghost & o, Map & map ) {
   // TODO
 }
 
-void Wall::Interact( Pacman & o ) {
+void Wall::Interact( Pacman & o, Map & map ) {
   // TODO
 }

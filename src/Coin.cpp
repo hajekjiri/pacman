@@ -4,6 +4,7 @@
  */
 
 #include "Coin.h"
+#include "Map.h"
 
 Coin::Coin( const std::pair<int, int> & coords )
           : SolidGameObject( '-', coords ) {
@@ -14,10 +15,10 @@ Coin::~Coin() {
   // TODO
 }
 
-void Coin::Interact( Ghost & o ) {
+void Coin::Interact( Ghost & o, Map & map ) {
   // TODO
 }
 
-void Coin::Interact( Pacman & o ) {
+void Coin::Interact( Pacman & o, Map & map ) {
   // TODO
 }

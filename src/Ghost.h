@@ -9,6 +9,8 @@
 
 #include "MovingGameObject.h"
 
+class Map;
+
 class Ghost : public MovingGameObject {
   public:
     /// Constructor
@@ -21,10 +23,10 @@ class Ghost : public MovingGameObject {
     ~Ghost();
 
     /// Interact with Pacman
-    void Interact( Ghost & o ) override;
+    void Interact( Ghost & o, Map & map ) override;
 
     /// Interact with a ghost
-    void Interact( Pacman & o ) override;
+    void Interact( Pacman & o, Map & map ) override;
 
     void Move( const int & direction ) override;
 

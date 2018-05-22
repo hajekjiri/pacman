@@ -24,11 +24,11 @@ Portal::~Portal() {
   // TODO
 }
 
-void Portal::Interact( Ghost & o ) {
+void Portal::Interact( Ghost & o, Map & map ) {
   // TODO
 }
 
-void Portal::Interact( Pacman & o ) {
+void Portal::Interact( Pacman & o, Map & map ) {
   // TODO
 }
 

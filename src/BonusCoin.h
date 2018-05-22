@@ -8,15 +8,17 @@
 
 #include "SolidGameObject.h"
 
+class Map;
+
 class BonusCoin : public SolidGameObject {
   public:
     BonusCoin( const std::pair<int, int> & coords );
 
     ~BonusCoin();
 
-    void Interact( Ghost & o ) override;
+    void Interact( Ghost & o, Map & map ) override;
 
-    void Interact( Pacman & o ) override;
+    void Interact( Pacman & o, Map & map ) override;
 
   private:
     // TODO

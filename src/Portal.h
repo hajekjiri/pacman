@@ -21,9 +21,9 @@ class Portal : public SolidGameObject {
     /// Destructor
     ~Portal();
 
-    void Interact( Ghost & o ) override;
+    void Interact( Ghost & o, Map & map ) override;
 
-    void Interact( Pacman & o ) override;
+    void Interact( Pacman & o, Map & map ) override;
 
     void SetPair( Portal * p );
 

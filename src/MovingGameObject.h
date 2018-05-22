@@ -12,6 +12,7 @@
 
 class Pacman;
 class Ghost;
+class Map;
 
 class MovingGameObject : public GameObject {
   public:
@@ -30,10 +31,10 @@ class MovingGameObject : public GameObject {
     virtual ~MovingGameObject() = 0;
 
     /// Interact with Pacman
-    virtual void Interact( Ghost & o ) = 0;
+    virtual void Interact( Ghost & o, Map & map ) = 0;
 
     /// Interact with a ghost
-    virtual void Interact( Pacman & o ) = 0;
+    virtual void Interact( Pacman & o, Map & map ) = 0;
 
     const bool IsLethal() const;
 

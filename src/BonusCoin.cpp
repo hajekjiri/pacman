@@ -4,6 +4,7 @@
  */
 
 #include "BonusCoin.h"
+#include "Map.h"
 
 BonusCoin::BonusCoin( const std::pair<int, int> & coords )
                     : SolidGameObject( '*', coords ) {
@@ -14,10 +15,10 @@ BonusCoin::~BonusCoin() {
   // TODO
 }
 
-void BonusCoin::Interact( Ghost & o ) {
+void BonusCoin::Interact( Ghost & o, Map & map ) {
   // TODO
 }
 
-void BonusCoin::Interact( Pacman & o ) {
+void BonusCoin::Interact( Pacman & o, Map & map ) {
   // TODO
 }

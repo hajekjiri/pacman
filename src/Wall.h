@@ -9,6 +9,8 @@
 
 #include "SolidGameObject.h"
 
+class Map;
+
 class Wall : public SolidGameObject {
   public:
     /// Constructor
@@ -17,9 +19,9 @@ class Wall : public SolidGameObject {
     /// Destructor
     ~Wall();
 
-    void Interact( Ghost & o ) override;
+    void Interact( Ghost & o, Map & map ) override;
 
-    void Interact( Pacman & o ) override;
+    void Interact( Pacman & o, Map & map ) override;
 
   private:
     // TODO

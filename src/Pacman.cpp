@@ -4,6 +4,7 @@
  */
 
 #include "Pacman.h"
+#include "Map.h"
 
 Pacman::Pacman( const std::pair<int, int> & coords,
                 const int & speed,
@@ -16,14 +17,14 @@ Pacman::~Pacman() {
  // TODO
 }
 
-void Pacman::Interact( Ghost & o ) {
+void Pacman::Interact( Ghost & o, Map & map ) {
   // TODO
 }
 
-void Pacman::Interact( Pacman & o ) {
+void Pacman::Interact( Pacman & o, Map & map ) {
   // TODO
 }
 
 void Pacman::Move( const int & direction ) {
-  // TODO
+
 }

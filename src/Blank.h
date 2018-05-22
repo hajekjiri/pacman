@@ -9,15 +9,17 @@
 
 #include "SolidGameObject.h"
 
+class Map;
+
 class Blank : public SolidGameObject {
   public:
     Blank( const std::pair<int, int> & coords );
 
     ~Blank();
 
-    void Interact( Ghost & o ) override;
+    void Interact( Ghost & o, Map & map ) override;
 
-    void Interact( Pacman & o ) override;
+    void Interact( Pacman & o, Map & map ) override;
 
   private:
     // TODO
