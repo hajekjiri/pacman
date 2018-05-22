@@ -27,6 +27,7 @@ class Map {
     void Draw( WINDOW * w );
 
     friend class Game;
+    friend class MovingGameObject;
 
   private:
     std::vector<std::vector<GameObject*> > m_Data;

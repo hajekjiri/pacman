@@ -42,6 +42,9 @@ class Game {
     /// Start playing the game
     void Play();
 
+    /// Make a game turn
+    void Turn( const int & k );
+
     /// Reset game
     void Reset();
 

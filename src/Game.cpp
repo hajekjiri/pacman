@@ -6,6 +6,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <cctype>
 #include "MyException.h"
 #include "Game.h"
 #include "MenuElement.h"
@@ -184,25 +185,37 @@ void Game::Run() {
 }
 
 void Game::Play() {
-  nodelay( stdscr, true );
-  wrefresh( m_Window );
   m_Map.Draw( m_Window );
   mvprintw( m_Map.m_Height+1, 0, "Press 'p' to pause the game"  );
   refresh();
+  wrefresh( m_Window );
   while ( true ) {
-    int k = wgetch( m_Window );
-    // do sth
-    switch ( k ) {
+    int k = getch();
+    switch ( tolower( k ) ) {
       case 'p':
         ChangeState( Game::STATE_PAUSED );
         return;
         break;
-
+      case 'w':
+        Turn( k );
+        break;
+      case 'a':
+        Turn( k );
+        break;
+      case 's':
+        Turn( k );
+        break;
+      case 'd':
+        Turn( k );
+        break;
       default:
         break;
     }
   }
-  nodelay( stdscr, false );
+}
+
+void Game::Turn( const int & k ) {
+
 }
 
 void Game::Reset() {

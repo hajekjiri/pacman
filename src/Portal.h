@@ -10,20 +10,22 @@
 #include "SolidGameObject.h"
 #include <utility>
 
+class Map;
+
 class Portal : public SolidGameObject {
   public:
     /// Constructor
     Portal( const int & id,
-            std::pair<int, int> coords );
+            const std::pair<int, int> & coords );
 
     /// Destructor
     ~Portal();
 
-    void Interact( MovingGameObject & o ) override;
+    void InteractDefault( MovingGameObject & o, Map & map ) override;
 
-    void Interact( Ghost & o ) override;
+    void Interact( Ghost & o, Map & map ) override;
 
-    void Interact( Pacman & o ) override;
+    void Interact( Pacman & o, Map & map ) override;
 
     void SetPair( Portal * p );
 
@@ -31,7 +33,6 @@ class Portal : public SolidGameObject {
 
   private:
     int m_Id;
-    std::pair<int, int> m_Coords;
     Portal * m_Pair;
 };
 

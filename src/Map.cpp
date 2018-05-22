@@ -73,13 +73,13 @@ void Map::LoadFromFile( const std::string & path ) {
     bool valid = false;
     if ( c == '-' ) {
       // coin
-      o = new Coin();
+      o = new Coin( { row, col } );
       valid = true;
     }
 
     if ( c == '#' ) {
       // wall
-      o = new Wall();
+      o = new Wall( { row, col } );
       if ( valid ) {
         throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
                            + std::to_string( row ) + "," + std::to_string( col ) );
@@ -89,7 +89,7 @@ void Map::LoadFromFile( const std::string & path ) {
 
     if ( c == '*' ) {
       // bonus coin
-      o = new BonusCoin();
+      o = new BonusCoin( { row, col } );
       if ( valid ) {
         throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
                            + std::to_string( row ) + "," + std::to_string( col ) );
@@ -99,7 +99,7 @@ void Map::LoadFromFile( const std::string & path ) {
 
     if ( c == ' ' ) {
       // blank
-      o = new Blank();
+      o = new Blank( { row, col } );
       if ( valid ) {
         throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
                            + std::to_string( row ) + "," + std::to_string( col ) );
@@ -109,7 +109,7 @@ void Map::LoadFromFile( const std::string & path ) {
 
     if ( c >= 'A' && c <= 'C' ) {
       // ghost
-      o = new Ghost( c );
+      o = new Ghost( c, { row, col } );
       if ( valid ) {
         throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
                            + std::to_string( row ) + "," + std::to_string( col ) );
@@ -149,7 +149,7 @@ void Map::LoadFromFile( const std::string & path ) {
 
     if ( c == 'P' ) {
       // pacman
-      o = new Pacman();
+      o = new Pacman( { row, col } );
       if ( valid ) {
         throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
                            + std::to_string( row ) + "," + std::to_string( col ) );

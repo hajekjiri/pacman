@@ -3,14 +3,17 @@
  * @file Portal.cpp
  */
 
+ #include <utility>
 #include "Portal.h"
-#include <utility>
+#include "Map.h"
+#include "MovingGameObject.h"
+#include "Pacman.h"
+#include "Ghost.h"
 
 Portal::Portal( const int & id,
-                std::pair<int, int> coords )
-              : SolidGameObject( '@' ),
-                m_Id( id ),
-                m_Coords( coords ) {
+                const std::pair<int, int> & coords )
+              : SolidGameObject( '@', coords ),
+                m_Id( id ) {
   /*
    * TODO:
    * - pair portal
@@ -21,15 +24,15 @@ Portal::~Portal() {
   // TODO
 }
 
-void Portal::Interact( MovingGameObject & o ) {
+void Portal::InteractDefault( MovingGameObject & o, Map & map ) {
   // TODO
 }
 
-void Portal::Interact( Ghost & o ) {
+void Portal::Interact( Ghost & o, Map & map ) {
   // TODO
 }
 
-void Portal::Interact( Pacman & o ) {
+void Portal::Interact( Pacman & o, Map & map ) {
   // TODO
 }
 
