@@ -20,6 +20,12 @@ class Ghost : public MovingGameObject {
     /// Destructor
     ~Ghost();
 
+    /// Interact with Pacman
+    void Interact( Ghost & o ) override;
+
+    /// Interact with a ghost
+    void Interact( Pacman & o ) override;
+
   private:
     // TODO
 };

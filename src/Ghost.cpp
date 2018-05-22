@@ -16,3 +16,11 @@ Ghost::Ghost( const char & c,
 Ghost::~Ghost() {
  // TODO
 }
+
+void Ghost::Interact( Ghost & o ) {
+  // TODO
+}
+
+void Ghost::Interact( Pacman & o ) {
+  // TODO
+}

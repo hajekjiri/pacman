@@ -9,6 +9,9 @@
 
 #include <utility>
 
+class Pacman;
+class Ghost;
+
 class GameObject {
   public:
     /// Constructor
@@ -20,6 +23,12 @@ class GameObject {
 
     /// return display char
     const char & Char() const;
+
+    /// Interact with Pacman
+    virtual void Interact( Ghost & o ) = 0;
+
+    /// Interact with a ghost
+    virtual void Interact( Pacman & o ) = 0;
 
   protected:
     char m_Char;

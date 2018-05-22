@@ -9,8 +9,9 @@
 
 #include "GameObject.h"
 #include "MovingGameObject.h"
-#include "Ghost.h"
-#include "Pacman.h"
+
+class Pacman;
+class Ghost;
 
 class SolidGameObject : public GameObject {
   public:

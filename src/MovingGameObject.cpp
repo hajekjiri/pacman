@@ -4,6 +4,8 @@
  */
 
 #include "MovingGameObject.h"
+#include "Ghost.h"
+#include "Pacman.h"
 
 MovingGameObject::MovingGameObject( const char & c,
                                     const std::pair<int, int> & coords,

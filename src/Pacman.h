@@ -19,11 +19,14 @@ class Pacman : public MovingGameObject {
     /// Destructor
     ~Pacman();
 
-    /// Interact with moving object
-    void Interact( const MovingGameObject & o );
-
     /// Getter for m_Alive
     const bool IsAlive() const;
+
+    /// Interact with Pacman
+    void Interact( Ghost & o ) override;
+
+    /// Interact with a ghost
+    void Interact( Pacman & o ) override;
 
   private:
     /// Indicates whether Pacman is alive

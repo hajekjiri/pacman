@@ -16,6 +16,10 @@ Pacman::~Pacman() {
  // TODO
 }
 
-void Pacman::Interact( const MovingGameObject & o ) {
+void Pacman::Interact( Ghost & o ) {
+  // TODO
+}
+
+void Pacman::Interact( Pacman & o ) {
   // TODO
 }

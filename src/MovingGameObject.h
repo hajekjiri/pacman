@@ -10,6 +10,9 @@
 #include <utility>
 #include "GameObject.h"
 
+class Pacman;
+class Ghost;
+
 class MovingGameObject : public GameObject {
   public:
     static const int DIRECTION_LEFT;
@@ -25,6 +28,12 @@ class MovingGameObject : public GameObject {
 
     /// Destructor
     virtual ~MovingGameObject() = 0;
+
+    /// Interact with Pacman
+    virtual void Interact( Ghost & o ) = 0;
+
+    /// Interact with a ghost
+    virtual void Interact( Pacman & o ) = 0;
 
     const bool IsLethal() const;
 
