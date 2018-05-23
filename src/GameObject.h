@@ -20,18 +20,10 @@ class GameObject {
     /// Getter/setter for display char
     char & Char();
 
-    bool & Solid();
-
   protected:
 
     /// Character to display
     char m_Char;
-
-    /**
-     * Boolean value indicating if things
-     *   can move through the object
-     */
-    bool m_Solid;
 };
 
 #endif // GAME_OBJECT_H

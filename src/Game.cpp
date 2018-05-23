@@ -187,37 +187,29 @@ void Game::Run() {
 }
 
 void Game::Play() {
-  m_Map.Draw( m_Window );
   mvprintw( m_Map.m_Height+1, 0, "Press 'p' to pause the game"  );
   refresh();
-  wrefresh( m_Window );
   while ( true ) {
+    m_Map.Draw( m_Window );
+    wrefresh( m_Window );
     int k = getch();
-    switch ( tolower( k ) ) {
-      case 'p':
-        ChangeState( Game::STATE_PAUSED );
-        return;
-        break;
-      case 'w':
-        Turn( k );
-        break;
-      case 'a':
-        Turn( k );
-        break;
-      case 's':
-        Turn( k );
-        break;
-      case 'd':
-        Turn( k );
-        break;
-      default:
-        break;
+    k = tolower( k );
+    if ( k == 'p' ) {
+      ChangeState( Game::STATE_PAUSED );
+      return;
+    }
+
+    if ( k == 'w' || k == 'a' || k == 's' || k == 'd' ) {
+      Turn( k );
     }
   }
 }
 
 void Game::Turn( const int & k ) {
-  //m_Pacman->Move( k, m_Map );
+  m_Map.CheckSize();
+  if ( ! m_Pacman->Move( k, m_Map ) ) {
+    return;
+  }
 }
 
 void Game::Reset() {
@@ -257,7 +249,7 @@ void Game::ChangeState( const int & state ) {
       m_Menu.Init();
       break;
     case Game::STATE_RUNNING:
-      m_Window = newwin( m_Map.m_Height, 20, 0, 0 );
+      m_Window = newwin( m_Map.m_Height, m_Map.m_Width, 0, 0 );
       break;
   }
 

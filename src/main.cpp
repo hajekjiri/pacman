@@ -5,7 +5,7 @@
 /*
  * TODO:
  * - document new files for doxygen
- * - portal pair(s)
+ * - !!!portal pair(s)!!! - search for pair each time Pacman steps on a portal, tp him on top of portal, don't replace with blank when Pacman moves away
  * - pacman interaction with other objects
  * - pacman movement
  */

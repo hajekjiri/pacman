@@ -17,7 +17,3 @@ GameObject::~GameObject() {
 char & GameObject::Char() {
   return m_Char;
 }
-
-bool & GameObject::Solid() {
-  return m_Solid;
-}

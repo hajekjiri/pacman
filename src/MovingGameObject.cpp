@@ -3,6 +3,8 @@
  * @file MovingGameObject.cpp
  */
 
+#include <utility>
+#include "Map.h"
 #include "MovingGameObject.h"
 
 MovingGameObject::MovingGameObject( const char & c,
@@ -35,4 +37,40 @@ bool & MovingGameObject::Alive() {
 
 int & MovingGameObject::Speed() {
   return m_Speed;
+}
+
+const bool MovingGameObject::Move( const int & direction, Map & map ) {
+  std::pair<int, int> newCoords = m_Coords;
+  switch ( direction ) {
+    case 'w':
+      --newCoords.first;
+      break;
+    case 'a':
+      --newCoords.second;
+      break;
+    case 's':
+      ++newCoords.first;
+      break;
+    case 'd':
+      ++newCoords.second;
+      break;
+  }
+  if ( ! map.ValidCoords( newCoords ) || map.Data()[ newCoords.first ][ newCoords.second ]->Char() == '#' ) {
+    return false;
+  }
+
+  // update Pacman's coords, save old coords
+  std::pair<int, int> oldCoords = m_Coords;
+  m_Coords = newCoords;
+
+  // place blank to old coords
+  map.Data()[ oldCoords.first ][ oldCoords.second ] = new GameObject( ' ' );
+
+  // delete what's on new coords
+  delete map.Data()[ newCoords.first ][ newCoords.second ];
+
+  // place Pacman to new coords
+  map.Data()[ newCoords.first ][ newCoords.second ] = this;
+
+  return true;
 }

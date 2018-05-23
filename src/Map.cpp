@@ -41,6 +41,30 @@ std::vector<std::vector<GameObject*> > & Map::Data() {
   return m_Data;
 }
 
+const bool Map::ValidCoords( const std::pair<int, int> & coords ) const {
+  if ( coords.first < 0 || coords.first >= m_Height ||
+       coords.second < 0 || coords.second >= m_Width ) {
+    return false;
+  }
+  return true;
+}
+
+std::vector<std::vector<GameObject*> >::iterator Map::CheckSize() {
+  int row = 0;
+  auto it = m_Data.begin();
+  size_t size = it->size();
+  for ( ; it != m_Data.end(); ++it, ++row ) {
+    if ( it->size() != size ) {
+      throw MyException( std::string( "Invalid map. Rows 0 and " )
+                         + std::to_string( row )
+                         + " are not the same length ( "
+                         + std::to_string( size ) + " x "
+                         + std::to_string( it->size() ) + " )" );
+    }
+  }
+  return it;
+}
+
 void Map::LoadFromFile( const std::string & path, Game & game ) {
   std::ifstream is;
   is.open( ( "./src/cfg/" + path ).data() );
@@ -72,6 +96,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
     if ( c == 'P' ) {
       mo = new MovingGameObject( c, { row, col }, 1, false );
       valid = true;
+      game.m_Pacman = mo;
     }
 
     if ( c >= 'A' && c <= 'C' ) {
@@ -81,6 +106,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
                            + std::to_string( row ) + "," + std::to_string( col ) );
       }
       valid = true;
+      game.m_Ghosts.push_back( mo );
     }
 
     if ( c == '-' || c == '#' || c == '*' || c == ' ' || ( c >= '0' && c <= '9' ) ) {
@@ -113,22 +139,6 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
 
     ++col;
   }
-
-  {
-    int row = 0;
-    auto it = m_Data.begin();
-    size_t size = it->size();
-    for ( ; it != m_Data.end(); ++it, ++row ) {
-      if ( it->size() != size ) {
-        throw MyException( std::string( "Invalid map. Rows 0 and " )
-                           + std::to_string( row )
-                           + " are not the same length ( "
-                           + std::to_string( size ) + " x "
-                           + std::to_string( it->size() ) + " )" );
-      }
-    }
-
-    m_Width = ( --it )->size();
-    m_Height = row;
-  }
+  m_Width = ( --CheckSize() )->size();
+  m_Height = row;
 }

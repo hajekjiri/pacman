@@ -27,6 +27,10 @@ class Map {
 
     std::vector<std::vector<GameObject*> > & Data();
 
+    const bool ValidCoords( const std::pair<int, int> & coords ) const;
+
+    std::vector<std::vector<GameObject*> >::iterator CheckSize();
+
     friend class Game;
 
   private:

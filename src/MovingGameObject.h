@@ -33,13 +33,13 @@ class MovingGameObject : public GameObject {
     /// Getter/Setter for m_Speed
     int & Speed();
 
-    void Move( const int & direction );
+    const bool Move( const int & direction, Map & map );
 
   private:
     /**
      * Position: first => y axis, second => x axis
      */
-    std::pair<int,int> m_Coords;
+    std::pair<int, int> m_Coords;
 
     /**
      * Boolean value indicating whether
