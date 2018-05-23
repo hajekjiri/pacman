@@ -19,13 +19,27 @@ Menu::Menu( const int & preset )
                          []( Game * g ) {
                            g->ChangeState( Game::STATE_RUNNING );
                          } ) );
+      Add( MenuElement( "Reload cfg",
+                         []( Game * g ) {
+                           g->GetMenu().Clear();
+                           WINDOW * w = newwin( 2, 30, 1, 1 );
+                           g->LoadCfg( Game::SETTINGS_FILE );
+                           mvprintw( 1, 1, "Cfg reloaded!" );
+                           mvprintw( 2, 1, "Press any key to continue..." );
+                           wrefresh( w );
+                           getch();
+                           werase( w );
+                           wrefresh( w );
+                           delwin( w );
+                           g->GetMenu().Draw();
+                         } ) );
       Add( MenuElement( "Help",
                         []( Game * g ) {
                           g->ChangeState( Game::STATE_HELP );
                         } ) );
       Add( MenuElement( "Exit",
                         []( Game * g ) {
-                          throw 1;
+                          g->ChangeState( Game::STATE_END );
                         } ) );
       break;
 

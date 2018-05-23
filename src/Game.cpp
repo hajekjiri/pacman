@@ -19,6 +19,9 @@ const int Game::STATE_RUNNING = 0;
 const int Game::STATE_PAUSED = 1;
 const int Game::STATE_MENU = 2;
 const int Game::STATE_HELP = 3;
+const int Game::STATE_END = 4;
+const int Game::STATE_EXIT = 5;
+const char * Game::SETTINGS_FILE = "settings.cfg";
 
 Game::Game()
           : m_GameState( Game::STATE_MENU ),
@@ -113,13 +116,13 @@ void Game::Init( const std::string & pathToCfg ) {
    * - load map file from some 'pathToMap' attribute
    */
   LoadCfg( pathToCfg );
-  auto it = m_Settings.find( "map" );
-  if ( it == m_Settings.cend() ) {
+  const char * pathToMap = Setting( "map" );
+  if ( ! pathToMap ) {
     // map missing in settings.cfg
     throw MyException( std::string( "Map path not found in cfg file '" )
                        + pathToCfg + "'" );
   }
-  m_Map.LoadFromFile( it->second, *this );
+  m_Map.LoadFromFile( pathToMap, *this );
 }
 
 void Game::Run() {
@@ -166,14 +169,8 @@ void Game::Run() {
             m_Menu.MoveDown();
             break;
           case 10:
-            try {
               m_Menu.m_Options.at( m_Menu.m_HighlightedIdx ).Action( this );
-            } catch ( ... ) {
-              return;
-            }
             break;
-          case 'q':
-            return;
         }
         break;
       }
@@ -208,6 +205,23 @@ void Game::Run() {
 
         break;
       }
+      case Game::STATE_END: {
+        WINDOW * w = newwin( 11, 30,
+                             ( m_Map.m_Height - 11 ) / 2,
+                             m_Map.m_Width + 10 );
+        box( m_PauseWin, 0, 0 );
+
+        mvwprintw( w, 2, 12, m_Pacman->Alive() ? "You won" : "You lost" );
+        mvwprintw( w, 4, 12, "press any key to continue" );
+        getch();
+        werase( w );
+        delwin( w );
+        ChangeState( Game::STATE_MENU );
+        return;
+      }
+      case Game::STATE_EXIT: {
+        return;
+      }
     }
   }
 }
@@ -237,17 +251,15 @@ void Game::Play() {
     }
 
     if ( k == 'w' || k == 'a' || k == 's' || k == 'd' ) {
-      Turn( k );
+      m_Map.CheckSize();
+      m_Pacman->Move( k, *this );
+      ++m_Turns;
+      if ( ! m_Pacman->Alive() ) {
+        ChangeState( Game::STATE_END );
+        return;
+      }
     }
   }
-}
-
-void Game::Turn( const int & k ) {
-  m_Map.CheckSize();
-  if ( ! m_Pacman->Move( k, *this ) ) {
-    return;
-  }
-  ++m_Turns;
 }
 
 void Game::Reset() {
@@ -309,12 +321,24 @@ Map & Game::GetMap() {
   return m_Map;
 }
 
+Menu & Game::GetMenu() {
+  return m_Menu;
+}
+
 std::vector<Portal*> & Game::Portals() {
   return m_Portals;
 }
 
 int & Game::Score() {
   return m_Score;
+}
+
+const char * Game::Setting( const std::string & key ) const {
+  const auto it = m_Settings.find( key );
+  if ( it == m_Settings.cend() ) {
+    return nullptr;
+  }
+  return it->second.data();
 }
 
 void Game::ChangeState( const int & state ) {

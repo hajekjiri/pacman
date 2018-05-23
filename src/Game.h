@@ -23,6 +23,9 @@ class Game {
     static const int STATE_PAUSED;
     static const int STATE_MENU;
     static const int STATE_HELP;
+    static const int STATE_END;
+    static const int STATE_EXIT;
+    static const char * SETTINGS_FILE;
 
     /// Constructor
     Game();
@@ -42,14 +45,13 @@ class Game {
     /// Start playing the game
     void Play();
 
-    /// Make a game turn
-    void Turn( const int & k );
-
     /// Reset game
     void Reset();
 
     /// Getter/Setter for m_Map
     Map & GetMap();
+
+    Menu & GetMenu();
 
     /// Getter/Setter for m_Portals
     std::vector<Portal*> & Portals();
@@ -57,8 +59,15 @@ class Game {
     /// Getter/Setter for m_Score
     int & Score();
 
+    /// Function for quicker settings search
+    const char * Setting( const std::string & key ) const;
+
+    /// Load settings from cfg file
+    void LoadCfg( const std::string & pathToCfg );
+
     /// Change state of game
     void ChangeState( const int & state );
+
 
     friend class Map;
 
@@ -78,7 +87,6 @@ class Game {
     int m_Score;
     int m_Turns;
 
-    void LoadCfg( const std::string & pathToCfg );
 };
 
 #endif // GAME_H

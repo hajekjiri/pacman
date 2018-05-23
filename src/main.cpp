@@ -17,7 +17,6 @@
  5 - ghost difficulty => every Xth turn of ghost is random, where X is loaded from config
  5 - ghost difficulty => DFS x BFS (?), sounds hard though
  * - document new files for doxygen
- * - bring 'reload cfg' option back
  -------------------------------------------------------------------------------
  * - if ghost makes a move after pacman, they can only end up stacked in this order: GameObject=>Pacman=>Ghost
  * - fix for MovingGameObject carry is already implemented, not tested though
@@ -34,7 +33,7 @@ int main() {
   nodelay( stdscr, false );
   Game * g = new Game();
   try {
-    g->Init( "settings.cfg" );
+    g->Init( Game::SETTINGS_FILE );
     g->Run();
   } catch ( const std::exception & e ) {
     endwin();
