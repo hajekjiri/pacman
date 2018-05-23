@@ -8,15 +8,9 @@
 #include <vector>
 #include "MyException.h"
 #include "Map.h"
-#include "Blank.h"
-#include "BonusCoin.h"
-#include "Coin.h"
 #include "Game.h"
 #include "GameObject.h"
-#include "Ghost.h"
-#include "Pacman.h"
-#include "Portal.h"
-#include "Wall.h"
+#include "MovingGameObject.h"
 
 Map::Map() {
   // TODO
@@ -28,10 +22,6 @@ Map::~Map() {
       delete insideElem;
     }
   }
-}
-
-void Map::Resize( const int & height, const int & width ) {
-  // TODO
 }
 
 void Map::Draw( WINDOW * w ) {
@@ -47,6 +37,10 @@ void Map::Draw( WINDOW * w ) {
   }
 }
 
+std::vector<std::vector<GameObject*> > & Map::Data() {
+  return m_Data;
+}
+
 void Map::LoadFromFile( const std::string & path, Game & game ) {
   std::ifstream is;
   is.open( ( "./src/cfg/" + path ).data() );
@@ -59,7 +53,6 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
   int row = 0;
   int col = 0;
   bool newLine = true;
-  std::vector<Portal*> portalsLfPair;
   while ( ! is.eof() ) {
     is.get( c );
     if ( is.bad() ) {
@@ -71,49 +64,18 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
       newLine = true;
       continue;
     }
-    GameObject * o;
+
+    GameObject * o = nullptr;
+    MovingGameObject * mo = nullptr;
     bool valid = false;
-    if ( c == '-' ) {
-      // coin
-      o = new Coin( { row, col } );
-      valid = true;
-    }
 
-    if ( c == '#' ) {
-      // wall
-      o = new Wall( { row, col } );
-      if ( valid ) {
-        throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
-                           + std::to_string( row ) + "," + std::to_string( col ) );
-      }
-      valid = true;
-    }
-
-    if ( c == '*' ) {
-      // bonus coin
-      o = new BonusCoin( { row, col } );
-      if ( valid ) {
-        throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
-                           + std::to_string( row ) + "," + std::to_string( col ) );
-      }
-      valid = true;
-    }
-
-    if ( c == ' ' ) {
-      // blank
-      o = new Blank( { row, col } );
-      if ( valid ) {
-        throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
-                           + std::to_string( row ) + "," + std::to_string( col ) );
-      }
+    if ( c == 'P' ) {
+      mo = new MovingGameObject( c, { row, col }, 1, false );
       valid = true;
     }
 
     if ( c >= 'A' && c <= 'C' ) {
-      // ghost
-      Ghost * ptr = new Ghost( c, { row, col } );
-      o = ptr;
-      game.m_Ghosts.push_back( ptr );
+      mo = new MovingGameObject( c, { row, col }, 1, true );
       if ( valid ) {
         throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
                            + std::to_string( row ) + "," + std::to_string( col ) );
@@ -121,29 +83,8 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
       valid = true;
     }
 
-    if ( c >= '0' && c <= '9' ) {
-      // portal
-      Portal * ptr =  new Portal( c - 48, { row, col } );
-      o = ptr;
-      bool found = false;
-      auto it = portalsLfPair.begin();
-      for ( ;
-            it != portalsLfPair.end();
-            ++it ) {
-        if ( ( *it )->GetId() == ptr->GetId() ) {
-          found = true;
-          break;
-        }
-      }
-
-      if ( found ) {
-        ptr->SetPair( *it );
-        ( *it )->SetPair( ptr );
-        portalsLfPair.erase( it );
-      } else {
-        portalsLfPair.push_back( ptr );
-      }
-
+    if ( c == '-' || c == '#' || c == '*' || c == ' ' || ( c >= '0' && c <= '9' ) ) {
+      o = new GameObject( c );
       if ( valid ) {
         throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
                            + std::to_string( row ) + "," + std::to_string( col ) );
@@ -151,17 +92,6 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
       valid = true;
     }
 
-    if ( c == 'P' ) {
-      // pacman
-      Pacman * ptr = new Pacman( { row, col } );
-      o = ptr;
-      game.m_Pacman = ptr;
-      if ( valid ) {
-        throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
-                           + std::to_string( row ) + "," + std::to_string( col ) );
-      }
-      valid = true;
-    }
     if ( ! valid ) {
       throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
                          + std::to_string( row ) + "," + std::to_string( col ) );
@@ -171,7 +101,16 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
       m_Data.push_back( std::vector<GameObject*>() );
       newLine = false;
     }
-    ( m_Data )[ row ].push_back( o );
+
+    if ( o ) {
+      m_Data[ row ].push_back( o );
+    } else if ( mo ) {
+      m_Data[ row ].push_back( mo );
+    } else {
+      throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
+                         + std::to_string( row ) + "," + std::to_string( col ) );
+    }
+
     ++col;
   }
 
@@ -188,9 +127,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
                            + std::to_string( it->size() ) + " )" );
       }
     }
-    if ( portalsLfPair.size() != 0 ) {
-      throw MyException( std::string( "Some portals are missing a pair" ) );
-    }
+
     m_Width = ( --it )->size();
     m_Height = row;
   }

@@ -4,20 +4,20 @@
  */
 
  #include "GameObject.h"
- #include "Ghost.h"
- #include "Pacman.h"
 
-GameObject::GameObject( const char & c,
-                        const std::pair<int, int> & coords )
-                      : m_Coords( coords ),
-                        m_Char( c ) {
-  // TODO
+GameObject::GameObject( const char & c )
+                      : m_Char( c ) {
+  // do nothing
 }
 
 GameObject::~GameObject() {
-  // TODO
+  // do nothing
 }
 
-const char & GameObject::Char() const {
+char & GameObject::Char() {
   return m_Char;
+}
+
+bool & GameObject::Solid() {
+  return m_Solid;
 }

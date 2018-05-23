@@ -5,23 +5,34 @@
 
 #include "MovingGameObject.h"
 
-const int MovingGameObject::DIRECTION_UP = 'w';
-const int MovingGameObject::DIRECTION_LEFT = 'a';
-const int MovingGameObject::DIRECTION_DOWN = 's';
-const int MovingGameObject::DIRECTION_RIGHT = 'd';
-
 MovingGameObject::MovingGameObject( const char & c,
                                     const std::pair<int, int> & coords,
                                     const int & speed,
                                     const bool & lethal )
-                                  : GameObject( c, coords ) {
-  // TODO
+                                  : GameObject( c ),
+                                    m_Coords( coords ),
+                                    m_Lethal( lethal ),
+                                    m_Alive( true ),
+                                    m_Speed( speed ) {
+  // do nothing
 }
 
 MovingGameObject::~MovingGameObject() {
-  // TODO
+  // do nothing
 }
 
-const bool MovingGameObject::IsLethal() const {
+std::pair<int, int> & MovingGameObject::Coords() {
+  return m_Coords;
+}
+
+bool & MovingGameObject::Lethal() {
   return m_Lethal;
+}
+
+bool & MovingGameObject::Alive() {
+  return m_Alive;
+}
+
+int & MovingGameObject::Speed() {
+  return m_Speed;
 }

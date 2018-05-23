@@ -1,7 +1,7 @@
 /// GameObject class
 /**
  * @file GameObject.h
- * Abstract class representing a moving object.
+ * Class representing a moving object.
  */
 
 #ifndef MOVING_GAME_OBJECT_H
@@ -10,17 +10,8 @@
 #include <utility>
 #include "GameObject.h"
 
-class Pacman;
-class Ghost;
-class Map;
-
 class MovingGameObject : public GameObject {
   public:
-    static const int DIRECTION_UP;
-    static const int DIRECTION_LEFT;
-    static const int DIRECTION_DOWN;
-    static const int DIRECTION_RIGHT;
-
     /// Constructor
     MovingGameObject( const char & c,
                       const std::pair<int, int> & coords,
@@ -28,23 +19,27 @@ class MovingGameObject : public GameObject {
                       const bool & lethal );
 
     /// Destructor
-    virtual ~MovingGameObject() = 0;
+    virtual ~MovingGameObject();
 
-    /// Interact with Pacman
-    virtual void Interact( Ghost & o, Map & map ) = 0;
+    /// Getter/Setter for m_Lethal
+    std::pair<int, int> & Coords();
 
-    /// Interact with a ghost
-    virtual void Interact( Pacman & o, Map & map ) = 0;
+    /// Getter/Setter for m_Lethal
+    bool & Lethal();
 
-    const bool IsLethal() const;
+    /// Getter/Setter for m_Alive
+    bool & Alive();
 
-    virtual void Move( const int & direction, Map & map ) = 0;
+    /// Getter/Setter for m_Speed
+    int & Speed();
 
-  protected:
+    void Move( const int & direction );
+
+  private:
     /**
      * Position: first => y axis, second => x axis
      */
-    std::pair<int,int> m_Coord;
+    std::pair<int,int> m_Coords;
 
     /**
      * Boolean value indicating whether
@@ -52,7 +47,13 @@ class MovingGameObject : public GameObject {
      */
     bool m_Lethal;
 
-    /// Movement speed
+    /**
+     * Boolean value indicating whether
+     *   the object is alive
+     */
+    bool m_Alive;
+
+    /// Movement speed ( moves per 1 game turn )
     int m_Speed;
 };
 

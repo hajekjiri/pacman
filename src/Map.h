@@ -11,8 +11,8 @@
 #include <vector>
 #include <ncurses.h>
 
-class GameObject;
 class Game;
+class GameObject;
 
 class Map {
   public:
@@ -22,19 +22,17 @@ class Map {
     /// Destructor
     ~Map();
 
-    /// Resize map
-    void Resize( const int & height, const int & width );
-
-    /// Draw map in a window
+    /// Draw map into a window
     void Draw( WINDOW * w );
 
-    std::vector<std::vector<GameObject*> > m_Data;
+    std::vector<std::vector<GameObject*> > & Data();
 
     friend class Game;
 
   private:
     int m_Height;
     int m_Width;
+    std::vector<std::vector<GameObject*> > m_Data;
 
     void LoadFromFile( const std::string & path, Game & game );
 };

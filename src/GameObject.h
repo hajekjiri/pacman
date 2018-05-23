@@ -1,7 +1,7 @@
 /// GameObject class
 /**
  * @file GameObject.h
- * Abstract class representing a game object.
+ * Class representing an object.
  */
 
 #ifndef GAME_OBJECT_H
@@ -9,32 +9,29 @@
 
 #include <utility>
 
-class Pacman;
-class Ghost;
-class Map;
-
 class GameObject {
   public:
     /// Constructor
-    GameObject( const char & c,
-                const std::pair<int, int> & coords );
+    GameObject( const char & c );
 
     /// Destructor
-    virtual ~GameObject() = 0;
+    virtual ~GameObject();
 
-    /// return display char
-    const char & Char() const;
+    /// Getter/setter for display char
+    char & Char();
 
-    /// Interact with Pacman
-    virtual void Interact( Ghost * o, Map & map ) = 0;
-
-    /// Interact with a ghost
-    virtual void Interact( Pacman * o, Map & map ) = 0;
-
-    std::pair<int, int> m_Coords;
+    bool & Solid();
 
   protected:
+
+    /// Character to display
     char m_Char;
+
+    /**
+     * Boolean value indicating if things
+     *   can move through the object
+     */
+    bool m_Solid;
 };
 
 #endif // GAME_OBJECT_H

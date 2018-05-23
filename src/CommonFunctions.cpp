@@ -1,5 +1,5 @@
-#ifndef COMMON_FUNCTIONS_H
-#define COMMON_FUNCTIONS_H
+#ifndef COMMON_FUNCTIONS_CPP
+#define COMMON_FUNCTIONS_CPP
 
 #include <string>
 #include <cctype>
@@ -22,4 +22,4 @@ void strTrim( std::string & s ) {
   strRTrim( s );
 }
 
-#endif // COMMON_FUNCTIONS_H
+#endif // COMMON_FUNCTIONS_CPP

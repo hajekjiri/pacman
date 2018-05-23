@@ -12,9 +12,8 @@
 #include <map>
 #include "Menu.h"
 #include "Map.h"
-#include "Pacman.h"
 
-class Ghost;
+class MovingGameObject;
 
 class Game {
   public:
@@ -59,8 +58,8 @@ class Game {
     WINDOW * m_Window;
     WINDOW * m_PauseWin;
     Menu m_Menu;
-    std::vector<Ghost*> m_Ghosts;
-    Pacman * m_Pacman;
+    std::vector<MovingGameObject*> m_Ghosts;
+    MovingGameObject * m_Pacman;
     std::map<std::string, std::string> m_Settings;
 
     void LoadCfg( const std::string & pathToCfg );
