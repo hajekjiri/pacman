@@ -19,10 +19,6 @@ Menu::Menu( const int & preset )
                          []( Game * g ) {
                            g->ChangeState( Game::STATE_RUNNING );
                          } ) );
-      Add( MenuElement( "Reload cfg",
-                        []( Game * g ) {
-
-                        } ) );
       Add( MenuElement( "Help",
                         []( Game * g ) {
                           g->ChangeState( Game::STATE_HELP );

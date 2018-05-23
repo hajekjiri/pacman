@@ -24,16 +24,16 @@ class MovingGameObject : public GameObject {
     /// Getter/Setter for m_Lethal
     std::pair<int, int> & Coords();
 
-    /// Getter/Setter for m_Lethal
-    bool & Lethal();
-
     /// Getter/Setter for m_Alive
     bool & Alive();
 
     /// Getter/Setter for m_Speed
     int & Speed();
 
-    const bool Move( const int & direction, Map & map );
+    /// Getter/Setter for m_Carry
+    GameObject * Carry();
+
+    const bool Move( const int & direction, Game & game );
 
   private:
     /**
@@ -43,18 +43,15 @@ class MovingGameObject : public GameObject {
 
     /**
      * Boolean value indicating whether
-     *   the object causes Pacman to die on contact
-     */
-    bool m_Lethal;
-
-    /**
-     * Boolean value indicating whether
      *   the object is alive
      */
     bool m_Alive;
 
     /// Movement speed ( moves per 1 game turn )
     int m_Speed;
+
+    /// Object hidden behind moving object
+    GameObject * m_Carry;
 };
 
 #endif // MOVING_GAME_OBJECT_H

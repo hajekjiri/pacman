@@ -4,6 +4,7 @@
  */
 
 #include <iostream>
+#include <sstream>
 #include <fstream>
 #include <vector>
 #include "MyException.h"
@@ -17,11 +18,8 @@ Map::Map() {
 }
 
 Map::~Map() {
-  for ( const auto & outsideElem : m_Data ) {
-    for ( const auto & insideElem : outsideElem ) {
-      delete insideElem;
-    }
-  }
+  // do nothing
+  // Map is deleted inside Game class for reasons, ask me why if curious
 }
 
 void Map::Draw( WINDOW * w ) {
@@ -29,7 +27,9 @@ void Map::Draw( WINDOW * w ) {
   int j = 0;
   for ( const auto & outsideElem : m_Data ) {
     for ( const auto & insideElem : outsideElem ) {
-      mvwprintw( w, i, j, &( insideElem->Char() ) );
+      std::ostringstream oss;
+      oss << insideElem->Char();
+      mvwprintw( w, i, j, oss.str().data() );
       ++j;
     }
     ++i;
@@ -74,16 +74,19 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
                        + path + "' does not exist" );
   }
   char c;
-  int row = 0;
+  int rowIndex = 0;
   int col = 0;
   bool newLine = true;
+  int rowAmt = 0;
+  std::vector<Portal*> portals;
+  bool pacmanExists = false;
   while ( ! is.eof() ) {
     is.get( c );
     if ( is.bad() ) {
       throw MyException( std::string( "Error while reading map from from file" ) );
     }
     if ( c == '\n' ) {
-      ++row;
+      ++rowIndex;
       col = 0;
       newLine = true;
       continue;
@@ -94,51 +97,115 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
     bool valid = false;
 
     if ( c == 'P' ) {
-      mo = new MovingGameObject( c, { row, col }, 1, false );
+      pacmanExists = true;
+      mo = new MovingGameObject( c, { rowIndex, col }, 1, false );
       valid = true;
       game.m_Pacman = mo;
     }
 
     if ( c >= 'A' && c <= 'C' ) {
-      mo = new MovingGameObject( c, { row, col }, 1, true );
+      mo = new MovingGameObject( c, { rowIndex, col }, 1, true );
       if ( valid ) {
         throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
-                           + std::to_string( row ) + "," + std::to_string( col ) );
+                           + std::to_string( rowIndex ) + "," + std::to_string( col ) );
       }
       valid = true;
       game.m_Ghosts.push_back( mo );
     }
 
-    if ( c == '-' || c == '#' || c == '*' || c == ' ' || ( c >= '0' && c <= '9' ) ) {
-      o = new GameObject( c );
+    if ( c >= '0' && c <= '9' ) {
+      o = new GameObject( c, false );
       if ( valid ) {
         throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
-                           + std::to_string( row ) + "," + std::to_string( col ) );
+                           + std::to_string( rowIndex ) + "," + std::to_string( col ) );
+      }
+      valid = true;
+      portals.push_back( new Portal( c, { rowIndex, col } ) );
+    }
+
+    if ( c == '-' || c == '#' || c == '*' || c == ' ' ) {
+      o = new GameObject( c, false );
+      if ( valid ) {
+        throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
+                           + std::to_string( rowIndex ) + "," + std::to_string( col ) );
       }
       valid = true;
     }
 
     if ( ! valid ) {
       throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
-                         + std::to_string( row ) + "," + std::to_string( col ) );
+                         + std::to_string( rowIndex ) + "," + std::to_string( col ) );
     }
 
     if ( newLine ) {
+      // increment row amount once an object is being pushed to the row
+      ++rowAmt;
       m_Data.push_back( std::vector<GameObject*>() );
       newLine = false;
     }
 
     if ( o ) {
-      m_Data[ row ].push_back( o );
+      m_Data[ rowIndex ].push_back( o );
     } else if ( mo ) {
-      m_Data[ row ].push_back( mo );
+      m_Data[ rowIndex ].push_back( mo );
     } else {
       throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
-                         + std::to_string( row ) + "," + std::to_string( col ) );
+                         + std::to_string( rowIndex ) + "," + std::to_string( col ) );
     }
 
     ++col;
   }
+
+  // map size is checked in the following m_Width assignment
   m_Width = ( --CheckSize() )->size();
-  m_Height = row;
+  m_Height = rowAmt;
+
+  if ( ! pacmanExists ) {
+    throw MyException( std::string( "Invalid map - Pacman ( char 'P' )not found" ) );
+  }
+
+  // portals - check for duplicates
+  for ( const auto & outsideElem : portals ) {
+    int timesFound = 0;
+    for ( const auto & insideElem : portals ) {
+      if ( outsideElem->Id() == insideElem->Id() ) {
+        ++timesFound;
+      }
+    }
+    if ( timesFound != 2 ) {
+      std::ostringstream oss;
+      oss << "Invalid map - portal '" << outsideElem->Id()
+          << "' was found " << timesFound << " times ( expecting 2 times )";
+      throw MyException( oss.str() );
+    }
+  }
+
+  // portals - pairing
+  for ( const auto & outsideElem : portals ) {
+    bool found = false;
+    for ( const auto & insideElem : portals ) {
+      if ( ( outsideElem->Id() == insideElem->Id() ) &&
+           ( outsideElem->Coords() != insideElem->Coords() ) ) {
+        outsideElem->PairCoords() = insideElem->Coords();
+        insideElem->PairCoords() = outsideElem->Coords();
+        found = true;
+        break;
+      }
+    }
+    if ( ! found ) {
+      std::ostringstream oss;
+      oss << "Portal pairing - pair for portal '" << outsideElem->Id()
+          << "' was not found";
+      // portals are not in Game class yet so we have to delete them manually
+      for ( const auto & elem : portals ) {
+        delete elem;
+      }
+      throw MyException( oss.str() );
+    }
+  }
+
+  // portals - transfer to Game class
+  for ( const auto & elem : portals ) {
+    game.m_Portals.push_back( elem );
+  }
 }

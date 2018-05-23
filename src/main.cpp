@@ -5,9 +5,8 @@
 /*
  * TODO:
  * - document new files for doxygen
- * - !!!portal pair(s)!!! - search for pair each time Pacman steps on a portal, tp him on top of portal, don't replace with blank when Pacman moves away
- * - pacman interaction with other objects
- * - pacman movement
+ * - ghost movement
+ * - ghost AI
  */
 #include <iostream>
 #include <ncurses.h>
@@ -17,18 +16,20 @@
 int main() {
   initscr();
   noecho();
+  curs_set( 0 );
+  nodelay( stdscr, false );
   Game * g = new Game();
   try {
     g->Init( "settings.cfg" );
     g->Run();
   } catch ( const std::exception & e ) {
-    delete g;
     endwin();
     std::cout << "Exception thrown:\n"
               << e.what() << std::endl;
+    delete g;
     return 1;
   }
-  delete g;
   endwin();
+  delete g;
   return 0;
 }

@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <sstream>
 #include <string>
 #include <cctype>
 #include "MyException.h"
@@ -22,14 +23,41 @@ const int Game::STATE_HELP = 3;
 Game::Game()
           : m_GameState( Game::STATE_MENU ),
             m_Menu( 1 ),
-            m_Pacman( nullptr ) {
+            m_Pacman( nullptr ),
+            m_Score( 0 ),
+            m_Turns( 0 ) {
   // do sth
 }
 
 Game::~Game() {
   delwin( m_Window );
   delwin( m_PauseWin );
-  delete m_Pacman;
+
+  // delete portals
+  for ( auto & elem : m_Portals ) {
+    delete elem;
+  }
+
+  // delete carry objects
+  if ( m_Pacman ) {
+    delete m_Pacman->Carry();
+  }
+
+  for ( const auto & elem : m_Ghosts ) {
+    if ( elem ) {
+      delete elem->Carry();
+    }
+  }
+
+  /*
+   * only after deleting carry objects
+   * can we delete the map elements themselves
+   */
+  for ( const auto & outsideElem : m_Map.Data() ) {
+    for ( const auto & insideElem : outsideElem ) {
+      delete insideElem;
+    }
+  }
 }
 
 void Game::LoadCfg( const std::string & pathToCfg ) {
@@ -74,7 +102,6 @@ void Game::LoadCfg( const std::string & pathToCfg ) {
 }
 
 void Game::Init( const std::string & pathToCfg ) {
-  curs_set( 0 );
   m_Menu.Init();
   /*
    * TODO:
@@ -102,7 +129,6 @@ void Game::Run() {
         Play();
         break;
       case Game::STATE_PAUSED: {
-        nodelay( stdscr, false );
         m_PauseWin = newwin( 11, 30,
                              ( m_Map.m_Height - 11 ) / 2,
                              m_Map.m_Width + 10 );
@@ -111,8 +137,9 @@ void Game::Run() {
         mvwprintw( m_PauseWin, 4, 2, "* press 'c' to continue" );
         mvwprintw( m_PauseWin, 6, 2, "* press 'm' to go to menu" );
         mvwprintw( m_PauseWin, 8, 2, "* press 'q' to quit" );
+        wrefresh( m_PauseWin );
         while ( true ) {
-          int k = wgetch( m_PauseWin );
+          int k = getch();
           if ( k == 'c' ) {
             ChangeState( Game::STATE_RUNNING );
             break;
@@ -142,7 +169,6 @@ void Game::Run() {
             try {
               m_Menu.m_Options.at( m_Menu.m_HighlightedIdx ).Action( this );
             } catch ( ... ) {
-              // TODO: custom exception
               return;
             }
             break;
@@ -153,20 +179,20 @@ void Game::Run() {
       }
       case Game::STATE_HELP: {
         nodelay( stdscr, false );
-        WINDOW * w = newwin( 20, 40, 0, 0 );
+        WINDOW * w = newwin( 20, 60, 0, 0 );
         box( w, 0, 0 );
         int posY = 3;
         int posX = 3;
         std::string text = "* Movement: arrow keys";
         mvwprintw( w, posY, posX, text.data() );
         posY += 2;
-        text = "* Goal: collect all white dots";
+        text = "* Goal: collect all coins ( '-' )";
         mvwprintw( w, posY, posX, text.data() );
         posY += 2;
-        text = "* Run away from ghosts";
+        text = "* Run away from ghosts ( [A-Z]-{P} )";
         mvwprintw( w, posY, posX, text.data() );
         posY += 2;
-        text = "* Press 'm' to go back to menu";
+        text = "* Press 'm' to go back to menu ( 'm' )";
         mvwprintw( w, posY, posX, text.data() );
 
         while ( true ) {
@@ -187,11 +213,22 @@ void Game::Run() {
 }
 
 void Game::Play() {
-  mvprintw( m_Map.m_Height+1, 0, "Press 'p' to pause the game"  );
-  refresh();
+  mvprintw( m_Map.m_Height + 1, 0, "Press 'p' to pause the game"  );
   while ( true ) {
+    // print score & number of turns
+    std::ostringstream oss;
+    oss << "Score: " << m_Score;
+    mvprintw( m_Map.m_Height + 2, 0, oss.str().data() );
+    oss.str( "" );
+    oss.clear();
+    oss << "Turns: " << m_Turns;
+    mvprintw( m_Map.m_Height + 3, 0, oss.str().data() );
+    refresh();
+
     m_Map.Draw( m_Window );
     wrefresh( m_Window );
+
+
     int k = getch();
     k = tolower( k );
     if ( k == 'p' ) {
@@ -207,13 +244,77 @@ void Game::Play() {
 
 void Game::Turn( const int & k ) {
   m_Map.CheckSize();
-  if ( ! m_Pacman->Move( k, m_Map ) ) {
+  if ( ! m_Pacman->Move( k, *this ) ) {
     return;
   }
+  ++m_Turns;
 }
 
 void Game::Reset() {
-  // TODO
+  // delete portals
+  for ( auto & elem : m_Portals ) {
+    delete elem;
+  }
+  m_Portals.clear();
+
+  // delete carry objects
+  if ( m_Pacman ) {
+    delete m_Pacman->Carry();
+  }
+  for ( const auto & elem : m_Ghosts ) {
+    if ( elem ) {
+      delete elem->Carry();
+    }
+  }
+
+  /*
+   * only after deleting carry objects
+   * can we delete the map elements themselves
+   */
+  for ( const auto & outsideElem : m_Map.Data() ) {
+    for ( const auto & insideElem : outsideElem ) {
+      delete insideElem;
+    }
+  }
+
+  // reset vector
+  m_Ghosts.clear();
+
+  m_Pacman = nullptr;
+  for ( auto & elem : m_Ghosts ) {
+    elem = nullptr;
+  }
+
+  // reset Map's data vector
+  m_Map.Data().clear();
+
+  // reset score & turns
+  m_Score = 0;
+  m_Turns = 0;
+
+  // find map path in settings and re-load it
+  auto it = m_Settings.find( "map" );
+  if ( it == m_Settings.cend() ) {
+    /*
+     * Map missing in settings
+     * ( impossible since a game is
+     *   being played at the moment )
+     */
+    throw MyException( std::string( "Map path not found in settings.\nThis should not have happened" ) );
+  }
+  m_Map.LoadFromFile( it->second, *this );
+}
+
+Map & Game::GetMap() {
+  return m_Map;
+}
+
+std::vector<Portal*> & Game::Portals() {
+  return m_Portals;
+}
+
+int & Game::Score() {
+  return m_Score;
 }
 
 void Game::ChangeState( const int & state ) {
@@ -251,6 +352,10 @@ void Game::ChangeState( const int & state ) {
     case Game::STATE_RUNNING:
       m_Window = newwin( m_Map.m_Height, m_Map.m_Width, 0, 0 );
       break;
+  }
+
+  if ( m_GameState == Game::STATE_PAUSED && state == Game::STATE_MENU ) {
+    Reset();
   }
 
   m_GameState = state;

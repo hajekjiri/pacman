@@ -12,6 +12,7 @@
 #include <map>
 #include "Menu.h"
 #include "Map.h"
+#include "Portal.h"
 
 class MovingGameObject;
 
@@ -47,6 +48,15 @@ class Game {
     /// Reset game
     void Reset();
 
+    /// Getter/Setter for m_Map
+    Map & GetMap();
+
+    /// Getter/Setter for m_Portals
+    std::vector<Portal*> & Portals();
+
+    /// Getter/Setter for m_Score
+    int & Score();
+
     /// Change state of game
     void ChangeState( const int & state );
 
@@ -58,9 +68,15 @@ class Game {
     WINDOW * m_Window;
     WINDOW * m_PauseWin;
     Menu m_Menu;
+    std::vector<Portal*> m_Portals;
     std::vector<MovingGameObject*> m_Ghosts;
     MovingGameObject * m_Pacman;
     std::map<std::string, std::string> m_Settings;
+    /**
+     * Score, or amount of coins collected by player
+     */
+    int m_Score;
+    int m_Turns;
 
     void LoadCfg( const std::string & pathToCfg );
 };

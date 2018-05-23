@@ -6,12 +6,12 @@ all: doc compile
 compile: ./src/main.o ./src/Game.o \
          ./src/MenuElement.o ./src/MovingGameObject.o \
          ./src/GameObject.o ./src/Map.o \
-         ./src/Menu.o \
+         ./src/Menu.o ./src/Portal.o \
          ./src/MyException.o 
 	# link, save output to '<login>'
 	g++ -o hajekj29 ./src/main.o ./src/Game.o ./src/Map.o ./src/GameObject.o \
 	                ./src/MenuElement.o ./src/MovingGameObject.o \
-	                ./src/Menu.o ./src/MyException.o -lncurses
+	                ./src/Menu.o ./src/MyException.o ./src/Portal.o -lncurses
 
 run:
 	# run
@@ -28,7 +28,7 @@ doc:
 
 lines:
 	# count number of lines
-	wc -l ./src/*h ./src/*.cpp
+	wc -l ./src/*.h ./src/*.cpp
 
 r: compile run
 	# custom target for simplicity, delete later
@@ -44,4 +44,5 @@ r: compile run
 ./src/MenuElement.o: ./src/MenuElement.cpp ./src/MenuElement.h
 ./src/Menu.o: ./src/Menu.cpp ./src/Menu.h
 ./src/MovingGameObject.o: ./src/MovingGameObject.cpp ./src/MovingGameObject.h
+./src/Portal.o: ./src/Portal.cpp ./src/Portal.h
 ./src/MyException.o: ./src/MyException.cpp ./src/MyException.h
