@@ -78,8 +78,14 @@ const bool MovingGameObject::Move( const int & direction, Game & game ) {
 
   GameObject * tmp = m_Carry;
   m_Carry = game.GetMap().Data()[ newCoords.first ][ newCoords.second ];
+  // if carry is a moving object, set carry to nullptr
+  if ( m_Carry->Char() >= 'A' && m_Carry->Char() <= 'Z' ) {
+    m_Carry = nullptr;
+  }
   game.GetMap().Data()[ newCoords.first ][ newCoords.second ] = this;
-  game.GetMap().Data()[ oldCoords.first ][ oldCoords.second ] = tmp;
+  if ( tmp ) {
+    game.GetMap().Data()[ oldCoords.first ][ oldCoords.second ] = tmp;
+  }
 
   if ( m_Char == 'P' ) {
     // MovingGameObject is Pacman
@@ -102,17 +108,15 @@ const bool MovingGameObject::Move( const int & direction, Game & game ) {
           oldCoords = m_Coords;
           m_Coords = elem->Coords();
           tmp = m_Carry;
-          try {
-            m_Carry = game.GetMap().Data()[ elem->Coords().first ][ elem->Coords().second ];
-          } catch ( ... ) {
-            std::ostringstream oss;
-            oss << "Invalid read @ Map[ "<< elem->Coords().first
-                << " ][ " << elem->Coords().second << " ]";
-            throw MyException( oss.str() );
+          m_Carry = game.GetMap().Data()[ elem->Coords().first ][ elem->Coords().second ];
+          // if carry is a moving object, set carry to nullptr
+          if ( m_Carry->Char() >= 'A' && m_Carry->Char() <= 'Z' ) {
+            m_Carry = nullptr;
           }
-
           game.GetMap().Data()[ m_Coords.first ][ m_Coords.second ] = this;
-          game.GetMap().Data()[ oldCoords.first ][ oldCoords.second ] = tmp;
+          if ( tmp ) {
+            game.GetMap().Data()[ oldCoords.first ][ oldCoords.second ] = tmp;
+          }
           return true;
         }
       }
