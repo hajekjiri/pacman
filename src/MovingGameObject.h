@@ -38,7 +38,7 @@ class MovingGameObject : public GameObject {
 
     const bool IsLethal() const;
 
-    virtual void Move( const int & direction ) = 0;
+    virtual void Move( const int & direction, Map & map ) = 0;
 
   protected:
     /**

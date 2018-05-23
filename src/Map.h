@@ -28,11 +28,11 @@ class Map {
     /// Draw map in a window
     void Draw( WINDOW * w );
 
+    std::vector<std::vector<GameObject*> > m_Data;
+
     friend class Game;
-    friend class MovingGameObject;
 
   private:
-    std::vector<std::vector<GameObject*> > m_Data;
     int m_Height;
     int m_Width;
 

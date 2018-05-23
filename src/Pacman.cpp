@@ -25,6 +25,19 @@ void Pacman::Interact( Pacman & o, Map & map ) {
   // TODO
 }
 
-void Pacman::Move( const int & direction ) {
-
+void Pacman::Move( const int & direction, Map & map ) {
+  switch ( direction ) {
+    case 'w':
+      map.m_Data[ m_Coord.first + 1 ][ m_Coord.second ]->Interact( this, map );
+      break;
+    case 'a':
+      map.m_Data[ m_Coord.first ][ m_Coord.second - 1 ]->Interact( this, map );
+      break;
+    case 's':
+      map.m_Data[ m_Coord.first ][ m_Coord.second - 1 ]->Interact( this, map );
+      break;
+    case 'd':
+      map.m_Data[ m_Coord.first ][ m_Coord.second + 1 ]->Interact( this, map );
+      break;
+  }
 }

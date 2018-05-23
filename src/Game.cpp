@@ -215,7 +215,7 @@ void Game::Play() {
 }
 
 void Game::Turn( const int & k ) {
-  m_Pacman->Move( k );
+  m_Pacman->Move( k, m_Map );
 }
 
 void Game::Reset() {

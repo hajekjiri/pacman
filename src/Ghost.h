@@ -28,7 +28,7 @@ class Ghost : public MovingGameObject {
     /// Interact with a ghost
     void Interact( Pacman & o, Map & map ) override;
 
-    void Move( const int & direction ) override;
+    void Move( const int & direction, Map & map ) override;
 
   private:
     // TODO

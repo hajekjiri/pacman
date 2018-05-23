@@ -11,6 +11,7 @@
 
 class Pacman;
 class Ghost;
+class Map;
 
 class GameObject {
   public:
@@ -25,14 +26,15 @@ class GameObject {
     const char & Char() const;
 
     /// Interact with Pacman
-    virtual void Interact( Ghost & o ) = 0;
+    virtual void Interact( Ghost * o, Map & map ) = 0;
 
     /// Interact with a ghost
-    virtual void Interact( Pacman & o ) = 0;
+    virtual void Interact( Pacman * o, Map & map ) = 0;
+
+    std::pair<int, int> m_Coords;
 
   protected:
     char m_Char;
-    std::pair<int, int> m_Coords;
 };
 
 #endif // GAME_OBJECT_H

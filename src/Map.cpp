@@ -155,6 +155,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
       // pacman
       Pacman * ptr = new Pacman( { row, col } );
       o = ptr;
+      game.m_Pacman = ptr;
       if ( valid ) {
         throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
                            + std::to_string( row ) + "," + std::to_string( col ) );

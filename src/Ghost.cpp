@@ -26,6 +26,6 @@ void Ghost::Interact( Pacman & o, Map & map ) {
   // TODO
 }
 
-void Ghost::Move( const int & direction ) {
+void Ghost::Move( const int & direction, Map & map ) {
   // TODO
 }

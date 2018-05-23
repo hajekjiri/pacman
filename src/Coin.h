@@ -17,9 +17,9 @@ class Coin : public SolidGameObject {
 
     ~Coin();
 
-    void Interact( Ghost & o, Map & map ) override;
+    void Interact( Ghost * o, Map & map );
 
-    void Interact( Pacman & o, Map & map ) override;
+    void Interact( Pacman * o, Map & map );
 
   private:
     int m_Score;

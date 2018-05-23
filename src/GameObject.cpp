@@ -6,11 +6,11 @@
  #include "GameObject.h"
  #include "Ghost.h"
  #include "Pacman.h"
- 
+
 GameObject::GameObject( const char & c,
                         const std::pair<int, int> & coords )
-                      : m_Char( c ),
-                        m_Coords( coords ) {
+                      : m_Coords( coords ),
+                        m_Char( c ) {
   // TODO
 }
 
