@@ -170,12 +170,6 @@ void MovingGameObject::MoveGhost( Game & game ) {
 
   char direction = pf.GetFirstStep( m_Coords, game.Pacman()->Coords() );
 
-  if ( direction != 'r' ) {
-    std::ostringstream oss;
-    oss << "Ghost/Path: " << m_Char << "/" << direction;
-    //throw MyException( oss.str() );
-  }
-
   std::pair<int, int> newCoords = m_Coords;
   switch ( direction ) {
     case 'w':
@@ -190,8 +184,9 @@ void MovingGameObject::MoveGhost( Game & game ) {
     case 'd':
       ++newCoords.second;
       break;
-    case 'r':
-      throw MyException( std::string( "TODO: random ghost direction" ) );
+    case 'n':
+      // path does not exist
+      throw MyException( std::string( "TODO: what happens when path doesnt exist?" ) );
   }
 
   if ( ! game.GetMap().ValidCoords( newCoords ) ||

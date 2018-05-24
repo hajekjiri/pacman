@@ -9,11 +9,13 @@
 #include "MovingGameObject.h"
 
 BfsPathFinder::BfsPathFinder( Map * map,
+                              const bool & usePortals,
                               const std::pair<int, int> & start,
                               const std::pair<int, int> & end )
                             : m_Map( map ),
                               m_Start( start ),
-                              m_End( end ) {
+                              m_End( end ),
+                              m_UsePortals( usePortals ) {
   // do nothing
 }
 
@@ -37,9 +39,9 @@ const char BfsPathFinder::GetFirstStep( const std::pair<int, int> & start,
 
     std::ostringstream oss;
     oss << "Didnt find pacman, was looking for { " << m_End.first << ", " << m_End.second << " }";
-    throw MyException( std::string( oss.str().data() ) );
+    //throw MyException( std::string( oss.str().data() ) );
 
-    return 'r';
+    return 'n';
   } else {
     //throw MyException( std::string( "Bfs found Pacman" ) );
   }

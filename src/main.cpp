@@ -13,10 +13,12 @@
  *--------------------------------------------------------------------------------------------------
  * - ghost movement, ghosts cannot walk through each other
  * - ghost interaction: ghost => pacman
- 2 - ghost AI - chase player; chase player if closer than X; find and destroy power-ups, otherwise random-ish
- 2 - implement bfs for ghosts, update shortest path to player on every turn
- 5 - ghost difficulty => every Xth turn of ghost is random, where X is loaded from config
- 5 - ghost difficulty => DFS x BFS (?), sounds hard though
+
+ 2 - ghost AI:
+ *     - A => chase player
+ *     - B => chase player if player is closer than X
+ *     - C => if bonus exists, chase bonus, if sitting on top of bonus and player gets close => chase player
+ 5 - ghost difficulty => allow ghosts to use portals ( via cfg ), add as parameter to path finder
  * - document new files for doxygen
  *--------------------------------------------------------------------------------------------------
  * - if ghost makes a move after pacman, they can only end up stacked in this order: GameObject=>Pacman=>Ghost

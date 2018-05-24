@@ -20,6 +20,7 @@ class BfsPathFinder {
   public:
     /// Constructor
     BfsPathFinder( Map * map,
+                   const bool & usePortals,
                    const std::pair<int, int> & start = { 0, 0 },
                    const std::pair<int, int> & end = { 0, 0 } );
 
@@ -50,6 +51,7 @@ class BfsPathFinder {
     Map * m_Map;
     std::pair<int, int> m_Start;
     std::pair<int, int> m_End;
+    bool m_UsePortals;
     std::map<std::pair<int, int>, std::pair<int, int>, PairIntCmp> m_Connections;
     std::set<std::pair<int, int>, PairIntCmp> m_Visited;
     std::queue<std::pair<int, int> > m_Queue;
