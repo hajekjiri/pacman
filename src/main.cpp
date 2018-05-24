@@ -3,10 +3,14 @@
  */
 
 /*
- 1 - CHECK
- 3 - CHECK
- 4 - CHECK
+ * DONE:
+ * 1 - Basic rules
+ * 3 - Load map from file
+ * 4 - Variable game diff ( load from cfg )
  * TODO:
+ * 2 - ghost AI
+ * 5 - ghost diff ( load from cfg )
+ *--------------------------------------------------------------------------------------------------
  * - ghost movement, ghosts cannot walk through each other
  * - ghost interaction: ghost => pacman
  2 - ghost AI - chase player; chase player if closer than X; find and destroy power-ups, otherwise random-ish
@@ -14,7 +18,7 @@
  5 - ghost difficulty => every Xth turn of ghost is random, where X is loaded from config
  5 - ghost difficulty => DFS x BFS (?), sounds hard though
  * - document new files for doxygen
- -------------------------------------------------------------------------------
+ *--------------------------------------------------------------------------------------------------
  * - if ghost makes a move after pacman, they can only end up stacked in this order: GameObject=>Pacman=>Ghost
  * - fix for MovingGameObject carry is already implemented, not tested though
  *
