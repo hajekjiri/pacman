@@ -166,7 +166,17 @@ const bool MovingGameObject::MovePacman( const int & direction, Game & game ) {
 }
 
 void MovingGameObject::MoveGhost( Game & game ) {
-  BfsPathFinder pf( &( game.GetMap() ) );
+  std::string usePortalsStr = game.Setting( "ghosts_portals_allowed" );
+  bool usePortals;
+  if ( usePortalsStr == "yes" ) {
+    usePortals = true;
+  } else if ( usePortalsStr == "no" ) {
+    usePortals = false;
+  } else {
+    throw MyException( std::string( "Invalid cfg - syntax error near 'ghosts_portals_allowed:'" ) );
+  }
+
+  BfsPathFinder pf( &( game.GetMap() ), usePortals );
 
   char direction = pf.GetFirstStep( m_Coords, game.Pacman()->Coords() );
 
@@ -187,6 +197,7 @@ void MovingGameObject::MoveGhost( Game & game ) {
     case 'n':
       // path does not exist
       throw MyException( std::string( "TODO: what happens when path doesnt exist?" ) );
+      break;
   }
 
   if ( ! game.GetMap().ValidCoords( newCoords ) ||
@@ -197,7 +208,7 @@ void MovingGameObject::MoveGhost( Game & game ) {
     throw MyException( oss.str() );
   }
 
-  // update Pacman's coords, save old coords
+  // update ghost's coords, save old coords
   std::pair<int, int> oldCoords = m_Coords;
   m_Coords = newCoords;
 
