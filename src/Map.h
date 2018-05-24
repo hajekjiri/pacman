@@ -25,6 +25,12 @@ class Map {
     /// Draw map into a window
     void Draw( WINDOW * w );
 
+    /// Getter for m_Height
+    const int & Height() const;
+
+    /// Getter for m_Width
+    const int & Width() const;
+
     std::vector<std::vector<GameObject*> > & Data();
 
     const bool ValidCoords( const std::pair<int, int> & coords ) const;

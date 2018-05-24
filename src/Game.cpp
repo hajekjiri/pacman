@@ -2,19 +2,19 @@
 /**
  * @file Game.cpp
  */
+ #include <cctype>
+ #include <cstring>
+ #include <fstream>
 #include <iostream>
-#include <fstream>
-#include <vector>
 #include <sstream>
 #include <string>
-#include <cctype>
-#include <cstring>
-#include "MyException.h"
+#include <vector>
+#include "CommonFunctions.h"
 #include "Game.h"
-#include "MenuElement.h"
 #include "GameObject.h"
+#include "MenuElement.h"
 #include "MovingGameObject.h"
-#include "CommonFunctions.cpp"
+#include "MyException.h"
 
 const int Game::STATE_RUNNING = 0;
 const int Game::STATE_PAUSED = 1;
@@ -271,7 +271,7 @@ void Game::Play() {
     }
 
     if ( k == 'w' || k == 'a' || k == 's' || k == 'd' ) {
-      if ( ! m_Pacman->Move( k, *this ) ) {
+      if ( ! m_Pacman->MovePacman( k, *this ) ) {
         continue;
       }
       ++m_Turns;
@@ -286,6 +286,10 @@ void Game::Play() {
       m_Pacman->Lethal() = true;
     } else {
       m_Pacman->Lethal() = false;
+    }
+
+    for ( const auto & ghost : m_Ghosts ) {
+      ghost->MoveGhost( *this );
     }
 
     if ( ! m_Pacman->Alive() ) {
@@ -421,6 +425,10 @@ std::map<std::string, std::string> & Game::Settings() {
 
 std::vector<MovingGameObject*> & Game::Ghosts() {
   return m_Ghosts;
+}
+
+MovingGameObject * Game::Pacman() {
+  return m_Pacman;
 }
 
 std::vector<std::pair<int, int> > & Game::BonusCoords() {

@@ -3,15 +3,15 @@ CXXFLAGS=-Wall -pedantic -Wno-long-long -O0 -ggdb -std=c++14
 
 all: doc compile
 
-compile: ./src/main.o ./src/Game.o \
-         ./src/MenuElement.o ./src/MovingGameObject.o \
-         ./src/GameObject.o ./src/Map.o \
-         ./src/Menu.o ./src/Portal.o \
-         ./src/MyException.o 
+compile: ./src/main.o ./src/Game.o ./src/MenuElement.o ./src/Menu.o \
+          ./src/MovingGameObject.o ./src/GameObject.o ./src/Map.o   \
+          ./src/BfsPathFinder.o ./src/Portal.o ./src/MyException.o  \
+          ./src/CommonFunctions.o
 	# link, save output to '<login>'
-	g++ -o hajekj29 ./src/main.o ./src/Game.o ./src/Map.o ./src/GameObject.o \
-	                ./src/MenuElement.o ./src/MovingGameObject.o \
-	                ./src/Menu.o ./src/MyException.o ./src/Portal.o -lncurses
+	g++ -o hajekj29 ./src/main.o ./src/Game.o ./src/Map.o ./src/GameObject.o  \
+	                ./src/MenuElement.o ./src/MovingGameObject.o ./src/Menu.o \
+	                ./src/BfsPathFinder.o ./src/MyException.o ./src/Portal.o  \
+					./src/CommonFunctions.o -lncurses
 
 run:
 	# run
@@ -37,6 +37,7 @@ r: compile run
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 
+./src/CommonFunctions.o: ./src/CommonFunctions.cpp
 ./src/Game.o: ./src/Game.cpp ./src/Game.h
 ./src/GameObject.o: ./src/GameObject.cpp ./src/GameObject.h
 ./src/main.o: ./src/main.cpp
@@ -46,3 +47,4 @@ r: compile run
 ./src/MovingGameObject.o: ./src/MovingGameObject.cpp ./src/MovingGameObject.h
 ./src/Portal.o: ./src/Portal.cpp ./src/Portal.h
 ./src/MyException.o: ./src/MyException.cpp ./src/MyException.h
+./src/BfsPathFinder.o: ./src/BfsPathFinder.cpp ./src/BfsPathFinder.h

@@ -42,6 +42,14 @@ std::vector<std::vector<GameObject*> > & Map::Data() {
   return m_Data;
 }
 
+const int & Map::Height() const {
+  return m_Height;
+}
+
+const int & Map::Width() const {
+  return m_Width;
+}
+
 const bool Map::ValidCoords( const std::pair<int, int> & coords ) const {
   if ( coords.first < 0 || coords.first >= m_Height ||
        coords.second < 0 || coords.second >= m_Width ) {

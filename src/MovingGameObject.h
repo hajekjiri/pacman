@@ -33,7 +33,9 @@ class MovingGameObject : public GameObject {
     /// Getter/Setter for m_Carry
     GameObject * Carry();
 
-    const bool Move( const int & direction, Game & game );
+    const bool MovePacman( const int & direction, Game & game );
+
+    void MoveGhost( Game & game );
 
   private:
     /**

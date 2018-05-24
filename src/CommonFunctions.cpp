@@ -1,6 +1,3 @@
-#ifndef COMMON_FUNCTIONS_CPP
-#define COMMON_FUNCTIONS_CPP
-
 #include <string>
 #include <cctype>
 #include <algorithm>
@@ -21,5 +18,3 @@ void strTrim( std::string & s ) {
   strLTrim( s );
   strRTrim( s );
 }
-
-#endif // COMMON_FUNCTIONS_CPP

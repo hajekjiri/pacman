@@ -57,6 +57,7 @@ class Game {
     /// Getter/Setter for m_Map
     Map & GetMap();
 
+    /// Getter/Setter for m_Menu
     Menu & GetMenu();
 
     /// Getter/Setter for m_Portals
@@ -73,6 +74,9 @@ class Game {
 
     /// Getter/Setter for m_Settings
     std::map<std::string, std::string> & Settings();
+
+    /// Getter/Setter for m_Pacman
+    MovingGameObject * Pacman();
 
     /// Getter/Setter for m_Ghosts
     std::vector<MovingGameObject*> & Ghosts();
