@@ -323,7 +323,9 @@ void Game::Play() {
         }
         break;
       default:
-        break;
+        std::ostringstream oss;
+        oss << "Invalid game mode ( " << m_Mode << " )";
+        throw MyException( oss.str() );
     }
   }
 }
@@ -423,6 +425,10 @@ std::map<std::string, std::string> & Game::Settings() {
   return m_Settings;
 }
 
+std::vector<MovingGameObject*> & Game::Ghosts() {
+  return m_Ghosts;
+}
+
 const char * Game::Setting( const std::string & key ) const {
   const auto it = m_Settings.find( key );
   if ( it == m_Settings.cend() ) {
@@ -466,6 +472,7 @@ void Game::ChangeState( const int & state ) {
       wrefresh( m_Window );
       delwin( m_Window );
       Reset();
+      break;
   }
 
   switch ( state ) {
@@ -476,10 +483,6 @@ void Game::ChangeState( const int & state ) {
     case Game::STATE_RUNNING:
       m_Window = newwin( m_Map.m_Height, m_Map.m_Width, 1, 2 );
       break;
-  }
-
-  if ( m_GameState == Game::STATE_END ) {
-    Reset();
   }
 
   m_GameState = state;

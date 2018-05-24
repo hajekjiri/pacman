@@ -98,7 +98,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
 
     if ( c == 'P' ) {
       pacmanExists = true;
-      mo = new MovingGameObject( c, { rowIndex, col }, 1, false );
+      mo = new MovingGameObject( c, { rowIndex, col }, 1, true );
       valid = true;
       game.m_Pacman = mo;
     }

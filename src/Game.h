@@ -71,6 +71,9 @@ class Game {
     /// Getter/Setter for m_Settings
     std::map<std::string, std::string> & Settings();
 
+    /// Getter/Setter for m_Ghosts
+    std::vector<MovingGameObject*> & Ghosts();
+
     /// Function for quicker settings search
     const char * Setting( const std::string & key ) const;
 

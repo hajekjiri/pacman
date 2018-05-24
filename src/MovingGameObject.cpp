@@ -67,6 +67,7 @@ const bool MovingGameObject::Move( const int & direction, Game & game ) {
       ++newCoords.second;
       break;
   }
+
   if ( ! game.GetMap().ValidCoords( newCoords ) ||
        game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() == '#' ) {
     return false;
@@ -77,14 +78,49 @@ const bool MovingGameObject::Move( const int & direction, Game & game ) {
   m_Coords = newCoords;
 
   GameObject * tmp = m_Carry;
-  m_Carry = game.GetMap().Data()[ newCoords.first ][ newCoords.second ];
-  // if carry is a moving object, set carry to nullptr
-  if ( m_Carry->Char() >= 'A' && m_Carry->Char() <= 'Z' ) {
-    m_Carry = nullptr;
+
+  // new coords contain a ghost
+  if ( game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() >= 'A' &&
+       game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() <= 'Z' ) {
+    if ( m_Lethal ) {
+      bool found = false;
+      auto it = game.Ghosts().begin();
+      for ( ;
+            it != game.Ghosts().end();
+            ++it ) {
+        if ( ( *it )->Char() == game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() ) {
+          found = true;
+          break;
+        }
+      }
+      if ( ! found ) {
+        std::ostringstream oss;
+        oss << "Ghost '" << game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() << "' not found in game data";
+        throw MyException( oss.str() );
+      }
+      m_Carry = new GameObject( ' ', false );
+      delete ( *it )->m_Carry;
+      delete *it;
+      game.Ghosts().erase( it );
+      game.Score() += 5;
+      game.GetMap().Data()[ newCoords.first ][ newCoords.second ] = new GameObject( ' ', false );
+    } else {
+      m_Carry = nullptr;
+      m_Alive = false;
+      return true;
+    }
+  } else {
+    m_Carry = game.GetMap().Data()[ newCoords.first ][ newCoords.second ];
   }
+
   game.GetMap().Data()[ newCoords.first ][ newCoords.second ] = this;
+
   if ( tmp ) {
     game.GetMap().Data()[ oldCoords.first ][ oldCoords.second ] = tmp;
+  }
+
+  if ( ! m_Carry ) {
+    return true;
   }
 
   if ( m_Char == 'P' ) {
@@ -120,12 +156,6 @@ const bool MovingGameObject::Move( const int & direction, Game & game ) {
           return true;
         }
       }
-    }
-
-    if ( ! m_Carry ) {
-      m_Alive = false;
-      //throw MyException( std::string( "Pacman ran into a ghost" ) );
-      return true;
     }
   }
 

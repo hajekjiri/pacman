@@ -33,13 +33,13 @@ int main() {
     g->Init( Game::SETTINGS_FILE );
     g->Run();
   } catch ( const std::exception & e ) {
+    delete g;
     endwin();
     std::cout << "Exception thrown:\n"
               << e.what() << std::endl;
-    delete g;
     return 1;
   }
-  endwin();
   delete g;
+  endwin();
   return 0;
 }
