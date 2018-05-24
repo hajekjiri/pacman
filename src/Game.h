@@ -25,7 +25,11 @@ class Game {
     static const int STATE_HELP;
     static const int STATE_END;
     static const int STATE_EXIT;
+
     static const char * SETTINGS_FILE;
+
+    static const int MODE_CLASSIC;
+    static const int MODE_SURVIVAL;
 
     /// Constructor
     Game();
@@ -48,6 +52,8 @@ class Game {
     /// Reset game
     void Reset();
 
+    const bool CoinsLeft();
+
     /// Getter/Setter for m_Map
     Map & GetMap();
 
@@ -59,6 +65,12 @@ class Game {
     /// Getter/Setter for m_Score
     int & Score();
 
+    /// Getter/Setter for m_Mode
+    int & Mode();
+
+    /// Getter/Setter for m_Settings
+    std::map<std::string, std::string> & Settings();
+
     /// Function for quicker settings search
     const char * Setting( const std::string & key ) const;
 
@@ -67,7 +79,6 @@ class Game {
 
     /// Change state of game
     void ChangeState( const int & state );
-
 
     friend class Map;
 
@@ -86,7 +97,7 @@ class Game {
      */
     int m_Score;
     int m_Turns;
-
+    int m_Mode;
 };
 
 #endif // GAME_H

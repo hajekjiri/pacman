@@ -122,12 +122,9 @@ const bool MovingGameObject::Move( const int & direction, Game & game ) {
       }
     }
 
-    if ( m_Carry->Char() >= 'A' &&
-         m_Carry->Char() <= 'Z' &&
-         m_Carry->Char() != 'P' ) {
-      if ( m_Carry->Lethal() ) {
-        m_Alive = false;
-      }
+    if ( ! m_Carry ) {
+      m_Alive = false;
+      //throw MyException( std::string( "Pacman ran into a ghost" ) );
       return true;
     }
   }

@@ -8,6 +8,7 @@
 #include <sstream>
 #include <string>
 #include <cctype>
+#include <cstring>
 #include "MyException.h"
 #include "Game.h"
 #include "MenuElement.h"
@@ -21,14 +22,19 @@ const int Game::STATE_MENU = 2;
 const int Game::STATE_HELP = 3;
 const int Game::STATE_END = 4;
 const int Game::STATE_EXIT = 5;
+
 const char * Game::SETTINGS_FILE = "settings.cfg";
+
+const int Game::MODE_CLASSIC = 0;
+const int Game::MODE_SURVIVAL = 1;
 
 Game::Game()
           : m_GameState( Game::STATE_MENU ),
             m_Menu( 1 ),
             m_Pacman( nullptr ),
             m_Score( 0 ),
-            m_Turns( 0 ) {
+            m_Turns( 0 ),
+            m_Mode( -1 ) {
   // do sth
 }
 
@@ -70,20 +76,31 @@ void Game::LoadCfg( const std::string & pathToCfg ) {
     // unable to open file
     throw MyException( std::string( "Unable to open cfg file" ) );
   }
+  int line = 0;
   while ( true ) {
-    std::string type;
+    std::string lineStr;
     int pos = is.tellg();
-    std::getline( is, type );
+    std::getline( is, lineStr );
+    ++line;
     if ( is.eof() ) {
       break;
     }
-    strLTrim( type );
-    if  ( ( type.data() )[ 0 ] == '#' ) {
-      // line is a comment
+    strLTrim( lineStr );
+    if ( lineStr.data()[ 0 ] == '#' ||
+         lineStr.size() == 0 ) {
+      // ignore comments and empty lines
       continue;
     } else {
+
+      if ( ! strchr( lineStr.data(), ':' ) ) {
+        std::ostringstream oss;
+        oss << "Invalid cfg file '" << pathToCfg << "' - syntax error on line "
+            << line << std::endl << lineStr;
+        throw MyException( oss.str() );
+      }
       is.seekg( pos, is.beg );
     }
+    std::string type;
     std::getline( is, type, ':' );
     strTrim( type );
     if ( is.eof() ) {
@@ -94,8 +111,10 @@ void Game::LoadCfg( const std::string & pathToCfg ) {
     strTrim( value );
     if ( is.eof() ) {
       // syntax error
-      throw MyException( std::string( "Syntax error in cfg file '" )
-                         + pathToCfg + "'" );
+      std::ostringstream oss;
+      oss << "Invalid cfg file '" << pathToCfg << "' - unexpected end of file on line "
+          << line << std::endl << lineStr;
+      throw MyException( oss.str() );
       break;
     }
 
@@ -117,11 +136,6 @@ void Game::Init( const std::string & pathToCfg ) {
    */
   LoadCfg( pathToCfg );
   const char * pathToMap = Setting( "map" );
-  if ( ! pathToMap ) {
-    // map missing in settings.cfg
-    throw MyException( std::string( "Map path not found in cfg file '" )
-                       + pathToCfg + "'" );
-  }
   m_Map.LoadFromFile( pathToMap, *this );
 }
 
@@ -206,18 +220,30 @@ void Game::Run() {
         break;
       }
       case Game::STATE_END: {
-        WINDOW * w = newwin( 11, 30,
+        WINDOW * w = newwin( 9, 50,
                              ( m_Map.m_Height - 11 ) / 2,
                              m_Map.m_Width + 10 );
         box( m_PauseWin, 0, 0 );
 
-        mvwprintw( w, 2, 12, m_Pacman->Alive() ? "You won" : "You lost" );
-        mvwprintw( w, 4, 12, "press any key to continue" );
+        std::ostringstream oss, oss2;
+        if ( m_Pacman->Alive() ) {
+          oss << "Congratulations, " << Setting( "username" );
+          oss2 << "You won!";
+        } else {
+          oss << "Im sorry, " << Setting( "username" );
+          oss2 << "You lost :(";
+        }
+        mvwprintw( w, 2, ( 50 - oss.str().size() ) / 2, oss.str().data() );
+        mvwprintw( w, 4, ( 50 - oss2.str().size() ) / 2, oss2.str().data() );
+        mvwprintw( w, 6, ( 50 - std::string( "Press any key to continue..." ).size() ) / 2, "Press any key to continue..." );
+        box( w , 0, 0 );
+        wrefresh( w );
         getch();
         werase( w );
+        wrefresh( w );
         delwin( w );
         ChangeState( Game::STATE_MENU );
-        return;
+        break;
       }
       case Game::STATE_EXIT: {
         return;
@@ -227,21 +253,38 @@ void Game::Run() {
 }
 
 void Game::Play() {
-  mvprintw( m_Map.m_Height + 1, 0, "Press 'p' to pause the game"  );
+  mvprintw( m_Map.m_Height + 2, 2, "Press 'p' to pause the game"  );
+  std::ostringstream oss;
+  oss << "Game mode: ";
+  switch ( m_Mode ) {
+    case Game::MODE_CLASSIC:
+      oss << "Classic";
+      break;
+    case Game::MODE_SURVIVAL:
+      oss << "Survival";
+      break;
+    default:
+      oss.str( "" );
+      oss.clear();
+      oss << "Invalid game mode ( " << m_Mode << " )";
+      throw MyException( oss.str() );
+      break;
+  }
+  mvprintw( m_Map.m_Height + 3, 2, oss.str().data() );
   while ( true ) {
     // print score & number of turns
-    std::ostringstream oss;
+    oss.str( "" );
+    oss.clear();
     oss << "Score: " << m_Score;
-    mvprintw( m_Map.m_Height + 2, 0, oss.str().data() );
+    mvprintw( m_Map.m_Height + 4, 2, oss.str().data() );
     oss.str( "" );
     oss.clear();
     oss << "Turns: " << m_Turns;
-    mvprintw( m_Map.m_Height + 3, 0, oss.str().data() );
+    mvprintw( m_Map.m_Height + 5, 2, oss.str().data() );
     refresh();
 
     m_Map.Draw( m_Window );
     wrefresh( m_Window );
-
 
     int k = getch();
     k = tolower( k );
@@ -252,12 +295,35 @@ void Game::Play() {
 
     if ( k == 'w' || k == 'a' || k == 's' || k == 'd' ) {
       m_Map.CheckSize();
-      m_Pacman->Move( k, *this );
-      ++m_Turns;
-      if ( ! m_Pacman->Alive() ) {
-        ChangeState( Game::STATE_END );
-        return;
+      if ( ! m_Pacman->Move( k, *this ) ) {
+        continue;
       }
+      ++m_Turns;
+    }
+
+    if ( ! m_Pacman->Alive() ) {
+      ChangeState( Game::STATE_END );
+      return;
+    }
+
+    switch ( m_Mode ) {
+      case Game::MODE_CLASSIC:
+        if ( m_Turns == atoi( Setting( "max_turns_classic" ) ) ) {
+          if ( CoinsLeft() ) {
+            m_Pacman->Alive() = false;
+          }
+          ChangeState( Game::STATE_END );
+          return;
+        }
+        break;
+      case Game::MODE_SURVIVAL:
+        if ( m_Turns == atoi( Setting( "max_turns_survival" ) ) ) {
+          ChangeState( Game::STATE_END );
+          return;
+        }
+        break;
+      default:
+        break;
     }
   }
 }
@@ -317,6 +383,22 @@ void Game::Reset() {
   m_Map.LoadFromFile( it->second, *this );
 }
 
+const bool Game::CoinsLeft() {
+  for ( const auto & outsideElem : m_Map.Data() ) {
+    for ( const auto & insideElem : outsideElem ) {
+      if ( insideElem->Char() == '-' ) {
+        return true;
+      }
+    }
+  }
+  for ( const auto & elem : m_Ghosts ) {
+    if ( elem->Carry() && elem->Carry()->Char() == '-' ) {
+      return true;
+    }
+  }
+  return false;
+}
+
 Map & Game::GetMap() {
   return m_Map;
 }
@@ -333,16 +415,26 @@ int & Game::Score() {
   return m_Score;
 }
 
+int & Game::Mode() {
+  return m_Mode;
+}
+
+std::map<std::string, std::string> & Game::Settings() {
+  return m_Settings;
+}
+
 const char * Game::Setting( const std::string & key ) const {
   const auto it = m_Settings.find( key );
   if ( it == m_Settings.cend() ) {
-    return nullptr;
+    std::ostringstream oss;
+    oss << "Invalid cfg file - could not find '" << key << "' setting";
+    throw MyException( oss.str() );
   }
   return it->second.data();
 }
 
 void Game::ChangeState( const int & state ) {
-  if ( state < 0 || state > 3 ) {
+  if ( state < 0 || state > 5 ) {
     throw MyException( std::string( "Invalid game state parameter ( " )
                        + std::to_string( state ) + " )" );
   }
@@ -364,21 +456,29 @@ void Game::ChangeState( const int & state ) {
         werase( m_Window );
         wrefresh( m_Window );
         delwin( m_Window );
+        Reset();
       }
-
       break;
+    case Game::STATE_END:
+      erase();
+      refresh();
+      werase( m_Window );
+      wrefresh( m_Window );
+      delwin( m_Window );
+      Reset();
   }
 
   switch ( state ) {
     case Game::STATE_MENU:
+      m_Mode = -1;
       m_Menu.Init();
       break;
     case Game::STATE_RUNNING:
-      m_Window = newwin( m_Map.m_Height, m_Map.m_Width, 0, 0 );
+      m_Window = newwin( m_Map.m_Height, m_Map.m_Width, 1, 2 );
       break;
   }
 
-  if ( m_GameState == Game::STATE_PAUSED && state == Game::STATE_MENU ) {
+  if ( m_GameState == Game::STATE_END ) {
     Reset();
   }
 

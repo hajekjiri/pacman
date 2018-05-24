@@ -15,17 +15,24 @@ Menu::Menu( const int & preset )
             m_HighlightedIdx( -1 ) {
   switch ( m_Preset ) {
     case 1:
-      Add( MenuElement( "Play",
+      Add( MenuElement( "Classic mode",
                          []( Game * g ) {
                            g->ChangeState( Game::STATE_RUNNING );
+                           g->Mode() = Game::MODE_CLASSIC;
+                         } ) );
+      Add( MenuElement( "Survival mode",
+                         []( Game * g ) {
+                           g->ChangeState( Game::STATE_RUNNING );
+                           g->Mode() = Game::MODE_SURVIVAL;
                          } ) );
       Add( MenuElement( "Reload cfg",
                          []( Game * g ) {
                            g->GetMenu().Clear();
-                           WINDOW * w = newwin( 2, 30, 1, 1 );
+                           WINDOW * w = newwin( 5, 40, 0, 0 );
+                           g->Settings().clear();
                            g->LoadCfg( Game::SETTINGS_FILE );
-                           mvprintw( 1, 1, "Cfg reloaded!" );
-                           mvprintw( 2, 1, "Press any key to continue..." );
+                           mvprintw( 2, 4, "Cfg reloaded!" );
+                           mvprintw( 4, 4, "Press any key to continue..." );
                            wrefresh( w );
                            getch();
                            werase( w );
@@ -39,10 +46,9 @@ Menu::Menu( const int & preset )
                         } ) );
       Add( MenuElement( "Exit",
                         []( Game * g ) {
-                          g->ChangeState( Game::STATE_END );
+                          g->ChangeState( Game::STATE_EXIT );
                         } ) );
       break;
-
     default:
       break;
   }
@@ -54,7 +60,7 @@ Menu::~Menu() {
 
 void Menu::Init() {
   m_Window = newwin( ( 3 * m_Options.size() ) + 2,
-                     20, 4, 10 );
+                     26, 4, 10 );
   keypad( m_Window, true );
 }
 
@@ -76,7 +82,7 @@ void Menu::Draw() {
    int index = 0;
    int posY = 2;
    for ( const MenuElement & elem : m_Options ) {
-     int posX = ( 20 - elem.m_Name.size() ) / 2;
+     int posX = ( 26 - elem.m_Name.size() ) / 2;
      if ( index++ == m_HighlightedIdx ) {
        posX -= 2;
        wattron( m_Window, A_REVERSE );
@@ -97,6 +103,7 @@ void Menu::Clear() {
    * - clear menu
    */
   werase( m_Window );
+  wrefresh( m_Window );
 }
 
 void Menu::Move( const bool & direction ) {

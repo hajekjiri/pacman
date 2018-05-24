@@ -5,12 +5,9 @@
 /*
  3 - CHECK
  * TODO:
- * - end state - screen with score & turns, if pacman is alive => victory, loss otherwise
+ * - Pacman must die on ghost contact, currently segfaults on contact
  1 - pacman power-up => for X turns, pacman has the ability to eat 1 ghost
- * - split 'Play' to 2 game modes in menu
- ! - gamemode ideas:
- 4   1) survive for X turns, where X is loaded from config
- 4   2) collect all coins in X turns ( 0 for no limit ), where X is loaded from config
+ 4 - powerup spawns at given location ( loaded from map ) every Xth turn, where X is loaded from config
  * - ghost movement
  2 - ghost AI - chase player; chase player if closer than X; find and destroy power-ups, otherwise random-ish
  2 - implement bfs for ghosts, update shortest path to player on every turn
