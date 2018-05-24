@@ -34,7 +34,10 @@
 #include <iostream>
 #include <ncurses.h>
 #include <exception>
+#include <sstream>
+#include "CommonFunctions.h"
 #include "Game.h"
+#include "GameObject.h"
 
 int main() {
   initscr();
@@ -50,9 +53,17 @@ int main() {
     endwin();
     std::cout << "Exception thrown:\n"
               << e.what() << std::endl;
+    dumpToFile( "Exception thrown:\n" );
+    std::ostringstream oss;
+    oss << e.what() << std::endl;
+    dumpToFile( oss.str().data() );
+    dumpToFile( "=========================================================\n" );
     return 1;
   }
   delete g;
   endwin();
+  dumpToFile( "Program finished\n" );
+  dumpToFile( "=========================================================\n" );
+  dumpToFile( "=========================================================\n" );
   return 0;
 }

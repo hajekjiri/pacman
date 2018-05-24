@@ -168,19 +168,44 @@ const bool MovingGameObject::MovePacman( const int & direction, Game & game ) {
 void MovingGameObject::MoveGhost( Game & game ) {
   BfsPathFinder pf( &( game.GetMap() ) );
 
-  char dir = pf.GetFirstStep( m_Coords, game.Pacman()->Coords() );
+  char direction = pf.GetFirstStep( m_Coords, game.Pacman()->Coords() );
 
-  if ( dir != 'r' ) {
+  if ( direction != 'r' ) {
     std::ostringstream oss;
-    oss << "Ghost/Path: " << m_Char << "/" << dir;
+    oss << "Ghost/Path: " << m_Char << "/" << direction;
+    //throw MyException( oss.str() );
+  }
+
+  std::pair<int, int> newCoords = m_Coords;
+  switch ( direction ) {
+    case 'w':
+      --newCoords.first;
+      break;
+    case 'a':
+      --newCoords.second;
+      break;
+    case 's':
+      ++newCoords.first;
+      break;
+    case 'd':
+      ++newCoords.second;
+      break;
+    case 'r':
+      throw MyException( std::string( "TODO: random ghost direction" ) );
+  }
+
+  if ( ! game.GetMap().ValidCoords( newCoords ) ||
+       game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() == '#' ) {
+    std::ostringstream oss;
+    oss << "Ghost '" << m_Char << "' attempted to move into invalid object '"
+        << game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() << "'";
     throw MyException( oss.str() );
   }
 
-  return;
+  // update Pacman's coords, save old coords
+  std::pair<int, int> oldCoords = m_Coords;
+  m_Coords = newCoords;
 
-  //
-  std::pair<int, int> oldCoords, newCoords;
-  //
 
   // save old carrry
   GameObject * tmp = m_Carry;

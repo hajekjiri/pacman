@@ -92,6 +92,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
   while ( ! is.eof() ) {
     is.get( c );
     if ( is.bad() ) {
+      is.close();
       throw MyException( std::string( "Error while reading map from from file" ) );
     }
     if ( c == '\n' ) {
@@ -115,6 +116,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
     if ( c >= 'A' && c <= 'C' ) {
       mo = new MovingGameObject( c, { rowIndex, col }, 1, true );
       if ( valid ) {
+        is.close();
         throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
                            + std::to_string( rowIndex ) + "," + std::to_string( col ) );
       }
@@ -125,6 +127,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
     if ( c >= '0' && c <= '9' ) {
       o = new GameObject( c, false );
       if ( valid ) {
+        is.close();
         throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
                            + std::to_string( rowIndex ) + "," + std::to_string( col ) );
       }
@@ -136,6 +139,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
       o = new GameObject( c, false );
       game.BonusCoords().push_back( { rowIndex, col } );
       if ( valid ) {
+        is.close();
         throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
                            + std::to_string( rowIndex ) + "," + std::to_string( col ) );
       }
@@ -145,6 +149,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
     if ( c == '-' || c == '#' || c == ' ' ) {
       o = new GameObject( c, false );
       if ( valid ) {
+        is.close();
         throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
                            + std::to_string( rowIndex ) + "," + std::to_string( col ) );
       }
@@ -152,6 +157,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
     }
 
     if ( ! valid ) {
+      is.close();
       throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
                          + std::to_string( rowIndex ) + "," + std::to_string( col ) );
     }
@@ -168,6 +174,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
     } else if ( mo ) {
       m_Data[ rowIndex ].push_back( mo );
     } else {
+      is.close();
       throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
                          + std::to_string( rowIndex ) + "," + std::to_string( col ) );
     }
@@ -180,6 +187,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
   m_Height = rowAmt;
 
   if ( ! pacmanExists ) {
+    is.close();
     throw MyException( std::string( "Invalid map - Pacman ( char 'P' )not found" ) );
   }
 
@@ -195,6 +203,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
       std::ostringstream oss;
       oss << "Invalid map - portal '" << outsideElem->Id()
           << "' was found " << timesFound << " times ( expecting 2 times )";
+      is.close();
       throw MyException( oss.str() );
     }
   }
@@ -219,6 +228,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
       for ( const auto & elem : portals ) {
         delete elem;
       }
+      is.close();
       throw MyException( oss.str() );
     }
   }
@@ -239,7 +249,9 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
       std::ostringstream oss;
       oss << "Invalid map - there are probably multiple instances of ghost '"
           << outsideElem->Char() << "'";
+      is.close();
       throw MyException( oss.str() );
     }
   }
+  is.close();
 }

@@ -11,7 +11,7 @@ compile: ./src/main.o ./src/Game.o ./src/MenuElement.o ./src/Menu.o \
 	g++ -o hajekj29 ./src/main.o ./src/Game.o ./src/Map.o ./src/GameObject.o  \
 	                ./src/MenuElement.o ./src/MovingGameObject.o ./src/Menu.o \
 	                ./src/BfsPathFinder.o ./src/MyException.o ./src/Portal.o  \
-					./src/CommonFunctions.o -lncurses
+	                ./src/CommonFunctions.o -lncurses
 
 run:
 	# run

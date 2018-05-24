@@ -7,4 +7,6 @@ void strRTrim( std::string & s );
 
 void strTrim( std::string & s );
 
+void dumpToFile( const char * s, const char * pathToFile = "./log.txt" );
+
 #endif // COMMON_FUNCTIONS_H

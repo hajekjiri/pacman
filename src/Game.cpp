@@ -30,6 +30,9 @@ const int Game::MODE_SURVIVAL = 1;
 
 Game::Game()
           : m_GameState( Game::STATE_MENU ),
+            m_Window( nullptr ),
+            m_PauseWin( nullptr ),
+            m_InfoWin( nullptr ),
             m_Menu( 1 ),
             m_Pacman( nullptr ),
             m_Score( 0 ),
@@ -97,6 +100,7 @@ void Game::LoadCfg( const std::string & pathToCfg ) {
         std::ostringstream oss;
         oss << "Invalid cfg file '" << pathToCfg << "' - syntax error on line "
             << line << std::endl << lineStr;
+        is.close();
         throw MyException( oss.str() );
       }
       is.seekg( pos, is.beg );
@@ -115,6 +119,7 @@ void Game::LoadCfg( const std::string & pathToCfg ) {
       std::ostringstream oss;
       oss << "Invalid cfg file '" << pathToCfg << "' - unexpected end of file on line "
           << line << std::endl << lineStr;
+      is.close();
       throw MyException( oss.str() );
       break;
     }
@@ -122,6 +127,7 @@ void Game::LoadCfg( const std::string & pathToCfg ) {
     // push setting to 'm_Settings'
     m_Settings.insert( { type, value } );
   }
+  is.close();
 }
 
 void Game::Init( const std::string & pathToCfg ) {

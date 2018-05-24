@@ -9,6 +9,7 @@
 #include <queue>
 #include <map>
 #include <utility>
+#include "CommonFunctions.h"
 #include "Map.h"
 #include "MyException.h"
 
@@ -29,11 +30,20 @@ class BfsPathFinder {
   private:
     struct PairIntCmp {
       const bool operator () ( const std::pair<int, int> & lhs, const std::pair<int, int> & rhs ) const {
+        /*
         std::ostringstream oss1;
         std::ostringstream oss2;
         oss1 << lhs.first << lhs.second;
         oss2 << rhs.first << rhs.second;
-        return oss1.str() < oss1.str();
+        std::ostringstream oss3;
+        oss3 << "'" << oss1.str() << "' < '" << oss2.str() << "'\n";
+        //dumpToFile( oss3.str().data() );
+        return oss1.str() < oss2.str();
+        */
+        if ( lhs.first != rhs.first ) {
+          return lhs.first < rhs.first;
+        }
+        return lhs.second < rhs.second;
       }
     };
 

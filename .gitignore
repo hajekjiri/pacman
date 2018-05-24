@@ -1,4 +1,5 @@
 /doc
 *.o
+./log.txt
 hajekj29
 
