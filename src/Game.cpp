@@ -34,7 +34,8 @@ Game::Game()
             m_Pacman( nullptr ),
             m_Score( 0 ),
             m_Turns( 0 ),
-            m_Mode( -1 ) {
+            m_Mode( -1 ),
+            m_BonusTurns( 0 ) {
   // do sth
 }
 
@@ -156,7 +157,7 @@ void Game::Run() {
         mvwprintw( m_PauseWin, 8, 2, "* press 'q' to quit" );
         wrefresh( m_PauseWin );
         while ( true ) {
-          int k = getch();
+          int k = wgetch( m_PauseWin );
           if ( k == 'c' ) {
             ChangeState( Game::STATE_RUNNING );
             break;
@@ -166,7 +167,8 @@ void Game::Run() {
             break;
           }
           if ( k == 'q' ) {
-            return;
+            ChangeState( Game::STATE_EXIT );
+            break;
           }
         }
         break;
@@ -238,7 +240,7 @@ void Game::Run() {
         mvwprintw( w, 6, ( 50 - std::string( "Press any key to continue..." ).size() ) / 2, "Press any key to continue..." );
         box( w , 0, 0 );
         wrefresh( w );
-        getch();
+        wgetch( w );
         werase( w );
         wrefresh( w );
         delwin( w );
@@ -253,40 +255,15 @@ void Game::Run() {
 }
 
 void Game::Play() {
-  mvprintw( m_Map.m_Height + 2, 2, "Press 'p' to pause the game"  );
-  std::ostringstream oss;
-  oss << "Game mode: ";
-  switch ( m_Mode ) {
-    case Game::MODE_CLASSIC:
-      oss << "Classic";
-      break;
-    case Game::MODE_SURVIVAL:
-      oss << "Survival";
-      break;
-    default:
-      oss.str( "" );
-      oss.clear();
-      oss << "Invalid game mode ( " << m_Mode << " )";
-      throw MyException( oss.str() );
-      break;
-  }
-  mvprintw( m_Map.m_Height + 3, 2, oss.str().data() );
+  m_InfoWin = newwin( 20, 60, m_Map.m_Height + 1, 2 );
   while ( true ) {
-    // print score & number of turns
-    oss.str( "" );
-    oss.clear();
-    oss << "Score: " << m_Score;
-    mvprintw( m_Map.m_Height + 4, 2, oss.str().data() );
-    oss.str( "" );
-    oss.clear();
-    oss << "Turns: " << m_Turns;
-    mvprintw( m_Map.m_Height + 5, 2, oss.str().data() );
-    refresh();
-
+    DrawInfo();
     m_Map.Draw( m_Window );
     wrefresh( m_Window );
+    wrefresh( m_InfoWin );
 
-    int k = getch();
+    int k = wgetch( m_Window );
+
     k = tolower( k );
     if ( k == 'p' ) {
       ChangeState( Game::STATE_PAUSED );
@@ -294,11 +271,21 @@ void Game::Play() {
     }
 
     if ( k == 'w' || k == 'a' || k == 's' || k == 'd' ) {
-      m_Map.CheckSize();
       if ( ! m_Pacman->Move( k, *this ) ) {
         continue;
       }
       ++m_Turns;
+      int interval = atoi( Setting( "bonus_interval" ) );
+      if ( interval > 0 && ( m_Turns % interval == 0 ) ) {
+        RespawnBonus();
+      }
+    }
+
+    if ( m_BonusTurns > 0 ) {
+      --m_BonusTurns;
+      m_Pacman->Lethal() = true;
+    } else {
+      m_Pacman->Lethal() = false;
     }
 
     if ( ! m_Pacman->Alive() ) {
@@ -331,6 +318,9 @@ void Game::Play() {
 }
 
 void Game::Reset() {
+  // delete bonus coords
+  m_BonusCoords.clear();
+
   // delete portals
   for ( auto & elem : m_Portals ) {
     delete elem;
@@ -421,12 +411,20 @@ int & Game::Mode() {
   return m_Mode;
 }
 
+int & Game::BonusTurns() {
+  return m_BonusTurns;
+}
+
 std::map<std::string, std::string> & Game::Settings() {
   return m_Settings;
 }
 
 std::vector<MovingGameObject*> & Game::Ghosts() {
   return m_Ghosts;
+}
+
+std::vector<std::pair<int, int> > & Game::BonusCoords() {
+  return m_BonusCoords;
 }
 
 const char * Game::Setting( const std::string & key ) const {
@@ -450,11 +448,13 @@ void Game::ChangeState( const int & state ) {
       werase( m_Menu.m_Window );
       wrefresh( m_Menu.m_Window );
       delwin( m_Menu.m_Window );
+      m_Menu.m_Window = nullptr;
       break;
     case Game::STATE_PAUSED:
       werase( m_PauseWin );
       wrefresh( m_PauseWin );
       delwin( m_PauseWin );
+      m_PauseWin = nullptr;
 
       if ( state == Game::STATE_MENU ) {
         erase();
@@ -462,6 +462,7 @@ void Game::ChangeState( const int & state ) {
         werase( m_Window );
         wrefresh( m_Window );
         delwin( m_Window );
+        m_Window = nullptr;
         Reset();
       }
       break;
@@ -471,6 +472,7 @@ void Game::ChangeState( const int & state ) {
       werase( m_Window );
       wrefresh( m_Window );
       delwin( m_Window );
+      m_Window = nullptr;
       Reset();
       break;
   }
@@ -485,6 +487,107 @@ void Game::ChangeState( const int & state ) {
       break;
   }
 
+  if ( m_GameState == Game::STATE_RUNNING && state != Game::STATE_PAUSED ) {
+    werase( m_InfoWin );
+    wrefresh( m_InfoWin );
+    delwin( m_InfoWin );
+    m_InfoWin = nullptr;
+  }
+
+  if ( m_GameState == Game::STATE_PAUSED && state != Game::STATE_RUNNING ) {
+    werase( m_InfoWin );
+    wrefresh( m_InfoWin );
+    delwin( m_InfoWin );
+    m_InfoWin = nullptr;
+  }
+
+  if ( m_GameState == Game::STATE_PAUSED && state == Game::STATE_EXIT ) {
+    werase( m_Window );
+    wrefresh( m_Window );
+    delwin( m_Window );
+    m_Window = nullptr;
+  }
+
   m_GameState = state;
   return;
+}
+
+void Game::RespawnBonus() {
+  for ( const auto & elem : m_BonusCoords ) {
+    if ( m_Map.Data()[ elem.first ][ elem.second ]->Char() == 'P' ) {
+      m_Pacman->Carry()->Char() = '*';
+      continue;
+    }
+
+    if ( m_Map.Data()[ elem.first ][ elem.second ]->Char() >= 'A' &&
+         m_Map.Data()[ elem.first ][ elem.second ]->Char() <= 'Z') {
+      auto it = m_Ghosts.begin();
+      for ( ;
+            it != m_Ghosts.end();
+            ++it ) {
+        if ( ( *it )->Char() == m_Map.Data()[ elem.first ][ elem.second ]->Char() ) {
+          break;
+        }
+      }
+      if ( ( *it )->Char() != m_Map.Data()[ elem.first ][ elem.second ]->Char() ) {
+        std::ostringstream oss;
+        oss << "Ghost '" << m_Map.Data()[ elem.first ][ elem.second ]->Char()
+            << "' not found in game data";
+        throw MyException( oss.str() );
+      }
+      ( *it )->Carry()->Char() = '*';
+      continue;
+    }
+
+    m_Map.Data()[ elem.first ][ elem.second ]->Char() = '*';
+  }
+}
+
+void Game::DrawInfo() {
+  werase( m_InfoWin );
+  mvwprintw( m_InfoWin, 2, 0, "Press 'p' to pause the game"  );
+  std::ostringstream oss;
+  oss << "Game mode: ";
+  switch ( m_Mode ) {
+    case Game::MODE_CLASSIC:
+      oss << "Classic";
+      break;
+    case Game::MODE_SURVIVAL:
+      oss << "Survival";
+      break;
+    default:
+      oss.str( "" );
+      oss.clear();
+      oss << "Invalid game mode ( " << m_Mode << " )";
+      throw MyException( oss.str() );
+      break;
+  }
+  mvwprintw( m_InfoWin, 3, 0, oss.str().data() );
+  oss.str( "" );
+  oss.clear();
+  oss << "Maximum turns: " << Setting( m_Mode == Game::MODE_CLASSIC ?
+                                       "max_turns_classic" : "max_turns_survival" );
+  mvwprintw( m_InfoWin, 4, 0, oss.str().data() );
+  oss.str( "" );
+  oss.clear();
+  oss << "Bonus turns: " << m_BonusTurns;
+  mvwprintw( m_InfoWin, 5, 0, oss.str().data() );
+  oss.str( "" );
+  oss.clear();
+  oss << "Turns: " << m_Turns;
+  mvwprintw( m_InfoWin, 6, 0, oss.str().data() );
+  oss.str( "" );
+  oss.clear();
+  oss << "Score: " << m_Score;
+  mvwprintw( m_InfoWin, 7, 0, oss.str().data() );
+  if ( m_BonusTurns > 0 ) {
+    oss.str( "" );
+    oss.clear();
+    oss << "Pacman can now eat 1 ghost in the next " << m_BonusTurns << " turns";
+  } else {
+    oss.str( "" );
+    oss.clear();
+    oss << "Pacman will die on contact with a ghost";
+  }
+  mvwprintw( m_InfoWin, 8, 0, oss.str().data() );
 }

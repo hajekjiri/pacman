@@ -3,12 +3,12 @@
  */
 
 /*
+ 1 - CHECK
  3 - CHECK
+ 4 - CHECK
  * TODO:
- * - Pacman must die on ghost contact, currently segfaults on contact
- 1 - pacman power-up => for X turns, pacman has the ability to eat 1 ghost
- 4 - powerup spawns at given location ( loaded from map ) every Xth turn, where X is loaded from config
- * - ghost movement
+ * - ghost movement, ghosts cannot walk through each other
+ * - ghost interaction: ghost => pacman
  2 - ghost AI - chase player; chase player if closer than X; find and destroy power-ups, otherwise random-ish
  2 - implement bfs for ghosts, update shortest path to player on every turn
  5 - ghost difficulty => every Xth turn of ghost is random, where X is loaded from config
@@ -17,6 +17,15 @@
  -------------------------------------------------------------------------------
  * - if ghost makes a move after pacman, they can only end up stacked in this order: GameObject=>Pacman=>Ghost
  * - fix for MovingGameObject carry is already implemented, not tested though
+ *
+ * - pacman steps on stacked ghosts => a) dies to first ghost
+ *                                     b) eats first ghost, if carry is a ghost, dies to second ghost
+ *     - do NOT clear carries to prevent memory leaks, carries are not deleted in Map's destruction
+ *
+ * // probs not gonna do ghost stacking because of possibly tons of carry searching
+ * - ghost movement => check if ghost is a carry of some other ghost,
+ *     if so, then give the "parent" ghost child ghosts' carry and then make the child ghosts' move,
+ *     setting child ghost's carry to nullptr and not placing it behind to prevent map corruption
  */
 #include <iostream>
 #include <ncurses.h>

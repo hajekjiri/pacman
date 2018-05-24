@@ -23,6 +23,7 @@ Map::~Map() {
 }
 
 void Map::Draw( WINDOW * w ) {
+  werase( w );
   int i = 0;
   int j = 0;
   for ( const auto & outsideElem : m_Data ) {
@@ -98,7 +99,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
 
     if ( c == 'P' ) {
       pacmanExists = true;
-      mo = new MovingGameObject( c, { rowIndex, col }, 1, true );
+      mo = new MovingGameObject( c, { rowIndex, col }, 1, false );
       valid = true;
       game.m_Pacman = mo;
     }
@@ -123,7 +124,17 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
       portals.push_back( new Portal( c, { rowIndex, col } ) );
     }
 
-    if ( c == '-' || c == '#' || c == '*' || c == ' ' ) {
+    if ( c == '*' ) {
+      o = new GameObject( c, false );
+      game.BonusCoords().push_back( { rowIndex, col } );
+      if ( valid ) {
+        throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
+                           + std::to_string( rowIndex ) + "," + std::to_string( col ) );
+      }
+      valid = true;
+    }
+
+    if ( c == '-' || c == '#' || c == ' ' ) {
       o = new GameObject( c, false );
       if ( valid ) {
         throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
@@ -207,5 +218,20 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
   // portals - transfer to Game class
   for ( const auto & elem : portals ) {
     game.m_Portals.push_back( elem );
+  }
+
+  for ( const auto & outsideElem : game.Ghosts() ) {
+    int times = 0;
+    for ( const auto & insideElem : game.Ghosts() ) {
+      if ( outsideElem->Char() == insideElem->Char() ) {
+        ++times;
+      }
+    }
+    if ( times != 1 ) {
+      std::ostringstream oss;
+      oss << "Invalid map - there are probably multiple instances of ghost '"
+          << outsideElem->Char() << "'";
+      throw MyException( oss.str() );
+    }
   }
 }

@@ -79,38 +79,44 @@ const bool MovingGameObject::Move( const int & direction, Game & game ) {
 
   GameObject * tmp = m_Carry;
 
-  // new coords contain a ghost
-  if ( game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() >= 'A' &&
-       game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() <= 'Z' ) {
-    if ( m_Lethal ) {
-      bool found = false;
-      auto it = game.Ghosts().begin();
-      for ( ;
-            it != game.Ghosts().end();
-            ++it ) {
-        if ( ( *it )->Char() == game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() ) {
-          found = true;
-          break;
+  // MovingGameObject is Pacman and new coords contain a ghost
+  if ( m_Char == 'P' ) {
+    if ( game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() >= 'A' &&
+         game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() <= 'Z' ) {
+      if ( m_Lethal ) {
+        bool found = false;
+        auto it = game.Ghosts().begin();
+        for ( ;
+              it != game.Ghosts().end();
+              ++it ) {
+          if ( ( *it )->Char() == game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() ) {
+            found = true;
+            break;
+          }
         }
+        if ( ! found ) {
+          std::ostringstream oss;
+          oss << "Ghost '" << game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char()
+              << "' not found in game data";
+          throw MyException( oss.str() );
+        }
+        m_Carry = new GameObject( ' ', false );
+        delete ( *it )->m_Carry;
+        delete *it;
+        game.Ghosts().erase( it );
+        game.Score() += 5;
+        game.GetMap().Data()[ newCoords.first ][ newCoords.second ] = new GameObject( ' ', false );
+
+        m_Lethal = false;
+        game.BonusTurns() = 0;
+      } else {
+        m_Carry = nullptr;
+        m_Alive = false;
+        return true;
       }
-      if ( ! found ) {
-        std::ostringstream oss;
-        oss << "Ghost '" << game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() << "' not found in game data";
-        throw MyException( oss.str() );
-      }
-      m_Carry = new GameObject( ' ', false );
-      delete ( *it )->m_Carry;
-      delete *it;
-      game.Ghosts().erase( it );
-      game.Score() += 5;
-      game.GetMap().Data()[ newCoords.first ][ newCoords.second ] = new GameObject( ' ', false );
     } else {
-      m_Carry = nullptr;
-      m_Alive = false;
-      return true;
+      m_Carry = game.GetMap().Data()[ newCoords.first ][ newCoords.second ];
     }
-  } else {
-    m_Carry = game.GetMap().Data()[ newCoords.first ][ newCoords.second ];
   }
 
   game.GetMap().Data()[ newCoords.first ][ newCoords.second ] = this;
@@ -131,7 +137,9 @@ const bool MovingGameObject::Move( const int & direction, Game & game ) {
         m_Carry->Char() = ' ';
         return true;
       case '*':
-        // TODO: temporary power-up
+        game.BonusTurns() = atoi( game.Setting( "bonus_duration" ) ) + 1;
+        game.Score() += 3;
+        m_Carry->Char() = ' ';
         return true;
     }
 

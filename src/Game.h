@@ -68,11 +68,17 @@ class Game {
     /// Getter/Setter for m_Mode
     int & Mode();
 
+    /// Getter/Setter for m_BonusTurns
+    int & BonusTurns();
+
     /// Getter/Setter for m_Settings
     std::map<std::string, std::string> & Settings();
 
     /// Getter/Setter for m_Ghosts
     std::vector<MovingGameObject*> & Ghosts();
+
+    /// Getter/Setter for m_BonusCoords
+    std::vector<std::pair<int, int> > & BonusCoords();
 
     /// Function for quicker settings search
     const char * Setting( const std::string & key ) const;
@@ -83,6 +89,12 @@ class Game {
     /// Change state of game
     void ChangeState( const int & state );
 
+    /// Respawn bonuses
+    void RespawnBonus();
+
+    /// Draw info ( score, turns, etc. )
+    void DrawInfo();
+
     friend class Map;
 
   private:
@@ -90,17 +102,33 @@ class Game {
     Map m_Map;
     WINDOW * m_Window;
     WINDOW * m_PauseWin;
+    WINDOW * m_InfoWin;
     Menu m_Menu;
     std::vector<Portal*> m_Portals;
     std::vector<MovingGameObject*> m_Ghosts;
     MovingGameObject * m_Pacman;
     std::map<std::string, std::string> m_Settings;
+    std::vector<std::pair<int, int> > m_BonusCoords;
+
     /**
-     * Score, or amount of coins collected by player
+     * Score => amount of coins collected by player
      */
     int m_Score;
+
+    /**
+     * Turns => amount of turns made by player
+     */
     int m_Turns;
+
+    /**
+     * Game mode
+     */
     int m_Mode;
+
+    /**
+     * Amount of turns where Pacman is able to eat ghosts
+     */
+    int m_BonusTurns;
 };
 
 #endif // GAME_H
