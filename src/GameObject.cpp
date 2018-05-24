@@ -5,9 +5,8 @@
 
  #include "GameObject.h"
 
-GameObject::GameObject( const char & c, const bool & lethal )
-                      : m_Char( c ),
-                        m_Lethal( lethal ) {
+GameObject::GameObject( const char & c )
+                      : m_Char( c ) {
   // do nothing
 }
 
@@ -17,8 +16,4 @@ GameObject::~GameObject() {
 
 char & GameObject::Char() {
   return m_Char;
-}
-
-bool & GameObject::Lethal() {
-  return m_Lethal;
 }

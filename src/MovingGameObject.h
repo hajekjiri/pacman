@@ -30,6 +30,9 @@ class MovingGameObject : public GameObject {
     /// Getter/Setter for m_Speed
     int & Speed();
 
+    /// Getter/Setter for m_Lethal
+    bool & Lethal();
+
     /// Getter/Setter for m_Carry
     GameObject * Carry();
 
@@ -49,8 +52,14 @@ class MovingGameObject : public GameObject {
      */
     bool m_Alive;
 
-    /// Movement speed ( moves per 1 game turn )
+    /// Movement speed ( # of moves per 1 game turn )
     int m_Speed;
+
+    /**
+     * Boolean value indicating whether
+     *   the object causes Pacman/Ghost to die on contact with Ghost/Pacman
+     */
+    bool m_Lethal;
 
     /// Object hidden behind moving object
     GameObject * m_Carry;

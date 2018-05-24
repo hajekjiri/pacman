@@ -125,7 +125,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
     }
 
     if ( c >= '0' && c <= '9' ) {
-      o = new GameObject( c, false );
+      o = new GameObject( c );
       if ( valid ) {
         is.close();
         throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
@@ -136,7 +136,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
     }
 
     if ( c == '*' ) {
-      o = new GameObject( c, false );
+      o = new GameObject( c );
       game.BonusCoords().push_back( { rowIndex, col } );
       if ( valid ) {
         is.close();
@@ -147,7 +147,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
     }
 
     if ( c == '-' || c == '#' || c == ' ' ) {
-      o = new GameObject( c, false );
+      o = new GameObject( c );
       if ( valid ) {
         is.close();
         throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "

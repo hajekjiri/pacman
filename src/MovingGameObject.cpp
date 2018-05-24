@@ -15,10 +15,11 @@ MovingGameObject::MovingGameObject( const char & c,
                                     const std::pair<int, int> & coords,
                                     const int & speed,
                                     const bool & lethal )
-                                  : GameObject( c, lethal ),
+                                  : GameObject( c ),
                                     m_Coords( coords ),
                                     m_Alive( true ),
-                                    m_Speed( speed ) {
+                                    m_Speed( speed ),
+                                    m_Lethal( lethal ) {
   if ( m_Char < 'A' || m_Char > 'Z' ) {
     std::ostringstream oss;
     oss << "Invalid MovingGameObject with id '" << m_Char << "'";
@@ -26,9 +27,9 @@ MovingGameObject::MovingGameObject( const char & c,
   }
 
   if ( m_Char == 'P' ) {
-    m_Carry = new GameObject( ' ', false );
+    m_Carry = new GameObject( ' ' );
   } else {
-    m_Carry = new GameObject( '-', false );
+    m_Carry = new GameObject( '-' );
   }
 }
 
@@ -46,6 +47,10 @@ bool & MovingGameObject::Alive() {
 
 int & MovingGameObject::Speed() {
   return m_Speed;
+}
+
+bool & MovingGameObject::Lethal() {
+  return m_Lethal;
 }
 
 GameObject * MovingGameObject::Carry() {
@@ -100,12 +105,12 @@ const bool MovingGameObject::MovePacman( const int & direction, Game & game ) {
             << "' not found in game data";
         throw MyException( oss.str() );
       }
-      m_Carry = new GameObject( ' ', false );
+      m_Carry = new GameObject( ' ' );
       delete ( *it )->m_Carry;
       delete *it;
       game.Ghosts().erase( it );
       game.Score() += 5;
-      game.GetMap().Data()[ newCoords.first ][ newCoords.second ] = new GameObject( ' ', false );
+      game.GetMap().Data()[ newCoords.first ][ newCoords.second ] = new GameObject( ' ' );
         m_Lethal = false;
       game.BonusTurns() = 0;
     } else {
