@@ -79,9 +79,22 @@ const bool MovingGameObject::MovePacman( const int & direction, Game & game ) {
     return false;
   }
 
+  if ( game.Turns() + 1 == game.RespawnBonusTurnNo() ) {
+    game.RespawnBonus();
+  }
+
   // update Pacman's coords, save old coords
   std::pair<int, int> oldCoords = m_Coords;
   m_Coords = newCoords;
+
+/*
+  if ( m_Carry && m_Carry->Char() == '*' ) {
+    game.BonusTurns() = atoi( game.Setting( "bonus_duration" ) );
+    game.RespawnBonusTurnNo() = game.Turns() + atoi( game.Setting( "bonus_interval" ) );
+    game.Score() += 3;
+    m_Carry->Char() = ' ';
+  }
+*/
 
   GameObject * tmp = m_Carry;
 
@@ -139,6 +152,7 @@ const bool MovingGameObject::MovePacman( const int & direction, Game & game ) {
       return true;
     case '*':
       game.BonusTurns() = atoi( game.Setting( "bonus_duration" ) ) + 1;
+      game.RespawnBonusTurnNo() = game.Turns() + atoi( game.Setting( "bonus_interval" ) ) + 1;
       game.Score() += 3;
       m_Carry->Char() = ' ';
       return true;

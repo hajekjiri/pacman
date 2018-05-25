@@ -72,6 +72,12 @@ class Game {
     /// Getter/Setter for m_BonusTurns
     int & BonusTurns();
 
+    /// Getter/Setter for m_RespawnBonusTurnNo
+    int & RespawnBonusTurnNo();
+
+    /// Getter/Setter for m_Turn
+    const int & Turns() const;
+
     /// Getter/Setter for m_Settings
     std::map<std::string, std::string> & Settings();
 
@@ -133,6 +139,11 @@ class Game {
      * Amount of turns where Pacman is able to eat ghosts
      */
     int m_BonusTurns;
+
+    /**
+     * Turn number when bonus coin(s) are supposed to be respawned
+     */
+    int m_RespawnBonusTurnNo;
 };
 
 #endif // GAME_H

@@ -38,7 +38,8 @@ Game::Game()
             m_Score( 0 ),
             m_Turns( 0 ),
             m_Mode( -1 ),
-            m_BonusTurns( 0 ) {
+            m_BonusTurns( 0 ),
+            m_RespawnBonusTurnNo( 0 ) {
   // do sth
 }
 
@@ -281,10 +282,11 @@ void Game::Play() {
         continue;
       }
       ++m_Turns;
-      int interval = atoi( Setting( "bonus_interval" ) );
-      if ( interval > 0 && ( m_Turns % interval == 0 ) ) {
-        RespawnBonus();
-      }
+    }
+
+    if ( ! m_Pacman->Alive() ) {
+      ChangeState( Game::STATE_END );
+      return;
     }
 
     if ( m_BonusTurns > 0 ) {
@@ -296,11 +298,6 @@ void Game::Play() {
 
     for ( const auto & ghost : m_Ghosts ) {
       ghost->MoveGhost( *this );
-    }
-
-    if ( ! m_Pacman->Alive() ) {
-      ChangeState( Game::STATE_END );
-      return;
     }
 
     switch ( m_Mode ) {
@@ -423,6 +420,14 @@ int & Game::Mode() {
 
 int & Game::BonusTurns() {
   return m_BonusTurns;
+}
+
+const int & Game::Turns() const {
+  return m_Turns;
+}
+
+int & Game::RespawnBonusTurnNo() {
+  return m_RespawnBonusTurnNo;
 }
 
 std::map<std::string, std::string> & Game::Settings() {
