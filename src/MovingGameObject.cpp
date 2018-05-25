@@ -118,13 +118,12 @@ const bool MovingGameObject::MovePacman( const int & direction, Game & game ) {
             << "' not found in game data";
         throw MyException( oss.str() );
       }
-      m_Carry = new GameObject( ' ' );
-      delete ( *it )->m_Carry;
+      m_Carry = ( *it )->m_Carry;
       delete *it;
       game.Ghosts().erase( it );
       game.Score() += 5;
-      game.GetMap().Data()[ newCoords.first ][ newCoords.second ] = new GameObject( ' ' );
-        m_Lethal = false;
+      //game.GetMap().Data()[ newCoords.first ][ newCoords.second ] = new GameObject( ' ' );
+      m_Lethal = false;
       game.BonusTurns() = 0;
     } else {
       m_Carry = nullptr;
@@ -225,9 +224,12 @@ void MovingGameObject::MoveGhost( Game & game ) {
   }
 
   if ( ! game.GetMap().ValidCoords( newCoords ) ||
-       game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() == '#' ) {
+       game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() == '#' ||
+       ( game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() >= 'A' &&
+         game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() <= 'Z' &&
+         game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() != 'P' ) ) {
     std::ostringstream oss;
-    oss << "Ghost '" << m_Char << "' attempted to move into invalid object '"
+    oss << "Ghost '" << m_Char << "' attempted to move into forbidden object '"
         << game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() << "'";
     throw MyException( oss.str() );
   }
@@ -236,6 +238,37 @@ void MovingGameObject::MoveGhost( Game & game ) {
   std::pair<int, int> oldCoords = m_Coords;
   m_Coords = newCoords;
 
+  // MovingGameObject is a ghost and new coords contain Pacman
+  if ( game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() == 'P' ) {
+    if ( game.Pacman()->Lethal() ) {
+      bool found = false;
+      auto it = game.Ghosts().begin();
+      for ( ;
+            it != game.Ghosts().end();
+            ++it ) {
+        if ( ( *it )->Char() == m_Char ) {
+          found = true;
+          break;
+        }
+      }
+      if ( ! found ) {
+        std::ostringstream oss;
+        oss << "Ghost '" << game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char()
+            << "' not found in game data";
+        throw MyException( oss.str() );
+      }
+      m_Char = ' ';
+      game.Ghosts().erase( it );
+      game.Score() += 5;
+      game.Pacman()->Lethal() = false;
+      game.BonusTurns() = 0;
+      game.GetMap().Data()[ oldCoords.first ][ oldCoords.second ] = m_Carry;
+      delete this; // meh
+      return;
+    } else {
+      game.Pacman()->Alive() = false;
+    }
+  }
 
   // save old carrry
   GameObject * tmp = m_Carry;
@@ -248,6 +281,10 @@ void MovingGameObject::MoveGhost( Game & game ) {
 
   // place old carry to old coords
   game.GetMap().Data()[ oldCoords.first ][ oldCoords.second ] = tmp;
+
+  if ( game.Pacman()->Alive() == false ) {
+    return;
+  }
 
   if ( m_Carry && m_Carry->Char() == '*' ) {
       game.RespawnBonusTurnNo() = game.Turns() + atoi( game.Setting( "bonus_interval" ) );

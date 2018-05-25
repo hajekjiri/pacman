@@ -284,11 +284,6 @@ void Game::Play() {
       ++m_Turns;
     }
 
-    if ( ! m_Pacman->Alive() ) {
-      ChangeState( Game::STATE_END );
-      return;
-    }
-
     if ( m_BonusTurns > 0 ) {
       --m_BonusTurns;
       m_Pacman->Lethal() = true;
@@ -296,8 +291,20 @@ void Game::Play() {
       m_Pacman->Lethal() = false;
     }
 
+    if ( ! m_Pacman->Alive() ) {
+      ChangeState( Game::STATE_END );
+      return;
+    }
+
     for ( const auto & ghost : m_Ghosts ) {
       ghost->MoveGhost( *this );
+    }
+
+    if ( ! m_Pacman->Alive() ) {
+      m_Map.Draw( m_Window );
+      wrefresh( m_Window );
+      ChangeState( Game::STATE_END );
+      return;
     }
 
     switch ( m_Mode ) {
