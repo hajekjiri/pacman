@@ -169,9 +169,12 @@ const bool MovingGameObject::MovePacman( const int & direction, Game & game ) {
         tmp = m_Carry;
         m_Carry = game.GetMap().Data()[ elem->Coords().first ][ elem->Coords().second ];
         // if carry is a moving object, set carry to nullptr
+        /*
+        // not necessary (?)
         if ( m_Carry->Char() >= 'A' && m_Carry->Char() <= 'Z' ) {
           m_Carry = nullptr;
         }
+        */
         game.GetMap().Data()[ m_Coords.first ][ m_Coords.second ] = this;
         if ( tmp ) {
           game.GetMap().Data()[ oldCoords.first ][ oldCoords.second ] = tmp;
@@ -244,6 +247,12 @@ void MovingGameObject::MoveGhost( Game & game ) {
   // place old carry to old coords
   game.GetMap().Data()[ oldCoords.first ][ oldCoords.second ] = tmp;
 
+  if ( m_Carry && m_Carry->Char() == '*' ) {
+      game.RespawnBonusTurnNo() = game.Turns() + atoi( game.Setting( "bonus_interval" ) );
+      m_Carry->Char() = ' ';
+      return;
+  }
+
   if ( m_Carry->Char() >= '0' && m_Carry->Char() <= '9' ) {
     // portal
     // find pair portal, move to its position, update carry
@@ -255,9 +264,12 @@ void MovingGameObject::MoveGhost( Game & game ) {
         tmp = m_Carry;
         m_Carry = game.GetMap().Data()[ elem->Coords().first ][ elem->Coords().second ];
         // if carry is a moving object, set carry to nullptr
+        /*
+        // not necessary (?)
         if ( m_Carry->Char() >= 'A' && m_Carry->Char() <= 'Z' ) {
           m_Carry = nullptr;
         }
+        */
         game.GetMap().Data()[ m_Coords.first ][ m_Coords.second ] = this;
         if ( tmp ) {
           game.GetMap().Data()[ oldCoords.first ][ oldCoords.second ] = tmp;
@@ -266,5 +278,4 @@ void MovingGameObject::MoveGhost( Game & game ) {
       }
     }
   }
-  //
 }

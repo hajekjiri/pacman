@@ -609,4 +609,12 @@ void Game::DrawInfo() {
     oss << "Pacman will die on contact with a ghost";
   }
   mvwprintw( m_InfoWin, 8, 0, oss.str().data() );
+  oss.str( "" );
+  oss.clear();
+  int when = m_RespawnBonusTurnNo - m_Turns;
+  if ( when < 0 ) {
+    when = 0;
+  }
+  oss << "Bonus(es) will respawn in " << when << ( when == 1 ? " turn" : " turns" );
+  mvwprintw( m_InfoWin, 9, 0, oss.str().data() );
 }

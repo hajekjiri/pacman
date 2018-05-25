@@ -95,6 +95,8 @@ void BfsPathFinder::PushChildrenToQueue( const std::pair<int, int> & n ) {
 }
 
 const bool BfsPathFinder::Search() {
+  m_Connections.clear();
+  m_Queue = std::queue<std::pair<int, int> >();
   Visit( m_Start );
   PushChildrenToQueue( m_Start );
   return SearchRec();
