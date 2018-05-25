@@ -101,33 +101,36 @@ const bool MovingGameObject::MovePacman( const int & direction, Game & game ) {
   // MovingGameObject is Pacman and new coords contain a ghost
   if ( game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() >= 'A' &&
        game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() <= 'Z' ) {
+    bool found = false;
+    auto it = game.Ghosts().begin();
+    for ( ;
+          it != game.Ghosts().end();
+          ++it ) {
+      if ( ( *it )->Char() == game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() ) {
+        found = true;
+        break;
+      }
+    }
+    if ( ! found ) {
+      std::ostringstream oss;
+      oss << "Ghost '" << game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char()
+          << "' not found in game data";
+      throw MyException( oss.str() );
+    }
+
     if ( m_Lethal ) {
-      bool found = false;
-      auto it = game.Ghosts().begin();
-      for ( ;
-            it != game.Ghosts().end();
-            ++it ) {
-        if ( ( *it )->Char() == game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() ) {
-          found = true;
-          break;
-        }
-      }
-      if ( ! found ) {
-        std::ostringstream oss;
-        oss << "Ghost '" << game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char()
-            << "' not found in game data";
-        throw MyException( oss.str() );
-      }
       m_Carry = ( *it )->m_Carry;
       delete *it;
       game.Ghosts().erase( it );
       game.Score() += 5;
-      //game.GetMap().Data()[ newCoords.first ][ newCoords.second ] = new GameObject( ' ' );
       m_Lethal = false;
       game.BonusTurns() = 0;
     } else {
-      m_Carry = nullptr;
+      if ( m_Carry ) {
+        game.GetMap().Data()[ oldCoords.first ][ oldCoords.second ] = m_Carry;
+      }
       m_Alive = false;
+      m_Carry = nullptr;
       return true;
     }
   } else {
@@ -169,13 +172,6 @@ const bool MovingGameObject::MovePacman( const int & direction, Game & game ) {
         m_Coords = elem->Coords();
         tmp = m_Carry;
         m_Carry = game.GetMap().Data()[ elem->Coords().first ][ elem->Coords().second ];
-        // if carry is a moving object, set carry to nullptr
-        /*
-        // not necessary (?)
-        if ( m_Carry->Char() >= 'A' && m_Carry->Char() <= 'Z' ) {
-          m_Carry = nullptr;
-        }
-        */
         game.GetMap().Data()[ m_Coords.first ][ m_Coords.second ] = this;
         if ( tmp ) {
           game.GetMap().Data()[ oldCoords.first ][ oldCoords.second ] = tmp;
@@ -267,6 +263,13 @@ void MovingGameObject::MoveGhost( Game & game ) {
       return;
     } else {
       game.Pacman()->Alive() = false;
+      // place ghost to new coords
+      game.GetMap().Data()[ newCoords.first ][ newCoords.second ] = this;
+      // place carry to old coords
+      game.GetMap().Data()[ oldCoords.first ][ oldCoords.second ] = m_Carry;
+      m_Carry = game.Pacman()->m_Carry;
+      game.Pacman()->m_Carry = nullptr;
+      return;
     }
   }
 
@@ -302,13 +305,6 @@ void MovingGameObject::MoveGhost( Game & game ) {
         m_Coords = elem->Coords();
         tmp = m_Carry;
         m_Carry = game.GetMap().Data()[ elem->Coords().first ][ elem->Coords().second ];
-        // if carry is a moving object, set carry to nullptr
-        /*
-        // not necessary (?)
-        if ( m_Carry->Char() >= 'A' && m_Carry->Char() <= 'Z' ) {
-          m_Carry = nullptr;
-        }
-        */
         game.GetMap().Data()[ m_Coords.first ][ m_Coords.second ] = this;
         if ( tmp ) {
           game.GetMap().Data()[ oldCoords.first ][ oldCoords.second ] = tmp;

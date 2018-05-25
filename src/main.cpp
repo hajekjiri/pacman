@@ -11,8 +11,9 @@
  * 2 - ghost AI
  * 5 - ghost diff ( load from cfg )
  *--------------------------------------------------------------------------------------------------
- * - ghost interaction: ghost => pacman, !!!pacman => ghost!!!
- * - ghost movement, ghosts cannot walk through each other
+ * - fix Game::Reset()
+ * - test multiple ghosts
+ * - make path finder return distance, if no path exists => return -1
  5 - ghost difficulty => allow ghosts to use portals ( via cfg ), add as parameter to path finder
  * - configure path finder to optionally allow use of portals
  2 - ghost AI:

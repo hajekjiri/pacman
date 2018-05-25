@@ -241,6 +241,8 @@ void Game::Run() {
         } else {
           oss << "Im sorry, " << Setting( "username" );
           oss2 << "You lost :(";
+          delete m_Pacman;
+          m_Pacman = nullptr;
         }
         mvwprintw( w, 2, ( 50 - oss.str().size() ) / 2, oss.str().data() );
         mvwprintw( w, 4, ( 50 - oss2.str().size() ) / 2, oss2.str().data() );
@@ -282,6 +284,8 @@ void Game::Play() {
         continue;
       }
       ++m_Turns;
+    } else {
+      continue;
     }
 
     if ( m_BonusTurns > 0 ) {
@@ -292,6 +296,8 @@ void Game::Play() {
     }
 
     if ( ! m_Pacman->Alive() ) {
+      m_Map.Draw( m_Window );
+      wrefresh( m_Window );
       ChangeState( Game::STATE_END );
       return;
     }
@@ -353,7 +359,7 @@ void Game::Reset() {
 
   /*
    * only after deleting carry objects
-   * can we delete the map elements themselves
+   *   can we delete the map elements themselves
    */
   for ( const auto & outsideElem : m_Map.Data() ) {
     for ( const auto & insideElem : outsideElem ) {
@@ -361,7 +367,6 @@ void Game::Reset() {
     }
   }
 
-  // reset vector
   m_Ghosts.clear();
 
   m_Pacman = nullptr;
@@ -573,7 +578,8 @@ void Game::RespawnBonus() {
 
 void Game::DrawInfo() {
   werase( m_InfoWin );
-  mvwprintw( m_InfoWin, 2, 0, "Press 'p' to pause the game"  );
+  int printPos = 2;
+  mvwprintw( m_InfoWin, printPos++, 0, "Press 'p' to pause the game"  );
   std::ostringstream oss;
   oss << "Game mode: ";
   switch ( m_Mode ) {
@@ -590,24 +596,20 @@ void Game::DrawInfo() {
       throw MyException( oss.str() );
       break;
   }
-  mvwprintw( m_InfoWin, 3, 0, oss.str().data() );
+  mvwprintw( m_InfoWin, printPos++, 0, oss.str().data() );
   oss.str( "" );
   oss.clear();
   oss << "Maximum turns: " << Setting( m_Mode == Game::MODE_CLASSIC ?
                                        "max_turns_classic" : "max_turns_survival" );
-  mvwprintw( m_InfoWin, 4, 0, oss.str().data() );
-  oss.str( "" );
-  oss.clear();
-  oss << "Bonus turns: " << m_BonusTurns;
-  mvwprintw( m_InfoWin, 5, 0, oss.str().data() );
+  mvwprintw( m_InfoWin, printPos++, 0, oss.str().data() );
   oss.str( "" );
   oss.clear();
   oss << "Turns: " << m_Turns;
-  mvwprintw( m_InfoWin, 6, 0, oss.str().data() );
+  mvwprintw( m_InfoWin, printPos++, 0, oss.str().data() );
   oss.str( "" );
   oss.clear();
   oss << "Score: " << m_Score;
-  mvwprintw( m_InfoWin, 7, 0, oss.str().data() );
+  mvwprintw( m_InfoWin, printPos++, 0, oss.str().data() );
   if ( m_BonusTurns > 0 ) {
     oss.str( "" );
     oss.clear();
@@ -617,20 +619,18 @@ void Game::DrawInfo() {
     oss.clear();
     oss << "Pacman will die on contact with a ghost";
   }
-  mvwprintw( m_InfoWin, 8, 0, oss.str().data() );
+  mvwprintw( m_InfoWin, printPos++, 0, oss.str().data() );
   oss.str( "" );
   oss.clear();
   int when = m_RespawnBonusTurnNo - m_Turns;
-  if ( when < 0 ) {
-    when = 0;
-  }
-  if ( int size = m_BonusCoords.size() ) {
+  int size;
+  if ( when > 0 && ( size = m_BonusCoords.size() ) > 0 ) {
     if ( size > 1 ) {
       oss << "Bonuses ";
     } else {
       oss << "Bonus ";
     }
     oss << "will respawn in " << when << ( when == 1 ? " turn" : " turns" );
-    mvwprintw( m_InfoWin, 9, 0, oss.str().data() );
+    mvwprintw( m_InfoWin, printPos++, 0, oss.str().data() );
   }
 }
