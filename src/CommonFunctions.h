@@ -9,4 +9,6 @@ void strTrim( std::string & s );
 
 void dumpToFile( const char * s, const char * pathToFile = "./log.txt" );
 
+const bool isGhost( const char & c );
+
 #endif // COMMON_FUNCTIONS_H

@@ -28,6 +28,9 @@ const char * Game::SETTINGS_FILE = "settings.cfg";
 const int Game::MODE_CLASSIC = 0;
 const int Game::MODE_SURVIVAL = 1;
 
+const int Game::RESULT_WIN = 1;
+const int Game::RESULT_LOSS = 2;
+
 Game::Game()
           : m_GameState( Game::STATE_MENU ),
             m_Window( nullptr ),
@@ -39,7 +42,8 @@ Game::Game()
             m_Turns( 0 ),
             m_Mode( -1 ),
             m_BonusTurns( 0 ),
-            m_RespawnBonusTurnNo( 0 ) {
+            m_RespawnBonusTurnNo( 0 ),
+            m_Result( 0 ) {
   // do sth
 }
 
@@ -235,14 +239,16 @@ void Game::Run() {
         box( m_PauseWin, 0, 0 );
 
         std::ostringstream oss, oss2;
-        if ( m_Pacman->Alive() ) {
+        if ( m_Result == Game::RESULT_WIN ) {
           oss << "Congratulations, " << Setting( "username" );
           oss2 << "You won!";
-        } else {
+        } else if ( m_Result == Game::RESULT_LOSS ) {
           oss << "Im sorry, " << Setting( "username" );
           oss2 << "You lost :(";
-          delete m_Pacman;
-          m_Pacman = nullptr;
+        } else {
+          std::ostringstream oss;
+          oss << "Undefined result ( " << m_Result << " )";
+          throw MyException( oss.str() );
         }
         mvwprintw( w, 2, ( 50 - oss.str().size() ) / 2, oss.str().data() );
         mvwprintw( w, 4, ( 50 - oss2.str().size() ) / 2, oss2.str().data() );
@@ -265,6 +271,7 @@ void Game::Run() {
 
 void Game::Play() {
   m_InfoWin = newwin( 20, 60, m_Map.m_Height + 1, 2 );
+  m_Result = 0;
   while ( true ) {
     DrawInfo();
     m_Map.Draw( m_Window );
@@ -295,9 +302,13 @@ void Game::Play() {
       m_Pacman->Lethal() = false;
     }
 
+    m_Map.Draw( m_Window );
+    wrefresh( m_Window );
+
     if ( ! m_Pacman->Alive() ) {
-      m_Map.Draw( m_Window );
-      wrefresh( m_Window );
+      m_Result = Game::RESULT_LOSS;
+      delete m_Pacman;
+      m_Pacman = nullptr;
       ChangeState( Game::STATE_END );
       return;
     }
@@ -306,10 +317,14 @@ void Game::Play() {
       ghost->MoveGhost( *this );
     }
 
+    m_Map.Draw( m_Window );
+    wrefresh( m_Window );
+
     if ( ! m_Pacman->Alive() ) {
-      m_Map.Draw( m_Window );
-      wrefresh( m_Window );
+      m_Result = Game::RESULT_LOSS;
       ChangeState( Game::STATE_END );
+      delete m_Pacman;
+      m_Pacman = nullptr;
       return;
     }
 
@@ -317,14 +332,23 @@ void Game::Play() {
       case Game::MODE_CLASSIC:
         if ( m_Turns == atoi( Setting( "max_turns_classic" ) ) ) {
           if ( CoinsLeft() ) {
-            m_Pacman->Alive() = false;
+            m_Result = Game::RESULT_LOSS;
+          } else {
+            m_Result = Game::RESULT_WIN;
           }
+          ChangeState( Game::STATE_END );
+          return;
+        }
+
+        if ( ! CoinsLeft() ) {
+          m_Result = Game::RESULT_WIN;
           ChangeState( Game::STATE_END );
           return;
         }
         break;
       case Game::MODE_SURVIVAL:
         if ( m_Turns == atoi( Setting( "max_turns_survival" ) ) ) {
+          m_Result = Game::RESULT_WIN;
           ChangeState( Game::STATE_END );
           return;
         }
@@ -361,11 +385,16 @@ void Game::Reset() {
    * only after deleting carry objects
    *   can we delete the map elements themselves
    */
+  //m_Map.Data()[ 1 ][ 6 ] = new GameObject( ' ' );
   for ( const auto & outsideElem : m_Map.Data() ) {
     for ( const auto & insideElem : outsideElem ) {
       delete insideElem;
     }
   }
+
+
+  //delete m_Map.Data()[ 1 ][ 6 ];
+
 
   m_Ghosts.clear();
 
@@ -391,7 +420,7 @@ void Game::Reset() {
      * ( impossible since a game is
      *   being played at the moment )
      */
-    throw MyException( std::string( "Map path not found in settings.\nThis should not have happened" ) );
+    throw MyException( std::string( "Map path not found in internal settings.\nThis should not have happened" ) );
   }
   m_Map.LoadFromFile( it->second, *this );
 }
@@ -452,7 +481,7 @@ std::vector<MovingGameObject*> & Game::Ghosts() {
   return m_Ghosts;
 }
 
-MovingGameObject * Game::Pacman() {
+MovingGameObject *& Game::Pacman() {
   return m_Pacman;
 }
 

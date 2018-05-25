@@ -3,6 +3,7 @@
  * @file MovingGameObject.cpp
  */
 
+#include <climits>
 #include <sstream>
 #include <utility>
 #include "BfsPathFinder.h"
@@ -13,12 +14,12 @@
 
 MovingGameObject::MovingGameObject( const char & c,
                                     const std::pair<int, int> & coords,
-                                    const int & speed,
+                                    std::pair<int, int> * homeCoords,
                                     const bool & lethal )
                                   : GameObject( c ),
                                     m_Coords( coords ),
+                                    m_HomeCoords( homeCoords ),
                                     m_Alive( true ),
-                                    m_Speed( speed ),
                                     m_Lethal( lethal ) {
   if ( m_Char < 'A' || m_Char > 'Z' ) {
     std::ostringstream oss;
@@ -34,7 +35,7 @@ MovingGameObject::MovingGameObject( const char & c,
 }
 
 MovingGameObject::~MovingGameObject() {
-  // do nothing
+  delete m_HomeCoords;
 }
 
 std::pair<int, int> & MovingGameObject::Coords() {
@@ -43,10 +44,6 @@ std::pair<int, int> & MovingGameObject::Coords() {
 
 bool & MovingGameObject::Alive() {
   return m_Alive;
-}
-
-int & MovingGameObject::Speed() {
-  return m_Speed;
 }
 
 bool & MovingGameObject::Lethal() {
@@ -195,12 +192,105 @@ void MovingGameObject::MoveGhost( Game & game ) {
     throw MyException( std::string( "Invalid cfg - syntax error near 'ghosts_portals_allowed:'" ) );
   }
 
-  BfsPathFinder pf( &( game.GetMap() ), usePortals );
+  switch ( m_Char ) {
+    case 'B': {
+      break;
+    }
+    case 'C': {
 
-  char direction = pf.GetFirstStep( m_Coords, game.Pacman()->Coords() );
+      break;
+    }
+    default: {
+      if ( ! m_HomeCoords ) {
+
+      } else {
+        std::ostringstream oss;
+        oss << "Ghost '" << m_Char << "' has home coords set.\nThis should not have happened";
+        throw MyException( oss.str() );
+      }
+    }
+  }
+
+  BfsPathFinder pf( &( game.GetMap() ), usePortals, false );
+  std::pair<char, int> path = { 'f', -1 };
+  switch ( m_Char ) {
+    case 'A': {
+      path = pf.GetFirstStep( m_Coords, game.Pacman()->Coords() );
+      break;
+    }
+
+    case 'B': {
+      if ( ! m_HomeCoords ) {
+        std::ostringstream oss;
+        oss << "Ghost '" << m_Char << "' doesnt have home coords";
+        throw MyException( oss.str() );
+      }
+
+      auto subPath = pf.GetFirstStep( *m_HomeCoords, game.Pacman()->m_Coords, true );
+
+      // if pacman has no path to ghost, dont move
+      if ( subPath.first == 'n' &&
+           game.Pacman()->Coords() != *m_HomeCoords ) {
+        path = subPath;
+        throw MyException( std::string( "Pacman has no path to ghost" ) );
+        break;
+      }
+
+      // if player is closer than X, chase pacman
+      int distance = subPath.second;
+      std::ostringstream oss;
+      if ( distance < atoi( game.Setting( "ghost_aggressive_range" ) ) ) {
+        path = pf.GetFirstStep( m_Coords, game.Pacman()->Coords() );
+        oss << "path to pacman: { " << path.first << ", " << path.second << " }\n";
+        dumpToFile( oss.str().data() );
+      } else {
+        path = pf.GetFirstStep( m_Coords, *m_HomeCoords );
+        oss << "path home: { " << path.first << ", " << path.second << " }\n";
+        dumpToFile( oss.str().data() );
+      }
+      break;
+    }
+
+    case 'C': {
+      path.second = INT_MAX;
+
+      /*
+       * we need this flag because other ghosts might be
+       *  blocking paths to all bonuses, in which case
+       *  path finder won't find a path
+       */
+      bool bonusFound = false;
+
+      // get path to closest spawned bonus
+      for ( const auto & elem : game.BonusCoords() ) {
+        if ( game.GetMap().Data()[ elem.first ][ elem.second ]->Char() == '*' ) {
+          bonusFound = true;
+          auto subPath = pf.GetFirstStep( m_Coords, elem );
+          if ( subPath.first != 'n' && subPath.second < path.second ) {
+            path = subPath;
+          }
+        }
+      }
+
+      // if no bonuses are present, get path to player
+      if ( path.first == 'f' ) {
+        if ( bonusFound ) {
+          path.first = 'n';
+        } else {
+          path = pf.GetFirstStep( m_Coords, game.Pacman()->Coords() );
+        }
+      }
+      break;
+    }
+
+    default: {
+      path = pf.GetFirstStep( m_Coords, game.Pacman()->Coords() );
+      break;
+    }
+  }
 
   std::pair<int, int> newCoords = m_Coords;
-  switch ( direction ) {
+  switch ( path.first ) {
     case 'w':
       --newCoords.first;
       break;
@@ -214,8 +304,13 @@ void MovingGameObject::MoveGhost( Game & game ) {
       ++newCoords.second;
       break;
     case 'n':
-      // path does not exist
-      throw MyException( std::string( "TODO: what happens when path doesnt exist?" ) );
+      // path does not exist, dont move
+      return;
+      break;
+    case 'f':
+      std::ostringstream oss;
+      oss << "Path deduction failed for ghost '" << m_Char << "'";
+      throw MyException( std::string( oss.str() ) );
       break;
   }
 

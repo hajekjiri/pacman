@@ -33,3 +33,10 @@ void dumpToFile( const char * s, const char * pathToFile = "./log.txt" ) {
   os << s;
   os.close();
 }
+
+const bool isGhost( const char & c ) {
+  if ( c >= 'A' && c <= 'Z' && c != 'P' ) {
+    return true;
+  }
+  return false;
+}

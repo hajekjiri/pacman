@@ -134,20 +134,35 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
 
     if ( c == 'P' ) {
       pacmanExists = true;
-      mo = new MovingGameObject( c, { rowIndex, col }, 1, false );
+      mo = new MovingGameObject( c, { rowIndex, col }, nullptr, false );
       valid = true;
-      game.m_Pacman = mo;
+      game.Pacman() = mo;
     }
 
     if ( c >= 'A' && c <= 'C' ) {
-      mo = new MovingGameObject( c, { rowIndex, col }, 1, true );
+      std::pair<int, int> * home;
+      switch ( c ) {
+        case 'A':
+          home = nullptr;
+          break;
+        case 'B':
+          home = new std::pair<int, int>( { rowIndex, col } );
+          break;
+        case 'C':
+          home = nullptr;
+          break;
+        default:
+          home = nullptr;
+          break;
+      }
+      mo = new MovingGameObject( c, { rowIndex, col }, home, true );
       if ( valid ) {
         is.close();
         throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
                            + std::to_string( rowIndex ) + "," + std::to_string( col ) );
       }
       valid = true;
-      game.m_Ghosts.push_back( mo );
+      game.Ghosts().push_back( mo );
     }
 
     if ( c >= '0' && c <= '9' ) {
@@ -261,7 +276,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
 
   // portals - transfer to Game class
   for ( const auto & elem : portals ) {
-    game.m_Portals.push_back( elem );
+    game.Portals().push_back( elem );
   }
 
   for ( const auto & outsideElem : game.Ghosts() ) {

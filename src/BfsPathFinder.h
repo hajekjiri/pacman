@@ -21,12 +21,14 @@ class BfsPathFinder {
     /// Constructor
     BfsPathFinder( Map * map,
                    const bool & usePortals,
+                   const bool & noBlock,
                    const std::pair<int, int> & start = { 0, 0 },
                    const std::pair<int, int> & end = { 0, 0 } );
 
     /// Get first step of returned path
-    const char GetFirstStep( const std::pair<int, int> & start,
-                             const std::pair<int, int> & end );
+    const std::pair<char, int> GetFirstStep( const std::pair<int, int> & start,
+                                             const std::pair<int, int> & end,
+                                             const bool & noBlock = false );
 
   private:
     struct PairIntCmp {
@@ -42,10 +44,23 @@ class BfsPathFinder {
     Map * m_Map;
     std::pair<int, int> m_Start;
     std::pair<int, int> m_End;
+
+    /**
+     * Use portals when searching path
+     */
     bool m_UsePortals;
+
+    /**
+     * When true, ignore moving object collisions
+     */
+    bool m_NoBlock;
+
     std::map<std::pair<int, int>, std::pair<int, int>, PairIntCmp> m_Connections;
     std::set<std::pair<int, int>, PairIntCmp> m_Visited;
     std::queue<std::pair<int, int> > m_Queue;
+
+    /// check if object is valid, depending on noBlock setting
+    const bool ObjectIsValid( const char & c ) const;
 
     /// Check if node was visited
     const bool Visited( const std::pair<int, int> & n ) const;

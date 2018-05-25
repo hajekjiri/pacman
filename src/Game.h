@@ -31,6 +31,9 @@ class Game {
     static const int MODE_CLASSIC;
     static const int MODE_SURVIVAL;
 
+    static const int RESULT_WIN;
+    static const int RESULT_LOSS;
+
     /// Constructor
     Game();
 
@@ -48,9 +51,6 @@ class Game {
 
     /// Start playing the game
     void Play();
-
-    /// Reset game
-    void Reset();
 
     const bool CoinsLeft();
 
@@ -82,7 +82,7 @@ class Game {
     std::map<std::string, std::string> & Settings();
 
     /// Getter/Setter for m_Pacman
-    MovingGameObject * Pacman();
+    MovingGameObject *& Pacman();
 
     /// Getter/Setter for m_Ghosts
     std::vector<MovingGameObject*> & Ghosts();
@@ -104,8 +104,6 @@ class Game {
 
     /// Draw info ( score, turns, etc. )
     void DrawInfo();
-
-    friend class Map;
 
   private:
     int m_GameState;
@@ -144,6 +142,14 @@ class Game {
      * Turn number when bonus coin(s) are supposed to be respawned
      */
     int m_RespawnBonusTurnNo;
+
+    /**
+     * Result of the game, win => 1, loss => -1
+     */
+    int m_Result;
+    
+    /// Reset game
+    void Reset();
 };
 
 #endif // GAME_H
