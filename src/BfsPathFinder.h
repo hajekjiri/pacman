@@ -10,7 +10,7 @@
 #include <map>
 #include <utility>
 #include "CommonFunctions.h"
-#include "Map.h"
+#include "Game.h"
 #include "MyException.h"
 
 #ifndef BFS_PATH_FINDER_H
@@ -19,7 +19,7 @@
 class BfsPathFinder {
   public:
     /// Constructor
-    BfsPathFinder( Map * map,
+    BfsPathFinder( Game * game,
                    const bool & usePortals,
                    const bool & noBlock,
                    const std::pair<int, int> & start = { 0, 0 },
@@ -41,7 +41,7 @@ class BfsPathFinder {
       }
     };
 
-    Map * m_Map;
+    Game * m_Game;
     std::pair<int, int> m_Start;
     std::pair<int, int> m_End;
 
@@ -77,15 +77,13 @@ class BfsPathFinder {
                               const std::pair<int, int> & n );
 
     /// push child nodes to queue
-    void PushChildrenToQueue( const std::pair<int, int> & n );
+    const bool PushChildrenToQueue( const std::pair<int, int> & n );
 
     /// BFS m_Start => m_End
     /**
      *
      */
     const bool Search();
-
-    const bool SearchRec();
 };
 
 #endif // BFS_PATH_FINDER_H

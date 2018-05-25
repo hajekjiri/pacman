@@ -288,7 +288,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
     }
     if ( times != 1 ) {
       std::ostringstream oss;
-      oss << "Invalid map - there are probably multiple instances of ghost '"
+      oss << "Invalid map - there are multiple instances of ghost '"
           << outsideElem->Char() << "'";
       is.close();
       throw MyException( oss.str() );

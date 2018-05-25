@@ -222,12 +222,8 @@ void MovingGameObject::MoveGhost( Game & game ) {
       std::ostringstream oss;
       if ( distance < atoi( game.Setting( "ghost_aggressive_range" ) ) ) {
         path = pf.GetFirstStep( m_Coords, game.Pacman()->Coords() );
-        oss << "path to pacman: { " << path.first << ", " << path.second << " }\n";
-        dumpToFile( oss.str().data() );
       } else {
         path = pf.GetFirstStep( m_Coords, *m_HomeCoords );
-        oss << "path home: { " << path.first << ", " << path.second << " }\n";
-        dumpToFile( oss.str().data() );
       }
       break;
     }
@@ -297,9 +293,7 @@ void MovingGameObject::MoveGhost( Game & game ) {
 
   if ( ! game.GetMap().ValidCoords( newCoords ) ||
        game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() == '#' ||
-       ( game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() >= 'A' &&
-         game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() <= 'Z' &&
-         game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() != 'P' ) ) {
+        isGhost( game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() ) ) {
     std::ostringstream oss;
     oss << "Ghost '" << m_Char << "' attempted to move into forbidden object '"
         << game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() << "'";
@@ -379,6 +373,45 @@ void MovingGameObject::MoveGhost( Game & game ) {
            m_Coords != elem->Coords() ) {
         oldCoords = m_Coords;
         m_Coords = elem->Coords();
+
+        if ( game.GetMap().Data()[ elem->Coords().first ][ elem->Coords().second ]->Char() == 'P' ) {
+          if ( game.Pacman()->Lethal() ) {
+            bool found = false;
+            auto it = game.Ghosts().begin();
+            for ( ;
+                  it != game.Ghosts().end();
+                  ++it ) {
+              if ( ( *it )->Char() == m_Char ) {
+                found = true;
+                break;
+              }
+            }
+            if ( ! found ) {
+              std::ostringstream oss;
+              oss << "Ghost '" << game.GetMap().Data()[ elem->Coords().first ][ elem->Coords().second ]->Char()
+                  << "' not found in game data";
+              throw MyException( oss.str() );
+            }
+            m_Char = ' ';
+            game.Ghosts().erase( it );
+            game.Score() += 5;
+            game.Pacman()->Lethal() = false;
+            game.BonusTurns() = 0;
+            game.GetMap().Data()[ oldCoords.first ][ oldCoords.second ] = m_Carry;
+            delete this; // meh
+            return;
+          } else {
+            game.Pacman()->Alive() = false;
+            // place ghost to new coords
+            game.GetMap().Data()[ elem->Coords().first ][ elem->Coords().second ] = this;
+            // place carry to old coords
+            game.GetMap().Data()[ oldCoords.first ][ oldCoords.second ] = m_Carry;
+            m_Carry = game.Pacman()->m_Carry;
+            game.Pacman()->m_Carry = nullptr;
+            return;
+          }
+        }
+
         tmp = m_Carry;
         m_Carry = game.GetMap().Data()[ elem->Coords().first ][ elem->Coords().second ];
         game.GetMap().Data()[ m_Coords.first ][ m_Coords.second ] = this;
