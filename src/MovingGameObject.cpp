@@ -192,26 +192,7 @@ void MovingGameObject::MoveGhost( Game & game ) {
     throw MyException( std::string( "Invalid cfg - syntax error near 'ghosts_portals_allowed:'" ) );
   }
 
-  switch ( m_Char ) {
-    case 'B': {
-      break;
-    }
-    case 'C': {
-
-      break;
-    }
-    default: {
-      if ( ! m_HomeCoords ) {
-
-      } else {
-        std::ostringstream oss;
-        oss << "Ghost '" << m_Char << "' has home coords set.\nThis should not have happened";
-        throw MyException( oss.str() );
-      }
-    }
-  }
-
-  BfsPathFinder pf( &( game.GetMap() ), usePortals, false );
+  BfsPathFinder pf( &game, usePortals, false );
   std::pair<char, int> path = { 'f', -1 };
   switch ( m_Char ) {
     case 'A': {

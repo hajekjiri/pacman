@@ -5,20 +5,15 @@
 /*
  * DONE:
  * 1 - Basic rules
+ * 2 - ghost AI
  * 3 - Load map from file
  * 4 - Variable game diff ( load from cfg )
  * TODO:
- * 2 - ghost AI
  * 5 - ghost diff ( load from cfg )
  *--------------------------------------------------------------------------------------------------
- * - make path finder return distance, if no path exists => return -1
  5 - ghost difficulty => allow ghosts to use portals ( via cfg ), add as parameter to path finder
  * - configure path finder to optionally allow use of portals
- * - fix Game::Reset() - not sure if broken anymore ( can't break it )
- 2 - ghost AI:
- *     - A => chase player
- *     - B => chase player if player is closer than X to ghost's home position
- *     - C => if bonus exists, chase closest bonus, otherwise chase player
+ * - try to give objects colors
  * - document new files for doxygen
  *--------------------------------------------------------------------------------------------------
  * - if ghost makes a move after pacman, they can only end up stacked in this order: GameObject=>Pacman=>Ghost
