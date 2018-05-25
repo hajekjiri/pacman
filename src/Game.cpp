@@ -368,6 +368,8 @@ void Game::Reset() {
   // reset score & turns
   m_Score = 0;
   m_Turns = 0;
+  m_BonusTurns = 0;
+  m_RespawnBonusTurnNo = 0;
 
   // find map path in settings and re-load it
   auto it = m_Settings.find( "map" );
@@ -615,6 +617,13 @@ void Game::DrawInfo() {
   if ( when < 0 ) {
     when = 0;
   }
-  oss << "Bonus(es) will respawn in " << when << ( when == 1 ? " turn" : " turns" );
-  mvwprintw( m_InfoWin, 9, 0, oss.str().data() );
+  if ( int size = m_BonusCoords.size() ) {
+    if ( size > 1 ) {
+      oss << "Bonuses ";
+    } else {
+      oss << "Bonus ";
+    }
+    oss << "will respawn in " << when << ( when == 1 ? " turn" : " turns" );
+    mvwprintw( m_InfoWin, 9, 0, oss.str().data() );
+  }
 }

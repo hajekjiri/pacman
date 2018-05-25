@@ -31,6 +31,8 @@ Menu::Menu( const int & preset )
                            WINDOW * w = newwin( 5, 40, 0, 0 );
                            g->Settings().clear();
                            g->LoadCfg( Game::SETTINGS_FILE );
+                           const char * pathToMap = g->Setting( "map" );
+                           g->GetMap().LoadFromFile( pathToMap, *g );
                            mvprintw( 2, 4, "Cfg reloaded!" );
                            mvprintw( 4, 4, "Press any key to continue..." );
                            wrefresh( w );

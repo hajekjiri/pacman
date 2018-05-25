@@ -25,6 +25,9 @@ class Map {
     /// Draw map into a window
     void Draw( WINDOW * w );
 
+    /// Load map from file
+    void LoadFromFile( const std::string & path, Game & game );
+
     /// Getter for m_Height
     const int & Height() const;
 
@@ -43,8 +46,6 @@ class Map {
     int m_Height;
     int m_Width;
     std::vector<std::vector<GameObject*> > m_Data;
-
-    void LoadFromFile( const std::string & path, Game & game );
 };
 
 #endif // MAP_H

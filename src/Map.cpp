@@ -59,10 +59,16 @@ const bool Map::ValidCoords( const std::pair<int, int> & coords ) const {
 }
 
 std::vector<std::vector<GameObject*> >::iterator Map::CheckSize() {
+  if ( m_Data.size() == 0 ) {
+    throw MyException( std::string( "Invalid map - 0 rows" ) );
+  }
   int row = 0;
   auto it = m_Data.begin();
   size_t size = it->size();
-  for ( ; it != m_Data.end(); ++it, ++row ) {
+  auto itEnd = m_Data.end();
+  while( ( --itEnd )->size() == 0 );
+  ++itEnd;
+  for ( ; it != itEnd; ++it, ++row ) {
     if ( it->size() != size ) {
       throw MyException( std::string( "Invalid map. Rows 0 and " )
                          + std::to_string( row )
@@ -75,6 +81,26 @@ std::vector<std::vector<GameObject*> >::iterator Map::CheckSize() {
 }
 
 void Map::LoadFromFile( const std::string & path, Game & game ) {
+  if ( game.Pacman() ) {
+    delete game.Pacman()->Carry();
+  }
+  for ( const auto & elem : game.Ghosts() ) {
+    delete elem->Carry();
+  }
+  game.Ghosts().clear();
+  for ( const auto & elem : game.Portals() ) {
+    delete elem;
+  }
+  game.Portals().clear();
+  game.BonusCoords().clear();
+
+  for ( const auto & outsideElem : m_Data ) {
+    for ( const auto & insideElem : outsideElem ) {
+      delete insideElem;
+    }
+  }
+  m_Data.clear();
+
   std::ifstream is;
   is.open( ( "./src/cfg/" + path ).data() );
   if ( ! is ) {

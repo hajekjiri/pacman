@@ -152,7 +152,9 @@ const bool MovingGameObject::MovePacman( const int & direction, Game & game ) {
       return true;
     case '*':
       game.BonusTurns() = atoi( game.Setting( "bonus_duration" ) ) + 1;
-      game.RespawnBonusTurnNo() = game.Turns() + atoi( game.Setting( "bonus_interval" ) ) + 1;
+      if ( game.RespawnBonusTurnNo() <= game.Turns() + 1 ) {
+        game.RespawnBonusTurnNo() = game.Turns() + atoi( game.Setting( "bonus_interval" ) ) + 1;
+      }
       game.Score() += 3;
       m_Carry->Char() = ' ';
       return true;
