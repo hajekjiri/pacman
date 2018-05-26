@@ -22,9 +22,9 @@ Map::Map() {
   init_pair( 4, COLOR_RED, COLOR_BLACK );
   init_pair( 5, COLOR_MAGENTA, COLOR_BLACK );
   init_pair( 6, COLOR_CYAN, COLOR_BLACK );
-  init_pair( 7, COLOR_BLUE, COLOR_WHITE );
-  init_pair( 8, COLOR_BLACK, COLOR_WHITE );
-  init_pair( 9, COLOR_YELLOW, COLOR_WHITE );
+  init_pair( 7, COLOR_GREEN, COLOR_BLACK );
+  init_pair( 8, COLOR_BLACK, COLOR_BLACK );
+  init_pair( 9, COLOR_WHITE, COLOR_BLACK );
   init_pair( 10, COLOR_BLACK, COLOR_WHITE );
 }
 
@@ -59,9 +59,9 @@ void Map::Draw( WINDOW * w ) {
           wattroff( w, COLOR_PAIR( 8 ) );
           break;
         case '-':
-          wattron( w, COLOR_PAIR( 10 ) );
+          wattron( w, COLOR_PAIR( 9 ) );
           mvwprintw( w, i, j, oss.str().data() );
-          wattroff( w, COLOR_PAIR( 10 ) );
+          wattroff( w, COLOR_PAIR( 9 ) );
           break;
         case '#':
           wattron( w, COLOR_PAIR( 10 ) );

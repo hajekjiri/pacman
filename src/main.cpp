@@ -5,6 +5,8 @@
 /*
  *------------------------------------------------------------------------------
  * TODO:
+ * -  imporove Game::Seting => struct w/ GetBoolean(), GetInt(), GetString()
+ * - throw exceptions if cfg file, or required settings dont exist
  * - get rid of friend statements
  * - create some functions to save lines
  * - write documentation

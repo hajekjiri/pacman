@@ -50,6 +50,7 @@ Game::Game()
 Game::~Game() {
   delwin( m_Window );
   delwin( m_PauseWin );
+  delwin( m_InfoWin );
 
   // delete portals
   for ( auto & elem : m_Portals ) {
@@ -252,10 +253,16 @@ void Game::Run() {
         }
         mvwprintw( w, 2, ( 50 - oss.str().size() ) / 2, oss.str().data() );
         mvwprintw( w, 4, ( 50 - oss2.str().size() ) / 2, oss2.str().data() );
-        mvwprintw( w, 6, ( 50 - std::string( "Press any key to continue..." ).size() ) / 2, "Press any key to continue..." );
+        std::string continueMessage = "Press enter to continue...";
+        mvwprintw( w, 6, ( 50 - continueMessage.size() ) / 2, continueMessage.data() );
         box( w , 0, 0 );
         wrefresh( w );
-        wgetch( w );
+        while ( true ) {
+          int k = wgetch( w );
+          if ( k == 10 ) {
+            break;
+          }
+        }
         werase( w );
         wrefresh( w );
         delwin( w );
