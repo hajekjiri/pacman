@@ -134,3 +134,15 @@ void Menu::MoveUp() {
 void Menu::MoveDown() {
   Move( true );
 }
+
+WINDOW *& Menu::Window() {
+  return m_Window;
+}
+
+std::vector<MenuElement> & Menu::Options() {
+  return m_Options;
+}
+
+const int & Menu::HighlightedIdx() {
+  return m_HighlightedIdx;
+}

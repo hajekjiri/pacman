@@ -37,8 +37,19 @@ class Menu {
 
     /// Clear menu
     void Clear();
+    
+    void MoveUp();
 
-    friend class Game;
+    void MoveDown();
+
+    /// Getter/Setter for m_Window
+    WINDOW *& Window();
+
+    /// Getter/Setter for m_Options
+    std::vector<MenuElement> & Options();
+
+    /// Getter for m_HighlightedIdx
+    const int & HighlightedIdx();
 
   private:
     /// Container for menu elements
@@ -62,10 +73,6 @@ class Menu {
      * @param direction DIRECTION_UP or DIRECTION_DOWN
      */
     void Move( const bool & direction );
-
-    void MoveUp();
-
-    void MoveDown();
 };
 
 #endif // MENU_H

@@ -3,11 +3,13 @@
  */
 
 /*
- * - create functions to save lines
- *
+ *------------------------------------------------------------------------------
+ * TODO:
+ * - get rid of friend statements
+ * - create some functions to save lines
  * - write documentation
  * - document new files for doxygen
- *--------------------------------------------------------------------------------------------------
+ *------------------------------------------------------------------------------
  */
 #include <iostream>
 #include <ncurses.h>

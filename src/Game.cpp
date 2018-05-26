@@ -187,7 +187,7 @@ void Game::Run() {
       case Game::STATE_MENU: {
         nodelay( stdscr, false );
         m_Menu.Draw();
-        int k = wgetch( m_Menu.m_Window );
+        int k = wgetch( m_Menu.Window() );
         switch ( k ) {
           case KEY_UP:
             m_Menu.MoveUp();
@@ -196,7 +196,7 @@ void Game::Run() {
             m_Menu.MoveDown();
             break;
           case 10:
-              m_Menu.m_Options.at( m_Menu.m_HighlightedIdx ).Action( this );
+              m_Menu.Options().at( m_Menu.HighlightedIdx() ).Action( this );
             break;
         }
         break;
@@ -507,10 +507,10 @@ void Game::ChangeState( const int & state ) {
 
   switch ( m_GameState ) {
     case Game::STATE_MENU:
-      werase( m_Menu.m_Window );
-      wrefresh( m_Menu.m_Window );
-      delwin( m_Menu.m_Window );
-      m_Menu.m_Window = nullptr;
+      werase( m_Menu.Window() );
+      wrefresh( m_Menu.Window() );
+      delwin( m_Menu.Window() );
+      m_Menu.Window() = nullptr;
       break;
     case Game::STATE_PAUSED:
       werase( m_PauseWin );
