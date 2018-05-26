@@ -82,22 +82,33 @@ const bool MovingGameObject::MovePacman( const int & direction, Game & game ) {
 
   // update Pacman's coords, save old coords
   std::pair<int, int> oldCoords = m_Coords;
-  m_Coords = newCoords;
-
-/*
-  if ( m_Carry && m_Carry->Char() == '*' ) {
-    game.BonusTurns() = atoi( game.Setting( "bonus_duration" ) );
-    game.RespawnBonusTurnNo() = game.Turns() + atoi( game.Setting( "bonus_interval" ) );
-    game.Score() += 3;
-    m_Carry->Char() = ' ';
+  if ( game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() >= '0' &&
+       game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() <= '9' ) {
+    bool found = false;
+    for ( const auto & elem : game.Portals() ) {
+      if ( game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() == elem->Id() &&
+           newCoords == elem->Coords() ) {
+        found = true;
+        if ( isGhost( game.GetMap().Data()[ elem->PairCoords().first ][ elem->PairCoords().second ]->Char() ) ) {
+          return false;
+        }
+        break;
+      }
+    }
+    if ( ! found ) {
+      std::ostringstream oss;
+      oss << "Portal '" << game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() << "' not found in game data";
+      throw MyException( oss.str().data() );
+    }
   }
-*/
+
+
+  m_Coords = newCoords;
 
   GameObject * tmp = m_Carry;
 
   // MovingGameObject is Pacman and new coords contain a ghost
-  if ( game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() >= 'A' &&
-       game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() <= 'Z' ) {
+  if ( isGhost( game.GetMap().Data()[ newCoords.first ][ newCoords.second ]->Char() ) ) {
     bool found = false;
     auto it = game.Ghosts().begin();
     for ( ;
@@ -194,7 +205,7 @@ void MovingGameObject::MoveGhost( Game & game ) {
 
   BfsPathFinder pf( &game, usePortals, false );
   std::pair<char, int> path = { 'f', -1 };
-  switch ( m_Char ) {
+  switch ( ( ( m_Char - 'A' ) % 3 ) + 'A'  ) {
     case 'A': {
       path = pf.GetFirstStep( m_Coords, game.Pacman()->Coords() );
       break;
@@ -261,7 +272,9 @@ void MovingGameObject::MoveGhost( Game & game ) {
     }
 
     default: {
-      path = pf.GetFirstStep( m_Coords, game.Pacman()->Coords() );
+      std::ostringstream oss;
+      oss << "Strategy deduction failed for ghost '" << m_Char << "'";
+      throw MyException( oss.str().data() );
       break;
     }
   }
@@ -371,9 +384,18 @@ void MovingGameObject::MoveGhost( Game & game ) {
     for ( const auto & elem : game.Portals() ) {
       if ( m_Carry->Char() == elem->Id() &&
            m_Coords != elem->Coords() ) {
+        if ( game.GetMap().Data()[ elem->Coords().first ][ elem->Coords().second ]->Char() < '0' ||
+             game.GetMap().Data()[ elem->Coords().first ][ elem->Coords().second ]->Char() > '9') {
+          std::ostringstream oss;
+          oss << "Ghost '" << m_Char << "' attempted to go through portal '" << elem->Id()
+              << "' while some other moving object was on the other end";
+          throw MyException( oss.str().data() );
+        }
         oldCoords = m_Coords;
         m_Coords = elem->Coords();
 
+
+/*
         if ( game.GetMap().Data()[ elem->Coords().first ][ elem->Coords().second ]->Char() == 'P' ) {
           if ( game.Pacman()->Lethal() ) {
             bool found = false;
@@ -411,7 +433,7 @@ void MovingGameObject::MoveGhost( Game & game ) {
             return;
           }
         }
-
+*/
         tmp = m_Carry;
         m_Carry = game.GetMap().Data()[ elem->Coords().first ][ elem->Coords().second ];
         game.GetMap().Data()[ m_Coords.first ][ m_Coords.second ] = this;

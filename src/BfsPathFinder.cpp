@@ -32,25 +32,8 @@ const std::pair<char, int> BfsPathFinder::GetFirstStep( const std::pair<int, int
   m_NoBlock = false;
 
   if ( ! pathExists ) {
-    dumpToFile( "Connections start:\n" );
-    for ( const auto & elem : m_Connections ) {
-      std::ostringstream oss;
-      oss << "{ " << elem.first.first << ", " << elem.first.second << " } => "
-          << "{ " << elem.second.first << ", " << elem.second.second << " }\n";
-      dumpToFile( oss.str().data() );
-    }
-    dumpToFile( "Connections end:\n" );
     return { 'n', -1 };
   }
-
-  dumpToFile( "Connections start:\n" );
-  for ( const auto & elem : m_Connections ) {
-    std::ostringstream oss;
-    oss << "{ " << elem.first.first << ", " << elem.first.second << " } => "
-        << "{ " << elem.second.first << ", " << elem.second.second << " }\n";
-    dumpToFile( oss.str().data() );
-  }
-  dumpToFile( "Connections end:\n" );
 
   std::pair<int, int> parent = m_End;
   std::pair<int, int> child;
@@ -60,10 +43,6 @@ const std::pair<char, int> BfsPathFinder::GetFirstStep( const std::pair<int, int
     if ( it == m_Connections.cend() ) {
       throw MyException( std::string( "Pathfinder error - could not backtrack route" ) );
     }
-    std::ostringstream oss;
-    oss << "{ " << it->first.first << ", " << it->first.second << " } => "
-        << "{ " << it->second.first << ", " << it->second.second << " }\n";
-    dumpToFile( oss.str().data() );
     ++distance;
     child = it->second;
     if ( child == m_Start ) {
@@ -147,9 +126,11 @@ const bool BfsPathFinder::PushChildrenToQueue( const std::pair<int, int> & n ) {
     }
     // if found, go through portal
     if ( found ) {
-      std::ostringstream oss;
-      oss << "Found portal @ { " << n.first << ", " << n.second << " }\n";
-      dumpToFile( oss.str().data() );
+      if ( ( isGhost( m_Game->GetMap().Data()[ pairCoords.first ][ pairCoords.second ]->Char() ) ||
+           m_Game->GetMap().Data()[ pairCoords.first ][ pairCoords.second ]->Char() == 'P' ) &&
+           isNextToInLine( n, m_Start ) ) {
+        return false;
+      }
       PushToConn( pairCoords, n );
       Visit( pairCoords );
       if ( pairCoords == m_End ) {
@@ -178,9 +159,6 @@ const bool BfsPathFinder::PushChildrenToQueue( const std::pair<int, int> & n ) {
 }
 
 const bool BfsPathFinder::Search() {
-  std::ostringstream oss;
-  oss << "LF { " << m_End.first << ", " << m_End.second << " }\n";
-  dumpToFile( oss.str().data() );
   if ( m_Start == m_End ) {
     return false;
   }

@@ -40,3 +40,16 @@ const bool isGhost( const char & c ) {
   }
   return false;
 }
+
+const bool isNextToInLine( const std::pair<int, int> & p1, const std::pair<int, int> & p2 ) {
+  std::pair<int, int> result;
+  result.first = p1.first - p2.first;
+  result.second = p1.second - p2.second;
+  if ( ( result.first == 1 && result.second == 0 ) ||
+       ( result.first == -1 && result.second == 0 ) ||
+       ( result.first == 0 && result.second == 1 ) ||
+       ( result.first == 0 && result.second == -1 ) ) {
+    return true;
+  }
+  return false;
+}

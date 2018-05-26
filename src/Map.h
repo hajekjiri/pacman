@@ -40,8 +40,6 @@ class Map {
 
     std::vector<std::vector<GameObject*> >::iterator CheckSize();
 
-    friend class Game;
-
   private:
     int m_Height;
     int m_Width;

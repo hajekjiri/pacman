@@ -3,10 +3,12 @@
  * @file Map.cpp
  */
 
+#include <algorithm>
 #include <iostream>
 #include <sstream>
 #include <fstream>
 #include <vector>
+#include "CommonFunctions.h"
 #include "MyException.h"
 #include "Map.h"
 #include "Game.h"
@@ -14,7 +16,16 @@
 #include "MovingGameObject.h"
 
 Map::Map() {
-  // TODO
+  init_pair( 1, COLOR_WHITE, COLOR_WHITE );
+  init_pair( 2, COLOR_BLUE, COLOR_WHITE );
+  init_pair( 3, COLOR_YELLOW, COLOR_WHITE );
+  init_pair( 4, COLOR_RED, COLOR_WHITE );
+  init_pair( 5, COLOR_MAGENTA, COLOR_WHITE );
+  init_pair( 6, COLOR_CYAN, COLOR_WHITE );
+  init_pair( 7, COLOR_GREEN, COLOR_WHITE );
+  init_pair( 8, COLOR_BLACK, COLOR_WHITE );
+  init_pair( 9, COLOR_YELLOW, COLOR_WHITE );
+  init_pair( 10, COLOR_BLACK, COLOR_WHITE );
 }
 
 Map::~Map() {
@@ -30,7 +41,50 @@ void Map::Draw( WINDOW * w ) {
     for ( const auto & insideElem : outsideElem ) {
       std::ostringstream oss;
       oss << insideElem->Char();
-      mvwprintw( w, i, j, oss.str().data() );
+
+      switch( insideElem->Char() ) {
+        case 'P':
+          wattron( w, COLOR_PAIR( 3 ) );
+          mvwprintw( w, i, j, oss.str().data() );
+          wattroff( w, COLOR_PAIR( 3 ) );
+          break;
+        case '*':
+          wattron( w, COLOR_PAIR( 7 ) );
+          mvwprintw( w, i, j, oss.str().data() );
+          wattroff( w, COLOR_PAIR( 7 ) );
+          break;
+        case ' ':
+          wattron( w, COLOR_PAIR( 8 ) );
+          mvwprintw( w, i, j, oss.str().data() );
+          wattroff( w, COLOR_PAIR( 8 ) );
+          break;
+        case '-':
+          wattron( w, COLOR_PAIR( 10 ) );
+          mvwprintw( w, i, j, oss.str().data() );
+          wattroff( w, COLOR_PAIR( 10 ) );
+          break;
+        case '#':
+          wattron( w, COLOR_PAIR( 10 ) );
+          mvwprintw( w, i, j, oss.str().data() );
+          wattroff( w, COLOR_PAIR( 10 ) );
+          break;
+        default:
+          mvwprintw( w, i, j, oss.str().data() );
+          break;
+      }
+
+      if ( isGhost( insideElem->Char() ) ) {
+        int colorPairNo = ( ( insideElem->Char() - 'A' ) % 3 ) + 4;
+        wattron( w, COLOR_PAIR( colorPairNo ) );
+        mvwprintw( w, i, j, oss.str().data() );
+        wattroff( w, COLOR_PAIR( colorPairNo ) );
+      }
+      if ( insideElem->Char() >= '0' &&
+           insideElem->Char() <= '9' ) {
+        wattron( w, COLOR_PAIR( 2 ) );
+        mvwprintw( w, i, j, oss.str().data() );
+        wattroff( w, COLOR_PAIR( 2 ) );
+      }
       ++j;
     }
     ++i;
@@ -133,27 +187,21 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
     bool valid = false;
 
     if ( c == 'P' ) {
+      if ( pacmanExists ) {
+        throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
+                           + std::to_string( rowIndex ) + "," + std::to_string( col )
+                           + std::string( " ( duplicate Pacman )" ) );
+      }
       pacmanExists = true;
       mo = new MovingGameObject( c, { rowIndex, col }, nullptr, false );
       valid = true;
       game.Pacman() = mo;
     }
 
-    if ( c >= 'A' && c <= 'C' ) {
+    if ( c >= 'A' && c <= 'Z' && c != 'P' ) {
       std::pair<int, int> * home;
-      switch ( c ) {
-        case 'A':
-          home = nullptr;
-          break;
-        case 'B':
-          home = new std::pair<int, int>( { rowIndex, col } );
-          break;
-        case 'C':
-          home = nullptr;
-          break;
-        default:
-          home = nullptr;
-          break;
+      if ( ( ( ( c - 'A' ) % 3 ) + 'A' ) == 'B' ) {
+        home = new std::pair<int, int>( { rowIndex, col } );
       }
       mo = new MovingGameObject( c, { rowIndex, col }, home, true );
       if ( valid ) {
@@ -279,8 +327,11 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
     game.Portals().push_back( elem );
   }
 
+  std::ostringstream oss;
+  oss << "Ghosts 1:\n";
   for ( const auto & outsideElem : game.Ghosts() ) {
     int times = 0;
+    oss << outsideElem->Char() << std::endl;
     for ( const auto & insideElem : game.Ghosts() ) {
       if ( outsideElem->Char() == insideElem->Char() ) {
         ++times;
@@ -294,5 +345,11 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
       throw MyException( oss.str() );
     }
   }
+
+  // sort ghosts by character
+  std::sort( game.Ghosts().begin(), game.Ghosts().end(), []( MovingGameObject * lhs, MovingGameObject * rhs ) {
+    return lhs->Char() < rhs->Char();
+  } );
+
   is.close();
 }

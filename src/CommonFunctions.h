@@ -11,4 +11,6 @@ void dumpToFile( const char * s, const char * pathToFile = "./log.txt" );
 
 const bool isGhost( const char & c );
 
+const bool isNextToInLine( const std::pair<int, int> & p1, const std::pair<int, int> & p2 );
+
 #endif // COMMON_FUNCTIONS_H

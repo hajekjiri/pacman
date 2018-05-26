@@ -159,8 +159,8 @@ void Game::Run() {
         break;
       case Game::STATE_PAUSED: {
         m_PauseWin = newwin( 11, 30,
-                             ( m_Map.m_Height - 11 ) / 2,
-                             m_Map.m_Width + 10 );
+                             ( m_Map.Height() - 11 ) / 2,
+                             m_Map.Width() + 10 );
         box( m_PauseWin, 0, 0 );
         mvwprintw( m_PauseWin, 2, 2, "Game paused" );
         mvwprintw( m_PauseWin, 4, 2, "* press 'c' to continue" );
@@ -234,8 +234,8 @@ void Game::Run() {
       }
       case Game::STATE_END: {
         WINDOW * w = newwin( 9, 50,
-                             ( m_Map.m_Height - 11 ) / 2,
-                             m_Map.m_Width + 10 );
+                             ( m_Map.Height() - 11 ) / 2,
+                             m_Map.Width() + 10 );
         box( m_PauseWin, 0, 0 );
 
         std::ostringstream oss, oss2;
@@ -270,7 +270,7 @@ void Game::Run() {
 }
 
 void Game::Play() {
-  m_InfoWin = newwin( 20, 60, m_Map.m_Height + 1, 2 );
+  m_InfoWin = newwin( 20, 60, m_Map.Height() + 1, 2 );
   m_Result = 0;
   while ( true ) {
     DrawInfo();
@@ -545,7 +545,7 @@ void Game::ChangeState( const int & state ) {
       m_Menu.Init();
       break;
     case Game::STATE_RUNNING:
-      m_Window = newwin( m_Map.m_Height, m_Map.m_Width, 1, 2 );
+      m_Window = newwin( m_Map.Height(), m_Map.Width(), 1, 2 );
       break;
   }
 
