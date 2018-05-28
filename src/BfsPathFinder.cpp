@@ -3,6 +3,7 @@
  * @file BfsPathFinder.cpp
  */
 
+#include <cstdlib>
 #include <sstream>
 #include <utility>
 #include "BfsPathFinder.h"
@@ -109,6 +110,7 @@ void BfsPathFinder::ValidatePushToQueue( const std::pair<int, int> & parent,
        ObjectIsValid( m_Game->GetMap().Data()[ newNode.first ][ newNode.second ]->Char() ) ) {
     m_Queue.push( { newNode.first, newNode.second } );
     PushToConn( newNode, parent );
+    Visit( newNode );
   }
 }
 
@@ -144,17 +146,33 @@ const bool BfsPathFinder::PushChildrenToQueue( const std::pair<int, int> & n ) {
     }
   }
 
-  // go up
-  ValidatePushToQueue( n, { n.first - 1, n.second } );
+  if ( std::abs( m_End.first - n.first ) > std::abs( m_End.second - n.second ) ) {
+    // go up
+    ValidatePushToQueue( n, { n.first - 1, n.second } );
 
-  // go left
-  ValidatePushToQueue( n, { n.first, n.second - 1 } );
+    // go down
+    ValidatePushToQueue( n, { n.first + 1, n.second } );
 
-  // go down
-  ValidatePushToQueue( n, { n.first + 1, n.second } );
+    // go left
+    ValidatePushToQueue( n, { n.first, n.second - 1 } );
 
-  // go right
-  ValidatePushToQueue( n, { n.first, n.second + 1  } );
+    // go right
+    ValidatePushToQueue( n, { n.first, n.second + 1  } );
+  } else {
+    // go left
+    ValidatePushToQueue( n, { n.first, n.second - 1 } );
+
+    // go right
+    ValidatePushToQueue( n, { n.first, n.second + 1  } );
+
+    // go up
+    ValidatePushToQueue( n, { n.first - 1, n.second } );
+
+    // go down
+    ValidatePushToQueue( n, { n.first + 1, n.second } );
+  }
+
+
   return false;
 }
 
@@ -175,7 +193,7 @@ const bool BfsPathFinder::Search() {
 
   while ( ! m_Queue.empty() ) {
     auto n = m_Queue.front();
-    Visit( n );
+
     if ( n == m_End ) {
       return true;
     }
