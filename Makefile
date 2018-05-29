@@ -1,5 +1,9 @@
 CXX=g++
 CXXFLAGS=-Wall -pedantic -Wno-long-long -O0 -ggdb -std=c++14
+HEADERFILES= ./src/Game.h ./src/MenuElement.h ./src/Menu.h             \
+             ./src/MovingGameObject.h ./src/GameObject.h ./src/Map.h   \
+             ./src/BfsPathFinder.h ./src/Portal.h ./src/MyException.h  \
+             ./src/CommonFunctions.h
 
 all: doc compile
 
@@ -13,7 +17,7 @@ compile: ./src/main.o ./src/Game.o ./src/MenuElement.o ./src/Menu.o \
 	                ./src/BfsPathFinder.o ./src/MyException.o ./src/Portal.o  \
 	                ./src/CommonFunctions.o -lncurses
 
-run:
+run: compile
 	# run
 	./hajekj29
 
@@ -30,21 +34,18 @@ lines:
 	# count number of lines
 	wc -l ./src/*.h ./src/*.cpp
 
-r: compile run
-	# custom target for simplicity, delete later
-
 %o: %cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 
 ./src/CommonFunctions.o: ./src/CommonFunctions.cpp
-./src/Game.o: ./src/Game.cpp ./src/Game.h
-./src/GameObject.o: ./src/GameObject.cpp ./src/GameObject.h
+./src/Game.o: ./src/Game.cpp
+./src/GameObject.o: ./src/GameObject.cpp
 ./src/main.o: ./src/main.cpp
-./src/Map.o: ./src/Map.cpp ./src/Map.h
-./src/MenuElement.o: ./src/MenuElement.cpp ./src/MenuElement.h
-./src/Menu.o: ./src/Menu.cpp ./src/Menu.h
-./src/MovingGameObject.o: ./src/MovingGameObject.cpp ./src/MovingGameObject.h
-./src/Portal.o: ./src/Portal.cpp ./src/Portal.h
-./src/MyException.o: ./src/MyException.cpp ./src/MyException.h
-./src/BfsPathFinder.o: ./src/BfsPathFinder.cpp ./src/BfsPathFinder.h
+./src/Map.o: ./src/Map.cpp
+./src/MenuElement.o: ./src/MenuElement.cpp
+./src/Menu.o: ./src/Menu.cpp
+./src/MovingGameObject.o: ./src/MovingGameObject.cpp
+./src/Portal.o: ./src/Portal.cpp
+./src/MyException.o: ./src/MyException.cpp
+./src/BfsPathFinder.o: ./src/BfsPathFinder.cpp

@@ -147,7 +147,7 @@ class Game {
      * Result of the game, win => 1, loss => -1
      */
     int m_Result;
-    
+
     /// Reset game
     void Reset();
 };
