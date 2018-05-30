@@ -5,6 +5,10 @@
 /*
  *------------------------------------------------------------------------------
  * TODO:
+ * - consistency - getters: GetObject()
+ *               - setters: SetObject()
+ *               -    both: Object()
+ * - detect & throw exception on duplicate settings
  * - throw exceptions if cfg file, or required settings dont exist
  * - get rid of friend statements
  * - create some functions to save lines
