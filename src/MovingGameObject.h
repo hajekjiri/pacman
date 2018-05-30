@@ -1,6 +1,6 @@
 /// GameObject class
 /**
- * @file GameObject.h
+ * @file MovingGameObject.h
  * Class representing a moving object.
  */
 

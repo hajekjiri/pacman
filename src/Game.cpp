@@ -148,8 +148,7 @@ void Game::Init( const std::string & pathToCfg ) {
    * - load map file from some 'pathToMap' attribute
    */
   LoadCfg( pathToCfg );
-  const char * pathToMap = Setting( "map" );
-  m_Map.LoadFromFile( pathToMap, *this );
+  m_Map.LoadFromFile( GetSetting( "map" ).GetStr(), *this );
 }
 
 void Game::Run() {
@@ -241,10 +240,10 @@ void Game::Run() {
 
         std::ostringstream oss, oss2;
         if ( m_Result == Game::RESULT_WIN ) {
-          oss << "Congratulations, " << Setting( "username" );
+          oss << "Congratulations, " << GetSetting( "username" ).GetStr();
           oss2 << "You won!";
         } else if ( m_Result == Game::RESULT_LOSS ) {
-          oss << "Im sorry, " << Setting( "username" );
+          oss << "Im sorry, " << GetSetting( "username" ).GetStr();
           oss2 << "You lost :(";
         } else {
           std::ostringstream oss;
@@ -337,7 +336,7 @@ void Game::Play() {
 
     switch ( m_Mode ) {
       case Game::MODE_CLASSIC:
-        if ( m_Turns == atoi( Setting( "max_turns_classic" ) ) ) {
+        if ( m_Turns == GetSetting( "max_turns_classic" ).GetInt() ) {
           if ( CoinsLeft() ) {
             m_Result = Game::RESULT_LOSS;
           } else {
@@ -354,7 +353,7 @@ void Game::Play() {
         }
         break;
       case Game::MODE_SURVIVAL:
-        if ( m_Turns == atoi( Setting( "max_turns_survival" ) ) ) {
+        if ( m_Turns == GetSetting( "max_turns_survival" ).GetInt() ) {
           m_Result = Game::RESULT_WIN;
           ChangeState( Game::STATE_END );
           return;
@@ -496,14 +495,14 @@ std::vector<std::pair<int, int> > & Game::BonusCoords() {
   return m_BonusCoords;
 }
 
-const char * Game::Setting( const std::string & key ) const {
+const Setting Game::GetSetting( const std::string & key ) const {
   const auto it = m_Settings.find( key );
   if ( it == m_Settings.cend() ) {
     std::ostringstream oss;
     oss << "Invalid cfg file - could not find '" << key << "' setting";
     throw MyException( oss.str() );
   }
-  return it->second.data();
+  return Setting( it->second );
 }
 
 void Game::ChangeState( const int & state ) {
@@ -635,8 +634,9 @@ void Game::DrawInfo() {
   mvwprintw( m_InfoWin, printPos++, 0, oss.str().data() );
   oss.str( "" );
   oss.clear();
-  oss << "Maximum turns: " << Setting( m_Mode == Game::MODE_CLASSIC ?
-                                       "max_turns_classic" : "max_turns_survival" );
+  oss << "Maximum turns: "
+      << GetSetting( m_Mode == Game::MODE_CLASSIC ?
+                     "max_turns_classic" : "max_turns_survival" ).GetStr();
   mvwprintw( m_InfoWin, printPos++, 0, oss.str().data() );
   oss.str( "" );
   oss.clear();

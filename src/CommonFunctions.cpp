@@ -1,3 +1,8 @@
+/// Implementation of GameObject
+/**
+ * @file CommonFunctions.cpp
+ */
+
 #include <iostream>
 #include <fstream>
 #include <string>

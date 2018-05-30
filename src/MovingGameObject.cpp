@@ -161,9 +161,9 @@ const bool MovingGameObject::MovePacman( const int & direction, Game & game ) {
       m_Carry->Char() = ' ';
       return true;
     case '*':
-      game.BonusTurns() = atoi( game.Setting( "bonus_duration" ) ) + 1;
+      game.BonusTurns() = game.GetSetting( "bonus_duration" ).GetInt() + 1;
       if ( game.RespawnBonusTurnNo() <= game.Turns() + 1 ) {
-        game.RespawnBonusTurnNo() = game.Turns() + atoi( game.Setting( "bonus_interval" ) ) + 1;
+        game.RespawnBonusTurnNo() = game.Turns() + game.GetSetting( "bonus_interval" ).GetInt() + 1;
       }
       game.Score() += 3;
       m_Carry->Char() = ' ';
@@ -193,15 +193,7 @@ const bool MovingGameObject::MovePacman( const int & direction, Game & game ) {
 }
 
 void MovingGameObject::MoveGhost( Game & game ) {
-  std::string usePortalsStr = game.Setting( "ghosts_portals_allowed" );
-  bool usePortals;
-  if ( usePortalsStr == "yes" ) {
-    usePortals = true;
-  } else if ( usePortalsStr == "no" ) {
-    usePortals = false;
-  } else {
-    throw MyException( std::string( "Invalid cfg - syntax error near 'ghosts_portals_allowed:'" ) );
-  }
+  bool usePortals = game.GetSetting( "ghosts_portals_allowed" ).GetBool();
 
   BfsPathFinder pf( &game, usePortals, false );
   std::pair<char, int> path = { 'f', -1 };
@@ -231,7 +223,7 @@ void MovingGameObject::MoveGhost( Game & game ) {
       // if player is closer than X, chase pacman
       int distance = subPath.second;
       std::ostringstream oss;
-      if ( distance < atoi( game.Setting( "ghost_aggressive_range" ) ) ) {
+      if ( distance < game.GetSetting( "ghost_aggressive_range" ).GetInt() ) {
         path = pf.GetFirstStep( m_Coords, game.Pacman()->Coords() );
       } else {
         path = pf.GetFirstStep( m_Coords, *m_HomeCoords );
@@ -374,7 +366,7 @@ void MovingGameObject::MoveGhost( Game & game ) {
 
   if ( m_Carry && m_Carry->Char() == '*' ) {
     if ( game.RespawnBonusTurnNo() <= game.Turns() + 1 ) {
-      game.RespawnBonusTurnNo() = game.Turns() + atoi( game.Setting( "bonus_interval" ) );
+      game.RespawnBonusTurnNo() = game.Turns() + game.GetSetting( "bonus_interval" ).GetInt();
     }
       m_Carry->Char() = ' ';
       return;

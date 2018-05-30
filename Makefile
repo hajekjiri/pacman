@@ -1,23 +1,24 @@
-CXX=g++
-CXXFLAGS=-Wall -pedantic -Wno-long-long -O0 -ggdb -std=c++14
-HEADERFILES= ./src/Game.h ./src/MenuElement.h ./src/Menu.h             \
-             ./src/MovingGameObject.h ./src/GameObject.h ./src/Map.h   \
-             ./src/BfsPathFinder.h ./src/Portal.h ./src/MyException.h  \
-             ./src/CommonFunctions.h
+CXX = g++
+
+CXXFLAGS = -Wall -pedantic -Wno-long-long -O0 -ggdb -std=c++14
+
+HEADERFILES = ./src/Game.h ./src/MenuElement.h ./src/Menu.h             \
+              ./src/MovingGameObject.h ./src/GameObject.h ./src/Map.h   \
+              ./src/BfsPathFinder.h ./src/Portal.h ./src/MyException.h  \
+              ./src/CommonFunctions.h ./src/Setting.h
+
+OBJECTFILES = ./src/main.o ./src/Game.o ./src/MenuElement.o ./src/Menu.o \
+              ./src/MovingGameObject.o ./src/GameObject.o ./src/Map.o    \
+              ./src/BfsPathFinder.o ./src/Portal.o ./src/MyException.o   \
+              ./src/CommonFunctions.o ./src/Setting.o
 
 all: doc compile
 
-compile: ./src/main.o ./src/Game.o ./src/MenuElement.o ./src/Menu.o \
-          ./src/MovingGameObject.o ./src/GameObject.o ./src/Map.o   \
-          ./src/BfsPathFinder.o ./src/Portal.o ./src/MyException.o  \
-          ./src/CommonFunctions.o
-	# link, save output to '<login>'
-	g++ -o hajekj29 ./src/main.o ./src/Game.o ./src/Map.o ./src/GameObject.o  \
-	                ./src/MenuElement.o ./src/MovingGameObject.o ./src/Menu.o \
-	                ./src/BfsPathFinder.o ./src/MyException.o ./src/Portal.o  \
-	                ./src/CommonFunctions.o -lncurses
+compile: $(OBJECTFILES)
+	# link, save output to 'hajekj29'
+	g++ -o hajekj29 $(OBJECTFILES) -lncurses
 
-run: compile
+run: compile hajekj29
 	# run
 	./hajekj29
 
@@ -26,7 +27,7 @@ clean:
 	rm -rvf doc
 	rm -vf hajekj29 ./src/*.o ./src/*.gch
 
-doc:
+doc: ./src/Doxyfile $(HEADERFILES)
 	# generate documentation
 	doxygen ./src/Doxyfile
 
@@ -34,7 +35,7 @@ lines:
 	# count number of lines
 	wc -l ./src/*.h ./src/*.cpp
 
-%o: %cpp
+%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 
@@ -49,3 +50,4 @@ lines:
 ./src/Portal.o: ./src/Portal.cpp
 ./src/MyException.o: ./src/MyException.cpp
 ./src/BfsPathFinder.o: ./src/BfsPathFinder.cpp
+./src/Setting.o: ./src/Setting.cpp

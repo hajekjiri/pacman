@@ -1,3 +1,9 @@
+/// Common functions
+/**
+ * @file CommonFunctions.h
+  * A set of useful functions
+ */
+
 #ifndef COMMON_FUNCTIONS_H
 #define COMMON_FUNCTIONS_H
 

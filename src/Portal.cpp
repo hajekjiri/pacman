@@ -1,6 +1,6 @@
 /// Implementation of Protal
 /**
- * @file Protal.cpp
+ * @file Portal.cpp
  */
 
 #include <utility>

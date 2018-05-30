@@ -13,6 +13,7 @@
 #include "Menu.h"
 #include "Map.h"
 #include "Portal.h"
+#include "Setting.h"
 
 class MovingGameObject;
 
@@ -91,7 +92,7 @@ class Game {
     std::vector<std::pair<int, int> > & BonusCoords();
 
     /// Function for quicker settings search
-    const char * Setting( const std::string & key ) const;
+    const Setting GetSetting( const std::string & key ) const;
 
     /// Load settings from cfg file
     void LoadCfg( const std::string & pathToCfg );
