@@ -12,6 +12,9 @@
 
  class Setting {
   public:
+    static void Validate( const std::string & key,
+                          const std::string & value );
+
     /// Constructor
     Setting( const std::string & key );
 

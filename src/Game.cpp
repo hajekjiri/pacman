@@ -130,8 +130,17 @@ void Game::LoadCfg( const std::string & pathToCfg ) {
       break;
     }
 
+    Setting::Validate( type, value );
+
+    auto it = m_Settings.find( type );
+    if ( it != m_Settings.cend() ) {
+      std::ostringstream oss;
+      oss << "Invalid cfg file - duplicate setting '" << type << "'";
+      throw MyException( oss.str().data() );
+    }
+
     // push setting to 'm_Settings'
-    m_Settings.insert( { type, value } );
+    m_Settings.insert( { type, Setting( value ) } );
   }
   is.close();
 }
@@ -428,7 +437,7 @@ void Game::Reset() {
      */
     throw MyException( std::string( "Map path not found in internal settings.\nThis should not have happened" ) );
   }
-  m_Map.LoadFromFile( it->second, *this );
+  m_Map.LoadFromFile( it->second.GetStr(), *this );
 }
 
 const bool Game::CoinsLeft() {
@@ -479,7 +488,7 @@ int & Game::RespawnBonusTurnNo() {
   return m_RespawnBonusTurnNo;
 }
 
-std::map<std::string, std::string> & Game::Settings() {
+std::map<std::string, Setting> & Game::Settings() {
   return m_Settings;
 }
 
@@ -499,7 +508,7 @@ const Setting Game::GetSetting( const std::string & key ) const {
   const auto it = m_Settings.find( key );
   if ( it == m_Settings.cend() ) {
     std::ostringstream oss;
-    oss << "Invalid cfg file - could not find '" << key << "' setting";
+    oss << "Could not find '" << key << "' setting";
     throw MyException( oss.str() );
   }
   return Setting( it->second );
@@ -669,4 +678,8 @@ void Game::DrawInfo() {
     oss << "will respawn in " << when << ( when == 1 ? " turn" : " turns" );
     mvwprintw( m_InfoWin, printPos++, 0, oss.str().data() );
   }
+  oss.str( "" );
+  oss.clear();
+  oss << "respawn bonus turn no: " << m_RespawnBonusTurnNo;
+  mvwprintw( m_InfoWin, printPos++, 0, oss.str().data() );
 }

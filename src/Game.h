@@ -80,7 +80,7 @@ class Game {
     const int & Turns() const;
 
     /// Getter/Setter for m_Settings
-    std::map<std::string, std::string> & Settings();
+    std::map<std::string, Setting> & Settings();
 
     /// Getter/Setter for m_Pacman
     MovingGameObject *& Pacman();
@@ -116,7 +116,7 @@ class Game {
     std::vector<Portal*> m_Portals;
     std::vector<MovingGameObject*> m_Ghosts;
     MovingGameObject * m_Pacman;
-    std::map<std::string, std::string> m_Settings;
+    std::map<std::string, Setting> m_Settings;
     std::vector<std::pair<int, int> > m_BonusCoords;
 
     /**

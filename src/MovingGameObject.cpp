@@ -365,7 +365,7 @@ void MovingGameObject::MoveGhost( Game & game ) {
   }
 
   if ( m_Carry && m_Carry->Char() == '*' ) {
-    if ( game.RespawnBonusTurnNo() <= game.Turns() + 1 ) {
+    if ( game.RespawnBonusTurnNo() <= game.Turns() ) {
       game.RespawnBonusTurnNo() = game.Turns() + game.GetSetting( "bonus_interval" ).GetInt();
     }
       m_Carry->Char() = ' ';
