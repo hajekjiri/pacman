@@ -44,7 +44,7 @@ Game::Game()
             m_BonusTurns( 0 ),
             m_RespawnBonusTurnNo( 0 ),
             m_Result( 0 ) {
-  // do sth
+  // do nothing
 }
 
 Game::~Game() {
@@ -293,6 +293,7 @@ void Game::Run() {
 void Game::Play() {
   m_InfoWin = newwin( 20, 60, m_Map.Height() + 1, 2 );
   m_Result = 0;
+  keypad( m_Window, true );
   while ( true ) {
     DrawInfo();
     m_Map.Draw( m_Window );
@@ -307,7 +308,8 @@ void Game::Play() {
       return;
     }
 
-    if ( k == 'w' || k == 'a' || k == 's' || k == 'd' ) {
+    if ( k == 'w' || k == 'a' || k == 's' || k == 'd' ||
+         k == KEY_UP || k == KEY_LEFT || k == KEY_DOWN || k == KEY_RIGHT ) {
       if ( ! m_Pacman->MovePacman( k, *this ) ) {
         continue;
       }

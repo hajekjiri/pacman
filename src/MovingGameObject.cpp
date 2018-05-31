@@ -60,13 +60,25 @@ const bool MovingGameObject::MovePacman( const int & direction, Game & game ) {
     case 'w':
       --newCoords.first;
       break;
+    case KEY_UP:
+      --newCoords.first;
+      break;
     case 'a':
+      --newCoords.second;
+      break;
+    case KEY_LEFT:
       --newCoords.second;
       break;
     case 's':
       ++newCoords.first;
       break;
+    case KEY_DOWN:
+      ++newCoords.first;
+      break;
     case 'd':
+      ++newCoords.second;
+      break;
+    case KEY_RIGHT:
       ++newCoords.second;
       break;
   }
