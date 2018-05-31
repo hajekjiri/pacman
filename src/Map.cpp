@@ -348,9 +348,10 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
   }
 
   // sort ghosts by character
-  std::sort( game.GetGhosts().begin(), game.GetGhosts().end(), []( MovingGameObject * lhs, MovingGameObject * rhs ) {
-    return lhs->GetChar() < rhs->GetChar();
-  } );
-
+  std::sort( game.GetGhosts().begin(),
+             game.GetGhosts().end(),
+             []( MovingGameObject * lhs, MovingGameObject * rhs ) {
+               return lhs->GetChar() < rhs->GetChar();
+             } );
   is.close();
 }

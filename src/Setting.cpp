@@ -102,6 +102,6 @@ const bool Setting::GetBoolConst() const {
 
   std::ostringstream oss;
   oss << "Invalid cfg file - could not convert value '"
-      << m_Value << "' to bool\nUse yes, y, or 1 for 'yes' / no, n, or 0 for 'no' ( case insensitive )";
+      << m_Value << "' to bool\nUse yes, y, or 1 for 'yes' / no, n, or 0 for 'no' ( not case sensitive )";
   throw MyException( oss.str() );
 }

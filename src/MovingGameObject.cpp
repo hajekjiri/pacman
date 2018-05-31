@@ -107,7 +107,8 @@ const bool MovingGameObject::MovePacman( const int & direction, Game & game ) {
     }
     if ( ! found ) {
       std::ostringstream oss;
-      oss << "Portal '" << game.GetMap().GetData()[ newCoords.first ][ newCoords.second ]->GetChar() << "' not found in game data";
+      oss << "Portal '" << game.GetMap().GetData()[ newCoords.first ][ newCoords.second ]->GetChar()
+          << "' not found in game data";
       throw MyException( oss.str().data() );
     }
   }

@@ -8,6 +8,8 @@
  * - document new files for doxygen
  * - write documentation / tutorial
  * - possibly create some function(s) to save lines
+ * - last checks for memory leaks and errors before submitting
+ * - remove this todo list
  *------------------------------------------------------------------------------
  */
 #include <iostream>
