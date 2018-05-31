@@ -344,7 +344,7 @@ void MovingGameObject::MoveGhost( Game & game ) {
       game.GetPacman()->GetLethal() = false;
       game.GetBonusTurns() = 0;
       game.GetMap().GetData()[ oldCoords.first ][ oldCoords.second ] = m_Carry;
-      delete this; // meh
+      delete this;
       return;
     } else {
       game.GetPacman()->GetAlive() = false;
@@ -397,47 +397,6 @@ void MovingGameObject::MoveGhost( Game & game ) {
         }
         oldCoords = m_Coords;
         m_Coords = elem->GetCoordsConst();
-
-
-/*
-        if ( game.GetMap().GetData()[ elem->GetCoordsConst().first ][ elem->GetCoordsConst().second ]->GetChar() == 'P' ) {
-          if ( game.GetPacman()->GetLethal() ) {
-            bool found = false;
-            auto it = game.GetGhosts().begin();
-            for ( ;
-                  it != game.GetGhosts().end();
-                  ++it ) {
-              if ( ( *it )->GetChar() == m_Char ) {
-                found = true;
-                break;
-              }
-            }
-            if ( ! found ) {
-              std::ostringstream oss;
-              oss << "Ghost '" << game.GetMap().GetData()[ elem->GetCoordsConst().first ][ elem->GetCoordsConst().second ]->GetChar()
-                  << "' not found in game data";
-              throw MyException( oss.str() );
-            }
-            m_Char = ' ';
-            game.GetGhosts().erase( it );
-            game.GetScore() += 5;
-            game.GetPacman()->GetLethal() = false;
-            game.GetBonusTurns() = 0;
-            game.GetMap().GetData()[ oldCoords.first ][ oldCoords.second ] = m_Carry;
-            delete this; // meh
-            return;
-          } else {
-            game.GetPacman()->GetAlive() = false;
-            // place ghost to new coords
-            game.GetMap().GetData()[ elem->GetCoordsConst().first ][ elem->GetCoordsConst().second ] = this;
-            // place carry to old coords
-            game.GetMap().GetData()[ oldCoords.first ][ oldCoords.second ] = m_Carry;
-            m_Carry = game.GetPacman()->GetCarry();
-            game.GetPacman()->GetCarry() = nullptr;
-            return;
-          }
-        }
-*/
         tmp = m_Carry;
         m_Carry = game.GetMap().GetData()[ elem->GetCoordsConst().first ][ elem->GetCoordsConst().second ];
         game.GetMap().GetData()[ m_Coords.first ][ m_Coords.second ] = this;

@@ -27,7 +27,7 @@ Map::Map() {
 
 Map::~Map() {
   // do nothing
-  // Map is deleted inside Game class for reasons, ask me why if curious
+  // Map is deleted in Game's destructor'
 }
 
 void Map::Draw( WINDOW * w ) {

@@ -1,4 +1,4 @@
-/// Implementation of Protal
+/// Implementation of Portal
 /**
  * @file Portal.cpp
  */

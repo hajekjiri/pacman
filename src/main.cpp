@@ -5,9 +5,9 @@
 /*
  *------------------------------------------------------------------------------
  * TODO:
- * - possibly create some function(s) to save lines
  * - document new files for doxygen
  * - write documentation / tutorial
+ * - possibly create some function(s) to save lines
  *------------------------------------------------------------------------------
  */
 #include <iostream>

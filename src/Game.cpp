@@ -138,15 +138,6 @@ void Game::LoadCfg( const std::string & pathToCfg ) {
 
 void Game::Init( const std::string & pathToCfg ) {
   m_Menu.Init();
-  /*
-   * TODO:
-   * - parse file @ 'pathToConfig'
-   * - apply settings
-   * ie:
-   * - ghost & pacman settings
-   * - ghost & pacman coords
-   * - load map file from some 'pathToMap' attribute
-   */
   LoadCfg( pathToCfg );
   m_Map.LoadFromFile( FindSetting( "map" ).GetStrConst(), *this );
 }
@@ -399,19 +390,13 @@ void Game::Reset() {
    * only after deleting carry objects
    *   can we delete the map elements themselves
    */
-  //m_Map.GetData()[ 1 ][ 6 ] = new GameObject( ' ' );
   for ( const auto & outsideElem : m_Map.GetData() ) {
     for ( const auto & insideElem : outsideElem ) {
       delete insideElem;
     }
   }
 
-
-  //delete m_Map.GetData()[ 1 ][ 6 ];
-
-
   m_Ghosts.clear();
-
   m_Pacman = nullptr;
   for ( auto & elem : m_Ghosts ) {
     elem = nullptr;

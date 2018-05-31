@@ -66,10 +66,6 @@ void Menu::Add( const MenuElement & e ) {
 }
 
 void Menu::Draw() {
-  /*
-   * TODO
-   * - draw menu on the screen
-   */
    werase( m_Window );
    box( m_Window, 0, 0 );
 
@@ -92,10 +88,6 @@ void Menu::Draw() {
 }
 
 void Menu::Clear() {
-  /*
-   * TODO
-   * - clear menu
-   */
   werase( m_Window );
   wrefresh( m_Window );
 }
