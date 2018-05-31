@@ -27,7 +27,7 @@ class MenuElement {
 
     void Action( Game * g ) const;
 
-    friend class Menu;
+    const std::string & GetName() const;
 
   private:
     /// Element's name

@@ -8,10 +8,9 @@
  * - consistency - getters: GetObject()
  *               - setters: SetObject()
  *               -    both: Object()
- * - get rid of friend statements
- * - possibly create some functions to save lines
- * - write documentation
+ * - possibly create some function(s) to save lines
  * - document new files for doxygen
+ * - write documentation / tutorial
  *------------------------------------------------------------------------------
  */
 #include <iostream>
@@ -38,16 +37,9 @@ int main() {
     endwin();
     std::cout << "Exception thrown:\n"
               << e.what() << std::endl;
-    dumpToFile( "Exception thrown:\n" );
-    std::ostringstream oss;
-    oss << e.what() << std::endl;
-    dumpToFile( oss.str().data() );
-    dumpToFile( "=========================================================\n" );
     return 1;
   }
   delete g;
   endwin();
-  dumpToFile( "Program finished\n" );
-  dumpToFile( "=========================================================\n" );
   return 0;
 }

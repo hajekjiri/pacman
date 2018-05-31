@@ -197,11 +197,17 @@ void Game::Run() {
         nodelay( stdscr, false );
         m_Menu.Draw();
         int k = wgetch( m_Menu.Window() );
-        switch ( k ) {
+        switch ( tolower( k ) ) {
           case KEY_UP:
             m_Menu.MoveUp();
             break;
+          case 'w':
+            m_Menu.MoveUp();
+            break;
           case KEY_DOWN:
+            m_Menu.MoveDown();
+            break;
+          case 's':
             m_Menu.MoveDown();
             break;
           case 10:

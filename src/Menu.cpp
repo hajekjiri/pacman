@@ -83,13 +83,13 @@ void Menu::Draw() {
    int index = 0;
    int posY = 2;
    for ( const MenuElement & elem : m_Options ) {
-     int posX = ( 26 - elem.m_Name.size() ) / 2;
+     int posX = ( 26 - elem.GetName().size() ) / 2;
      if ( index++ == m_HighlightedIdx ) {
        posX -= 2;
        wattron( m_Window, A_REVERSE );
-       mvwprintw( m_Window, posY, posX, ( "[ " + elem.m_Name + " ]" ).data() );
+       mvwprintw( m_Window, posY, posX, ( "[ " + elem.GetName() + " ]" ).data() );
      } else {
-       mvwprintw( m_Window, posY, posX, elem.m_Name.data() );
+       mvwprintw( m_Window, posY, posX, elem.GetName().data() );
      }
      wattroff( m_Window, A_REVERSE );
      wmove( m_Window, 0, 0 );

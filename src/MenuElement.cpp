@@ -20,3 +20,7 @@ MenuElement::~MenuElement() {
 void MenuElement::Action( Game * g ) const {
   m_Action( g );
 }
+
+const std::string & MenuElement::GetName() const {
+  return m_Name;
+}
