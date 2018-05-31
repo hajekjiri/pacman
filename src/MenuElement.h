@@ -25,9 +25,9 @@ class MenuElement {
     /// Destructor
     ~MenuElement();
 
-    void Action( Game * g ) const;
+    void GetActionConst( Game * g ) const;
 
-    const std::string & GetName() const;
+    const std::string & GetNameConst() const;
 
   private:
     /// Element's name

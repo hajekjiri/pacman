@@ -29,7 +29,6 @@ Game::Game()
             m_Window( nullptr ),
             m_PauseWin( nullptr ),
             m_InfoWin( nullptr ),
-            m_Menu( 1 ),
             m_Pacman( nullptr ),
             m_Score( 0 ),
             m_Turns( 0 ),
@@ -52,12 +51,12 @@ Game::~Game() {
 
   // delete carry objects
   if ( m_Pacman ) {
-    delete m_Pacman->Carry();
+    delete m_Pacman->GetCarry();
   }
 
   for ( const auto & elem : m_Ghosts ) {
     if ( elem ) {
-      delete elem->Carry();
+      delete elem->GetCarry();
     }
   }
 
@@ -65,7 +64,7 @@ Game::~Game() {
    * only after deleting carry objects
    * can we delete the map elements themselves
    */
-  for ( const auto & outsideElem : m_Map.Data() ) {
+  for ( const auto & outsideElem : m_Map.GetData() ) {
     for ( const auto & insideElem : outsideElem ) {
       delete insideElem;
     }
@@ -149,7 +148,7 @@ void Game::Init( const std::string & pathToCfg ) {
    * - load map file from some 'pathToMap' attribute
    */
   LoadCfg( pathToCfg );
-  m_Map.LoadFromFile( GetSetting( "map" ).GetStr(), *this );
+  m_Map.LoadFromFile( FindSetting( "map" ).GetStrConst(), *this );
 }
 
 void Game::Run() {
@@ -160,8 +159,8 @@ void Game::Run() {
         break;
       case Game::STATE_PAUSED: {
         m_PauseWin = newwin( 11, 30,
-                             ( m_Map.Height() - 11 ) / 2,
-                             m_Map.Width() + 10 );
+                             ( m_Map.GetHeightConst() - 11 ) / 2,
+                             m_Map.GetWidthConst() + 10 );
         box( m_PauseWin, 0, 0 );
         mvwprintw( m_PauseWin, 2, 2, "Game paused" );
         mvwprintw( m_PauseWin, 4, 2, "* press 'c' to continue" );
@@ -188,7 +187,7 @@ void Game::Run() {
       case Game::STATE_MENU: {
         nodelay( stdscr, false );
         m_Menu.Draw();
-        int k = wgetch( m_Menu.Window() );
+        int k = wgetch( m_Menu.GetWindow() );
         switch ( tolower( k ) ) {
           case KEY_UP:
             m_Menu.MoveUp();
@@ -203,7 +202,7 @@ void Game::Run() {
             m_Menu.MoveDown();
             break;
           case 10:
-              m_Menu.Options().at( m_Menu.HighlightedIdx() ).Action( this );
+              m_Menu.GetOptionsConst().at( m_Menu.GetHighlightedIdxConst() ).GetActionConst( this );
             break;
         }
         break;
@@ -241,16 +240,16 @@ void Game::Run() {
       }
       case Game::STATE_END: {
         WINDOW * w = newwin( 9, 50,
-                             ( m_Map.Height() - 11 ) / 2,
-                             m_Map.Width() + 10 );
+                             ( m_Map.GetHeightConst() - 11 ) / 2,
+                             m_Map.GetWidthConst() + 10 );
         box( m_PauseWin, 0, 0 );
 
         std::ostringstream oss, oss2;
         if ( m_Result == Game::RESULT_WIN ) {
-          oss << "Congratulations, " << GetSetting( "username" ).GetStr();
+          oss << "Congratulations, " << FindSetting( "username" ).GetStrConst();
           oss2 << "You won!";
         } else if ( m_Result == Game::RESULT_LOSS ) {
-          oss << "Im sorry, " << GetSetting( "username" ).GetStr();
+          oss << "Im sorry, " << FindSetting( "username" ).GetStrConst();
           oss2 << "You lost :(";
         } else {
           std::ostringstream oss;
@@ -283,7 +282,7 @@ void Game::Run() {
 }
 
 void Game::Play() {
-  m_InfoWin = newwin( 20, 60, m_Map.Height() + 1, 2 );
+  m_InfoWin = newwin( 20, 60, m_Map.GetHeightConst() + 1, 2 );
   m_Result = 0;
   keypad( m_Window, true );
   while ( true ) {
@@ -312,15 +311,15 @@ void Game::Play() {
 
     if ( m_BonusTurns > 0 ) {
       --m_BonusTurns;
-      m_Pacman->Lethal() = true;
+      m_Pacman->GetLethal() = true;
     } else {
-      m_Pacman->Lethal() = false;
+      m_Pacman->GetLethal() = false;
     }
 
     m_Map.Draw( m_Window );
     wrefresh( m_Window );
 
-    if ( ! m_Pacman->Alive() ) {
+    if ( ! m_Pacman->GetAlive() ) {
       m_Result = Game::RESULT_LOSS;
       delete m_Pacman;
       m_Pacman = nullptr;
@@ -335,7 +334,7 @@ void Game::Play() {
     m_Map.Draw( m_Window );
     wrefresh( m_Window );
 
-    if ( ! m_Pacman->Alive() ) {
+    if ( ! m_Pacman->GetAlive() ) {
       m_Result = Game::RESULT_LOSS;
       ChangeState( Game::STATE_END );
       delete m_Pacman;
@@ -345,7 +344,7 @@ void Game::Play() {
 
     switch ( m_Mode ) {
       case Game::MODE_CLASSIC:
-        if ( m_Turns == GetSetting( "max_turns_classic" ).GetInt() ) {
+        if ( m_Turns == FindSetting( "max_turns_classic" ).GetIntConst() ) {
           if ( CoinsLeft() ) {
             m_Result = Game::RESULT_LOSS;
           } else {
@@ -362,7 +361,7 @@ void Game::Play() {
         }
         break;
       case Game::MODE_SURVIVAL:
-        if ( m_Turns == GetSetting( "max_turns_survival" ).GetInt() ) {
+        if ( m_Turns == FindSetting( "max_turns_survival" ).GetIntConst() ) {
           m_Result = Game::RESULT_WIN;
           ChangeState( Game::STATE_END );
           return;
@@ -388,11 +387,11 @@ void Game::Reset() {
 
   // delete carry objects
   if ( m_Pacman ) {
-    delete m_Pacman->Carry();
+    delete m_Pacman->GetCarry();
   }
   for ( const auto & elem : m_Ghosts ) {
     if ( elem ) {
-      delete elem->Carry();
+      delete elem->GetCarry();
     }
   }
 
@@ -400,15 +399,15 @@ void Game::Reset() {
    * only after deleting carry objects
    *   can we delete the map elements themselves
    */
-  //m_Map.Data()[ 1 ][ 6 ] = new GameObject( ' ' );
-  for ( const auto & outsideElem : m_Map.Data() ) {
+  //m_Map.GetData()[ 1 ][ 6 ] = new GameObject( ' ' );
+  for ( const auto & outsideElem : m_Map.GetData() ) {
     for ( const auto & insideElem : outsideElem ) {
       delete insideElem;
     }
   }
 
 
-  //delete m_Map.Data()[ 1 ][ 6 ];
+  //delete m_Map.GetData()[ 1 ][ 6 ];
 
 
   m_Ghosts.clear();
@@ -419,7 +418,7 @@ void Game::Reset() {
   }
 
   // reset Map's data vector
-  m_Map.Data().clear();
+  m_Map.GetData().clear();
 
   // reset score & turns
   m_Score = 0;
@@ -437,19 +436,19 @@ void Game::Reset() {
      */
     throw MyException( std::string( "Map path not found in internal settings.\nThis should not have happened" ) );
   }
-  m_Map.LoadFromFile( it->second.GetStr(), *this );
+  m_Map.LoadFromFile( it->second.GetStrConst(), *this );
 }
 
 const bool Game::CoinsLeft() {
-  for ( const auto & outsideElem : m_Map.Data() ) {
+  for ( const auto & outsideElem : m_Map.GetData() ) {
     for ( const auto & insideElem : outsideElem ) {
-      if ( insideElem->Char() == '-' ) {
+      if ( insideElem->GetChar() == '-' ) {
         return true;
       }
     }
   }
   for ( const auto & elem : m_Ghosts ) {
-    if ( elem->Carry() && elem->Carry()->Char() == '-' ) {
+    if ( elem->GetCarry() && elem->GetCarry()->GetChar() == '-' ) {
       return true;
     }
   }
@@ -464,47 +463,47 @@ Menu & Game::GetMenu() {
   return m_Menu;
 }
 
-std::vector<Portal*> & Game::Portals() {
+std::vector<Portal*> & Game::GetPortals() {
   return m_Portals;
 }
 
-int & Game::Score() {
+int & Game::GetScore() {
   return m_Score;
 }
 
-int & Game::Mode() {
+int & Game::GetMode() {
   return m_Mode;
 }
 
-int & Game::BonusTurns() {
+int & Game::GetBonusTurns() {
   return m_BonusTurns;
 }
 
-const int & Game::Turns() const {
-  return m_Turns;
-}
-
-int & Game::RespawnBonusTurnNo() {
+int & Game::GetRespawnBonusTurnNo() {
   return m_RespawnBonusTurnNo;
 }
 
-std::map<std::string, Setting> & Game::Settings() {
+const int & Game::GetTurnsConst() const {
+  return m_Turns;
+}
+
+std::map<std::string, Setting> & Game::GetSettings() {
   return m_Settings;
 }
 
-std::vector<MovingGameObject*> & Game::Ghosts() {
+std::vector<MovingGameObject*> & Game::GetGhosts() {
   return m_Ghosts;
 }
 
-MovingGameObject *& Game::Pacman() {
+MovingGameObject *& Game::GetPacman() {
   return m_Pacman;
 }
 
-std::vector<std::pair<int, int> > & Game::BonusCoords() {
+std::vector<std::pair<int, int> > & Game::GetBonusCoords() {
   return m_BonusCoords;
 }
 
-const Setting Game::GetSetting( const std::string & key ) const {
+const Setting Game::FindSetting( const std::string & key ) const {
   const auto it = m_Settings.find( key );
   if ( it == m_Settings.cend() ) {
     std::ostringstream oss;
@@ -522,10 +521,10 @@ void Game::ChangeState( const int & state ) {
 
   switch ( m_GameState ) {
     case Game::STATE_MENU:
-      werase( m_Menu.Window() );
-      wrefresh( m_Menu.Window() );
-      delwin( m_Menu.Window() );
-      m_Menu.Window() = nullptr;
+      werase( m_Menu.GetWindow() );
+      wrefresh( m_Menu.GetWindow() );
+      delwin( m_Menu.GetWindow() );
+      m_Menu.GetWindow() = nullptr;
       break;
     case Game::STATE_PAUSED:
       werase( m_PauseWin );
@@ -560,7 +559,7 @@ void Game::ChangeState( const int & state ) {
       m_Menu.Init();
       break;
     case Game::STATE_RUNNING:
-      m_Window = newwin( m_Map.Height(), m_Map.Width(), 1, 2 );
+      m_Window = newwin( m_Map.GetHeightConst(), m_Map.GetWidthConst(), 1, 2 );
       break;
   }
 
@@ -591,32 +590,32 @@ void Game::ChangeState( const int & state ) {
 
 void Game::RespawnBonus() {
   for ( const auto & elem : m_BonusCoords ) {
-    if ( m_Map.Data()[ elem.first ][ elem.second ]->Char() == 'P' ) {
-      m_Pacman->Carry()->Char() = '*';
+    if ( m_Map.GetData()[ elem.first ][ elem.second ]->GetChar() == 'P' ) {
+      m_Pacman->GetCarry()->GetChar() = '*';
       continue;
     }
 
-    if ( m_Map.Data()[ elem.first ][ elem.second ]->Char() >= 'A' &&
-         m_Map.Data()[ elem.first ][ elem.second ]->Char() <= 'Z') {
+    if ( m_Map.GetData()[ elem.first ][ elem.second ]->GetChar() >= 'A' &&
+         m_Map.GetData()[ elem.first ][ elem.second ]->GetChar() <= 'Z') {
       auto it = m_Ghosts.begin();
       for ( ;
             it != m_Ghosts.end();
             ++it ) {
-        if ( ( *it )->Char() == m_Map.Data()[ elem.first ][ elem.second ]->Char() ) {
+        if ( ( *it )->GetChar() == m_Map.GetData()[ elem.first ][ elem.second ]->GetChar() ) {
           break;
         }
       }
-      if ( ( *it )->Char() != m_Map.Data()[ elem.first ][ elem.second ]->Char() ) {
+      if ( ( *it )->GetChar() != m_Map.GetData()[ elem.first ][ elem.second ]->GetChar() ) {
         std::ostringstream oss;
-        oss << "Ghost '" << m_Map.Data()[ elem.first ][ elem.second ]->Char()
+        oss << "Ghost '" << m_Map.GetData()[ elem.first ][ elem.second ]->GetChar()
             << "' not found in game data";
         throw MyException( oss.str() );
       }
-      ( *it )->Carry()->Char() = '*';
+      ( *it )->GetCarry()->GetChar() = '*';
       continue;
     }
 
-    m_Map.Data()[ elem.first ][ elem.second ]->Char() = '*';
+    m_Map.GetData()[ elem.first ][ elem.second ]->GetChar() = '*';
   }
 }
 
@@ -644,8 +643,8 @@ void Game::DrawInfo() {
   oss.str( "" );
   oss.clear();
   oss << "Maximum turns: "
-      << GetSetting( m_Mode == Game::MODE_CLASSIC ?
-                     "max_turns_classic" : "max_turns_survival" ).GetStr();
+      << FindSetting( m_Mode == Game::MODE_CLASSIC ?
+                     "max_turns_classic" : "max_turns_survival" ).GetStrConst();
   mvwprintw( m_InfoWin, printPos++, 0, oss.str().data() );
   oss.str( "" );
   oss.clear();

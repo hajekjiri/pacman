@@ -30,32 +30,32 @@ void Setting::Validate( const std::string & key,
   }
 
   if ( key == "max_turns_classic" ) {
-    Setting( value ).GetInt();
+    Setting( value ).GetIntConst();
     return;
   }
 
   if ( key == "max_turns_survival" ) {
-    Setting( value ).GetInt();
+    Setting( value ).GetIntConst();
     return;
   }
 
   if ( key == "bonus_interval" ) {
-    Setting( value ).GetInt();
+    Setting( value ).GetIntConst();
     return;
   }
 
   if ( key == "bonus_duration" ) {
-    Setting( value ).GetInt();
+    Setting( value ).GetIntConst();
     return;
   }
 
   if ( key == "ghost_aggressive_range" ) {
-    Setting( value ).GetInt();
+    Setting( value ).GetIntConst();
     return;
   }
 
   if ( key == "ghosts_portals_allowed" ) {
-    Setting( value ).GetBool();
+    Setting( value ).GetBoolConst();
     return;
   }
 
@@ -66,11 +66,11 @@ void Setting::Validate( const std::string & key,
 
 
 
-const std::string & Setting::GetStr() const {
+const std::string & Setting::GetStrConst() const {
   return m_Value;
 }
 
-const int Setting::GetInt() const {
+const int Setting::GetIntConst() const {
   int res;
   try {
     res = stoi( m_Value );
@@ -82,7 +82,7 @@ const int Setting::GetInt() const {
   return res;
 }
 
-const bool Setting::GetBool() const {
+const bool Setting::GetBoolConst() const {
   std::string value = m_Value;
   std::transform( value.begin(),
                   value.end(),

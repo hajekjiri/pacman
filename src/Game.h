@@ -61,37 +61,37 @@ class Game {
     Menu & GetMenu();
 
     /// Getter/Setter for m_Portals
-    std::vector<Portal*> & Portals();
+    std::vector<Portal*> & GetPortals();
 
     /// Getter/Setter for m_Score
-    int & Score();
+    int & GetScore();
 
     /// Getter/Setter for m_Mode
-    int & Mode();
+    int & GetMode();
 
     /// Getter/Setter for m_BonusTurns
-    int & BonusTurns();
+    int & GetBonusTurns();
 
     /// Getter/Setter for m_RespawnBonusTurnNo
-    int & RespawnBonusTurnNo();
+    int & GetRespawnBonusTurnNo();
 
-    /// Getter/Setter for m_Turn
-    const int & Turns() const;
+    /// Getter for m_Turn
+    const int & GetTurnsConst() const;
 
     /// Getter/Setter for m_Settings
-    std::map<std::string, Setting> & Settings();
+    std::map<std::string, Setting> & GetSettings();
 
     /// Getter/Setter for m_Pacman
-    MovingGameObject *& Pacman();
+    MovingGameObject *& GetPacman();
 
     /// Getter/Setter for m_Ghosts
-    std::vector<MovingGameObject*> & Ghosts();
+    std::vector<MovingGameObject*> & GetGhosts();
 
     /// Getter/Setter for m_BonusCoords
-    std::vector<std::pair<int, int> > & BonusCoords();
+    std::vector<std::pair<int, int> > & GetBonusCoords();
 
-    /// Function for quicker settings search
-    const Setting GetSetting( const std::string & key ) const;
+    /// Function for quicker search in settings
+    const Setting FindSetting( const std::string & key ) const;
 
     /// Load settings from cfg file
     void LoadCfg( const std::string & pathToCfg );

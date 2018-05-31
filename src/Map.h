@@ -29,15 +29,18 @@ class Map {
     void LoadFromFile( const std::string & path, Game & game );
 
     /// Getter for m_Height
-    const int & Height() const;
+    const int & GetHeightConst() const;
 
     /// Getter for m_Width
-    const int & Width() const;
+    const int & GetWidthConst() const;
 
-    std::vector<std::vector<GameObject*> > & Data();
+    std::vector<std::vector<GameObject*> > & GetData();
 
     const bool ValidCoords( const std::pair<int, int> & coords ) const;
 
+    /**
+     * Check map size, return iterator to last row
+     */
     std::vector<std::vector<GameObject*> >::iterator CheckSize();
 
   private:

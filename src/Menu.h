@@ -20,7 +20,7 @@ class Menu {
      * Create Menu, set highlighted index to -1
      * @param preset menu preset
      */
-    Menu( const int & preset = 1 );
+    Menu();
 
     /// Destructor
     ~Menu();
@@ -42,24 +42,17 @@ class Menu {
     void MoveDown();
 
     /// Getter/Setter for m_Window
-    WINDOW *& Window();
+    WINDOW *& GetWindow();
 
     /// Getter/Setter for m_Options
-    std::vector<MenuElement> & Options();
+    const std::vector<MenuElement> & GetOptionsConst() const;
 
     /// Getter for m_HighlightedIdx
-    const int & HighlightedIdx();
+    const int & GetHighlightedIdxConst();
 
   private:
     /// Container for menu elements
     std::vector<MenuElement> m_Options;
-
-    /// Menu preset:
-    /**
-     * 0 ---> empty menu\n
-     * 1 ---> default predefined menu
-     */
-    int m_Preset;
 
     /// ncurses window
     WINDOW * m_Window;

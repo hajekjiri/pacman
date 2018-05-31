@@ -21,13 +21,13 @@
     ~Setting();
 
     /// Get string value
-    const std::string & GetStr() const;
+    const std::string & GetStrConst() const;
 
     /// Get integer value
-    const int GetInt() const;
+    const int GetIntConst() const;
 
     /// Get boolean value
-    const bool GetBool() const;
+    const bool GetBoolConst() const;
 
   private:
     std::string m_Value;

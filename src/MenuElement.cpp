@@ -17,10 +17,10 @@ MenuElement::~MenuElement() {
   // do nothing
 }
 
-void MenuElement::Action( Game * g ) const {
+void MenuElement::GetActionConst( Game * g ) const {
   m_Action( g );
 }
 
-const std::string & MenuElement::GetName() const {
+const std::string & MenuElement::GetNameConst() const {
   return m_Name;
 }

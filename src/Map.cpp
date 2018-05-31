@@ -37,9 +37,9 @@ void Map::Draw( WINDOW * w ) {
   for ( const auto & outsideElem : m_Data ) {
     for ( const auto & insideElem : outsideElem ) {
       std::ostringstream oss;
-      oss << insideElem->Char();
+      oss << insideElem->GetChar();
 
-      switch( insideElem->Char() ) {
+      switch( insideElem->GetChar() ) {
         case 'P':
           wattron( w, COLOR_PAIR( 3 ) );
           mvwprintw( w, i, j, oss.str().data() );
@@ -70,14 +70,14 @@ void Map::Draw( WINDOW * w ) {
           break;
       }
 
-      if ( isGhost( insideElem->Char() ) ) {
-        int colorPairNo = ( ( insideElem->Char() - 'A' ) % 3 ) + 4;
+      if ( isGhost( insideElem->GetChar() ) ) {
+        int colorPairNo = ( ( insideElem->GetChar() - 'A' ) % 3 ) + 4;
         wattron( w, COLOR_PAIR( colorPairNo ) );
         mvwprintw( w, i, j, oss.str().data() );
         wattroff( w, COLOR_PAIR( colorPairNo ) );
       }
-      if ( insideElem->Char() >= '0' &&
-           insideElem->Char() <= '9' ) {
+      if ( insideElem->GetChar() >= '0' &&
+           insideElem->GetChar() <= '9' ) {
         wattron( w, COLOR_PAIR( 2 ) );
         mvwprintw( w, i, j, oss.str().data() );
         wattroff( w, COLOR_PAIR( 2 ) );
@@ -89,15 +89,15 @@ void Map::Draw( WINDOW * w ) {
   }
 }
 
-std::vector<std::vector<GameObject*> > & Map::Data() {
+std::vector<std::vector<GameObject*> > & Map::GetData() {
   return m_Data;
 }
 
-const int & Map::Height() const {
+const int & Map::GetHeightConst() const {
   return m_Height;
 }
 
-const int & Map::Width() const {
+const int & Map::GetWidthConst() const {
   return m_Width;
 }
 
@@ -117,7 +117,9 @@ std::vector<std::vector<GameObject*> >::iterator Map::CheckSize() {
   auto it = m_Data.begin();
   size_t size = it->size();
   auto itEnd = m_Data.end();
-  while( ( --itEnd )->size() == 0 );
+  while( ( --itEnd )->size() == 0 ) {
+    // do nothing
+  }
   ++itEnd;
   for ( ; it != itEnd; ++it, ++row ) {
     if ( it->size() != size ) {
@@ -132,18 +134,18 @@ std::vector<std::vector<GameObject*> >::iterator Map::CheckSize() {
 }
 
 void Map::LoadFromFile( const std::string & path, Game & game ) {
-  if ( game.Pacman() ) {
-    delete game.Pacman()->Carry();
+  if ( game.GetPacman() ) {
+    delete game.GetPacman()->GetCarry();
   }
-  for ( const auto & elem : game.Ghosts() ) {
-    delete elem->Carry();
+  for ( const auto & elem : game.GetGhosts() ) {
+    delete elem->GetCarry();
   }
-  game.Ghosts().clear();
-  for ( const auto & elem : game.Portals() ) {
+  game.GetGhosts().clear();
+  for ( const auto & elem : game.GetPortals() ) {
     delete elem;
   }
-  game.Portals().clear();
-  game.BonusCoords().clear();
+  game.GetPortals().clear();
+  game.GetBonusCoords().clear();
 
   for ( const auto & outsideElem : m_Data ) {
     for ( const auto & insideElem : outsideElem ) {
@@ -192,7 +194,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
       pacmanExists = true;
       mo = new MovingGameObject( c, { rowIndex, col }, nullptr, false );
       valid = true;
-      game.Pacman() = mo;
+      game.GetPacman() = mo;
     }
 
     if ( c >= 'A' && c <= 'Z' && c != 'P' ) {
@@ -209,7 +211,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
                            + std::to_string( rowIndex ) + "," + std::to_string( col ) );
       }
       valid = true;
-      game.Ghosts().push_back( mo );
+      game.GetGhosts().push_back( mo );
     }
 
     if ( c >= '0' && c <= '9' ) {
@@ -225,7 +227,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
 
     if ( c == '*' ) {
       o = new GameObject( c );
-      game.BonusCoords().push_back( { rowIndex, col } );
+      game.GetBonusCoords().push_back( { rowIndex, col } );
       if ( valid ) {
         is.close();
         throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
@@ -283,13 +285,13 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
   for ( const auto & outsideElem : portals ) {
     int timesFound = 0;
     for ( const auto & insideElem : portals ) {
-      if ( outsideElem->Id() == insideElem->Id() ) {
+      if ( outsideElem->GetIdConst() == insideElem->GetIdConst() ) {
         ++timesFound;
       }
     }
     if ( timesFound != 2 ) {
       std::ostringstream oss;
-      oss << "Invalid map - portal '" << outsideElem->Id()
+      oss << "Invalid map - portal '" << outsideElem->GetIdConst()
           << "' was found " << timesFound << " times ( expecting 2 times )";
       is.close();
       throw MyException( oss.str() );
@@ -300,17 +302,17 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
   for ( const auto & outsideElem : portals ) {
     bool found = false;
     for ( const auto & insideElem : portals ) {
-      if ( ( outsideElem->Id() == insideElem->Id() ) &&
-           ( outsideElem->Coords() != insideElem->Coords() ) ) {
-        outsideElem->PairCoords() = insideElem->Coords();
-        insideElem->PairCoords() = outsideElem->Coords();
+      if ( ( outsideElem->GetIdConst() == insideElem->GetIdConst() ) &&
+           ( outsideElem->GetCoordsConst() != insideElem->GetCoordsConst() ) ) {
+        outsideElem->GetPairCoords() = insideElem->GetCoordsConst();
+        insideElem->GetPairCoords() = outsideElem->GetCoordsConst();
         found = true;
         break;
       }
     }
     if ( ! found ) {
       std::ostringstream oss;
-      oss << "Portal pairing - pair for portal '" << outsideElem->Id()
+      oss << "Portal pairing - pair for portal '" << outsideElem->GetIdConst()
           << "' was not found";
       // portals are not in Game class yet so we have to delete them manually
       for ( const auto & elem : portals ) {
@@ -323,31 +325,31 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
 
   // portals - transfer to Game class
   for ( const auto & elem : portals ) {
-    game.Portals().push_back( elem );
+    game.GetPortals().push_back( elem );
   }
 
   std::ostringstream oss;
   oss << "Ghosts 1:\n";
-  for ( const auto & outsideElem : game.Ghosts() ) {
+  for ( const auto & outsideElem : game.GetGhosts() ) {
     int times = 0;
-    oss << outsideElem->Char() << std::endl;
-    for ( const auto & insideElem : game.Ghosts() ) {
-      if ( outsideElem->Char() == insideElem->Char() ) {
+    oss << outsideElem->GetChar() << std::endl;
+    for ( const auto & insideElem : game.GetGhosts() ) {
+      if ( outsideElem->GetChar() == insideElem->GetChar() ) {
         ++times;
       }
     }
     if ( times != 1 ) {
       std::ostringstream oss;
       oss << "Invalid map - there are multiple instances of ghost '"
-          << outsideElem->Char() << "'";
+          << outsideElem->GetChar() << "'";
       is.close();
       throw MyException( oss.str() );
     }
   }
 
   // sort ghosts by character
-  std::sort( game.Ghosts().begin(), game.Ghosts().end(), []( MovingGameObject * lhs, MovingGameObject * rhs ) {
-    return lhs->Char() < rhs->Char();
+  std::sort( game.GetGhosts().begin(), game.GetGhosts().end(), []( MovingGameObject * lhs, MovingGameObject * rhs ) {
+    return lhs->GetChar() < rhs->GetChar();
   } );
 
   is.close();

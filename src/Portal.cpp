@@ -15,14 +15,14 @@ Portal::~Portal() {
   // do nothing
 }
 
-char & Portal::Id() {
+const char & Portal::GetIdConst() const {
   return m_Id;
 }
 
-std::pair<int, int> & Portal::Coords() {
+const std::pair<int, int> & Portal::GetCoordsConst() const {
   return m_Coords;
 }
 
-std::pair<int, int> & Portal::PairCoords() {
+std::pair<int, int> & Portal::GetPairCoords() {
   return m_PairCoords;
 }

@@ -106,7 +106,7 @@ void BfsPathFinder::ValidatePushToQueue( const std::pair<int, int> & parent,
    */
   if ( m_Game->GetMap().ValidCoords( newNode ) &&
        ! Visited( { newNode.first, newNode.second } ) &&
-       ObjectIsValid( m_Game->GetMap().Data()[ newNode.first ][ newNode.second ]->Char() ) ) {
+       ObjectIsValid( m_Game->GetMap().GetData()[ newNode.first ][ newNode.second ]->GetChar() ) ) {
     m_Queue.push( { newNode.first, newNode.second } );
     PushToConn( newNode, parent );
     Visit( newNode );
@@ -118,17 +118,17 @@ const bool BfsPathFinder::PushChildrenToQueue( const std::pair<int, int> & n ) {
     // check if node is a portal
     bool found = false;
     std::pair<int, int> pairCoords;
-    for ( const auto & elem : m_Game->Portals() ) {
-      if ( elem->Coords() == n ) {
+    for ( const auto & elem : m_Game->GetPortals() ) {
+      if ( elem->GetCoordsConst() == n ) {
         found = true;
-        pairCoords = elem->PairCoords();
+        pairCoords = elem->GetPairCoords();
         break;
       }
     }
     // if found, go through portal
     if ( found ) {
-      if ( ( isGhost( m_Game->GetMap().Data()[ pairCoords.first ][ pairCoords.second ]->Char() ) ||
-           m_Game->GetMap().Data()[ pairCoords.first ][ pairCoords.second ]->Char() == 'P' ) &&
+      if ( ( isGhost( m_Game->GetMap().GetData()[ pairCoords.first ][ pairCoords.second ]->GetChar() ) ||
+           m_Game->GetMap().GetData()[ pairCoords.first ][ pairCoords.second ]->GetChar() == 'P' ) &&
            isNextToInLine( n, m_Start ) ) {
         return false;
       }

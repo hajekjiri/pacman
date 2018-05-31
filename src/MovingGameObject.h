@@ -22,17 +22,17 @@ class MovingGameObject : public GameObject {
     /// Destructor
     virtual ~MovingGameObject();
 
-    /// Getter/Setter for m_Lethal
-    std::pair<int, int> & Coords();
+    /// Getter/Setter for m_Coords
+    std::pair<int, int> & GetCoords();
 
     /// Getter/Setter for m_Alive
-    bool & Alive();
+    bool & GetAlive();
 
     /// Getter/Setter for m_Lethal
-    bool & Lethal();
+    bool & GetLethal();
 
     /// Getter/Setter for m_Carry
-    GameObject * Carry();
+    GameObject *& GetCarry();
 
     const bool MovePacman( const int & direction, Game & game );
 

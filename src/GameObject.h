@@ -16,7 +16,7 @@ class GameObject {
     virtual ~GameObject();
 
     /// Getter/setter for display char
-    char & Char();
+    char & GetChar();
 
   protected:
 

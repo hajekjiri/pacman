@@ -5,9 +5,6 @@
 /*
  *------------------------------------------------------------------------------
  * TODO:
- * - consistency - getters: GetObject()
- *               - setters: SetObject()
- *               -    both: Object()
  * - possibly create some function(s) to save lines
  * - document new files for doxygen
  * - write documentation / tutorial

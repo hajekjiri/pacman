@@ -14,6 +14,6 @@ GameObject::~GameObject() {
   // do nothing
 }
 
-char & GameObject::Char() {
+char & GameObject::GetChar() {
   return m_Char;
 }
