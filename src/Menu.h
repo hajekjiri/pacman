@@ -8,8 +8,7 @@
 
 #include <ncurses.h>
 #include <vector>
-
-class MenuElement;
+#include "MenuElement.h"
 
 class Menu {
   public:
@@ -37,7 +36,7 @@ class Menu {
 
     /// Clear menu
     void Clear();
-    
+
     void MoveUp();
 
     void MoveDown();

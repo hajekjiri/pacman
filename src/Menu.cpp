@@ -4,7 +4,7 @@
  */
 
 #include "Menu.h"
-#include "MenuElement.h"
+#include "Game.h"
 
 const bool Menu::DIRECTION_UP = false;
 const bool Menu::DIRECTION_DOWN = true;

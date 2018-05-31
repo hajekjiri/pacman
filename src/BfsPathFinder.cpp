@@ -3,12 +3,11 @@
  * @file BfsPathFinder.cpp
  */
 
-#include <cstdlib>
 #include <sstream>
-#include <utility>
 #include "BfsPathFinder.h"
 #include "CommonFunctions.h"
 #include "MovingGameObject.h"
+#include "MyException.h"
 
 BfsPathFinder::BfsPathFinder( Game * game,
                               const bool & usePortals,

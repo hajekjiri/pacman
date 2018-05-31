@@ -2,18 +2,11 @@
 /**
  * @file Game.cpp
  */
- #include <cctype>
- #include <cstring>
- #include <fstream>
-#include <iostream>
+
+#include <fstream>
 #include <sstream>
-#include <string>
-#include <vector>
 #include "CommonFunctions.h"
 #include "Game.h"
-#include "GameObject.h"
-#include "MenuElement.h"
-#include "MovingGameObject.h"
 #include "MyException.h"
 
 const int Game::STATE_RUNNING = 0;
@@ -101,8 +94,7 @@ void Game::LoadCfg( const std::string & pathToCfg ) {
       // ignore comments and empty lines
       continue;
     } else {
-
-      if ( ! strchr( lineStr.data(), ':' ) ) {
+      if ( lineStr.find( ':' ) == std::string::npos ) {
         std::ostringstream oss;
         oss << "Invalid cfg file '" << pathToCfg << "' - syntax error on line "
             << line << std::endl << lineStr;

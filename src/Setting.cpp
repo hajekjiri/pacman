@@ -4,10 +4,7 @@
  */
 
 #include <algorithm>
-#include <cctype>
-#include <ostream>
 #include <sstream>
-#include <string>
 #include "MyException.h"
 #include "Setting.h"
 

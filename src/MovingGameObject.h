@@ -1,13 +1,14 @@
-/// GameObject class
+/// MovingGameObject class
 /**
  * @file MovingGameObject.h
- * Class representing a moving object.
+ * Class representing a moving object
  */
 
 #ifndef MOVING_GAME_OBJECT_H
 #define MOVING_GAME_OBJECT_H
 
 #include <utility>
+#include "Game.h"
 #include "GameObject.h"
 
 class MovingGameObject : public GameObject {

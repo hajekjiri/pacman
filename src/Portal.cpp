@@ -3,7 +3,6 @@
  * @file Portal.cpp
  */
 
-#include <utility>
 #include "Portal.h"
 
 Portal::Portal( const char & id, const std::pair<int, int> & coords )

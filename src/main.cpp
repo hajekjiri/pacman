@@ -16,13 +16,11 @@
 #include <iostream>
 #include <ncurses.h>
 #include <exception>
-#include <sstream>
 #include "CommonFunctions.h"
 #include "Game.h"
 #include "GameObject.h"
 
 int main() {
-  dumpToFile( "=========================================================\n" );
   initscr();
   start_color();
   noecho();

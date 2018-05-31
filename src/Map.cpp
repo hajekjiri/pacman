@@ -4,15 +4,12 @@
  */
 
 #include <algorithm>
-#include <iostream>
 #include <sstream>
 #include <fstream>
-#include <vector>
 #include "CommonFunctions.h"
 #include "MyException.h"
 #include "Map.h"
 #include "Game.h"
-#include "GameObject.h"
 #include "MovingGameObject.h"
 
 Map::Map() {

@@ -1,17 +1,14 @@
 /// Bfs path finder class
 /**
  * @file BfsPathFinder.h
- * class for a ghost->pacman path finder using the bfs algorithm
+ * class for a path finder using the bfs algorithm
  */
 
 #include <set>
-#include <sstream>
 #include <queue>
 #include <map>
 #include <utility>
-#include "CommonFunctions.h"
 #include "Game.h"
-#include "MyException.h"
 
 #ifndef BFS_PATH_FINDER_H
 #define BFS_PATH_FINDER_H

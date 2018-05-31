@@ -5,10 +5,8 @@
 
 #include <climits>
 #include <sstream>
-#include <utility>
 #include "BfsPathFinder.h"
-#include "Game.h"
-#include "Map.h"
+#include "CommonFunctions.h"
 #include "MovingGameObject.h"
 #include "MyException.h"
 

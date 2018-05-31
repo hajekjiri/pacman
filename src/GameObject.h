@@ -1,13 +1,11 @@
 /// GameObject class
 /**
  * @file GameObject.h
- * Class representing an object.
+ * Class representing an object
  */
 
 #ifndef GAME_OBJECT_H
 #define GAME_OBJECT_H
-
-#include <utility>
 
 class GameObject {
   public:

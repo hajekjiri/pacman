@@ -10,9 +10,9 @@
 #include <string>
 #include <vector>
 #include <ncurses.h>
+#include "GameObject.h"
 
 class Game;
-class GameObject;
 
 class Map {
   public:

@@ -1,21 +1,20 @@
 /// Game class
 /**
  * @file Game.h
- * Represents the Pacman game itself as an object
+ * Represents the game itself as an object
  */
 
 #ifndef GAME_H
 #define GAME_H
 
+#include <map>
 #include <ncurses.h>
 #include <string>
-#include <map>
-#include "Menu.h"
 #include "Map.h"
+#include "Menu.h"
+#include "MovingGameObject.h"
 #include "Portal.h"
 #include "Setting.h"
-
-class MovingGameObject;
 
 class Game {
   public:

@@ -1,13 +1,11 @@
-/// Implementation of GameObject
+/// Implementation of CommonFunctions
 /**
  * @file CommonFunctions.cpp
  */
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <cctype>
 #include <algorithm>
+#include <fstream>
+#include "CommonFunctions.h"
 #include "MyException.h"
 
 void strLTrim( std::string & s ) {
@@ -27,7 +25,7 @@ void strTrim( std::string & s ) {
   strRTrim( s );
 }
 
-void dumpToFile( const char * s, const char * pathToFile = "./log.txt" ) {
+void dumpToFile( const char * s, const char * pathToFile ) {
   std::ofstream os;
   os.open( pathToFile, std::ios_base::app );
 
@@ -46,7 +44,8 @@ const bool isGhost( const char & c ) {
   return false;
 }
 
-const bool isNextToInLine( const std::pair<int, int> & p1, const std::pair<int, int> & p2 ) {
+const bool isNextToInLine( const std::pair<int, int> & p1,
+                           const std::pair<int, int> & p2 ) {
   std::pair<int, int> result;
   result.first = p1.first - p2.first;
   result.second = p1.second - p2.second;
