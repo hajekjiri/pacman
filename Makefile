@@ -27,9 +27,9 @@ clean:
 	rm -rvf doc
 	rm -vf hajekj29 ./src/*.o ./src/*.gch
 
-doc: ./src/Doxyfile $(HEADERFILES)
+doc: ./Doxyfile $(HEADERFILES) ./tutorial.dox
 	# generate documentation
-	doxygen ./src/Doxyfile
+	doxygen ./Doxyfile
 
 lines:
 	# count number of lines

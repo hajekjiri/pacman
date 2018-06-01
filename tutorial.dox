@@ -1,0 +1,59 @@
+/**
+* <div style='font-family: Courier;'>
+* @file tutorial
+* @mainpage Tutorial
+* @section Objects
+'<span style='color: orange;'>P</span>' => Pacman<br>
+<span style='color: red;'>A</span>, <span style='color: magenta;'>B</span>, <span style='color: cyan;'>C</span>, <span style='color: red;'>D</span>, <span style='color: magenta;'>E</span>, ..., <span style='color: magenta;'>Z</span> - {<span style='color: orange;'>P</span>} => Ghosts<br>
+[<span style='color: blue;'>0</span>-<span style='color: blue;'>9</span>] => Portals<br>
+'-' => Coin<br>
+'<span style='color: green;'>*</span>' => Bonus coin<br>
+'#' => Wall<br>
+' ' => Blank field
+*
+* @section Movement
+<ul>
+  <li>Arrow keys</li>
+  <li>WASD</li>
+  <li>HJKL ( Vim-like )</li>
+</ul>
+*
+* @section Ghost AI
+*
+* @section Game-modes
+<ul>
+  <li>Classic</li>
+  Goal: collect all coins in X amount of turns
+  <li>Survival</li>
+  Goal: survive for X amount of turns
+</ul>
+* @section Settings
+The default settings file, settings.cfg, is located in the cfg folder<br>
+Comments<br>
+<ul>
+  <li>Only lines that begin with '#' are comments</li>
+  <li>All lines that are not comments must be valid according to this specification</li>
+</ul>
+Settings<br>
+Syntax: {setting_type}:{optional whitespace}{value}{optional whitespace}<br>
+<ul>
+  <li>map: {map file name,}<br>e.g. map: map_easy<br>map file to use</li>
+  <li>username: {player name}<br>e.g. username: Ghost Buster<br>player's name</li>
+  <li>max_turns_classic: {number}<br>e.g. max_turns_classic: 100<br>maximum amount of turns in classic mode</li>
+  <li>max_turns_survival: {number}<br>e.g. max_turns_survival: 100<br>maximum amount of turns in survival mode</li>
+  <li>bonus_spawn_interval: {number}<br>e.g. bonus_spawn_interval:: 10<br>Amount of turns it takes to respawn bonus(es) after picking up the 1st bonus</li>
+  <li>bonus_duration: {number}<br>e.g. bonus_duration: 10<br>For how many turns Pacman can eat a ghost after picking up a bonus</li>
+  <li>ghost_aggressive_range: {number}<br>e.g. ghost_aggressive_range: 10<br>How close Pacman has to come to Ghost of type B to make the ghost chase him</li>
+</ul>
+*
+* @section Map
+Requirements:
+<ul>
+  <li>one, and only one Pacman</li>
+  <li>no 2 ghosts with the same character</li>
+  <li>all map rows have to be the same length</li>
+</ul>
+*
+* @section Rules
+* </div>
+*/

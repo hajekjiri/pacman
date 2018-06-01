@@ -73,7 +73,7 @@ Game::~Game() {
 
 void Game::LoadCfg( const std::string & pathToCfg ) {
   std::ifstream is;
-  is.open( ( "./src/cfg/" + pathToCfg ).data() );
+  is.open( ( "./cfg/" + pathToCfg ).data() );
   if ( ! is ) {
     // unable to open file
     throw MyException( std::string( "Unable to open cfg file" ) );
@@ -186,10 +186,15 @@ void Game::Run() {
           case 'w':
             m_Menu.MoveUp();
             break;
+          case 'k':
+            m_Menu.MoveUp();
+            break;
           case KEY_DOWN:
             m_Menu.MoveDown();
             break;
           case 's':
+            m_Menu.MoveDown();
+          case 'h':
             m_Menu.MoveDown();
             break;
           case 10:
@@ -291,6 +296,7 @@ void Game::Play() {
     }
 
     if ( k == 'w' || k == 'a' || k == 's' || k == 'd' ||
+         k == 'k' || k == 'h' || k == 'j' || k == 'l' ||
          k == KEY_UP || k == KEY_LEFT || k == KEY_DOWN || k == KEY_RIGHT ) {
       if ( ! m_Pacman->MovePacman( k, *this ) ) {
         continue;
@@ -553,6 +559,10 @@ void Game::ChangeState( const int & state ) {
       break;
     case Game::STATE_RUNNING:
       m_Window = newwin( m_Map.GetHeightConst(), m_Map.GetWidthConst(), 1, 2 );
+      break;
+    case Game::STATE_END:
+      wrefresh( m_Window );
+      DrawInfo();
       break;
   }
 

@@ -54,31 +54,17 @@ GameObject *& MovingGameObject::GetCarry() {
 
 const bool MovingGameObject::MovePacman( const int & direction, Game & game ) {
   std::pair<int, int> newCoords = m_Coords;
-  switch ( direction ) {
-    case 'w':
-      --newCoords.first;
-      break;
-    case KEY_UP:
-      --newCoords.first;
-      break;
-    case 'a':
-      --newCoords.second;
-      break;
-    case KEY_LEFT:
-      --newCoords.second;
-      break;
-    case 's':
-      ++newCoords.first;
-      break;
-    case KEY_DOWN:
-      ++newCoords.first;
-      break;
-    case 'd':
-      ++newCoords.second;
-      break;
-    case KEY_RIGHT:
-      ++newCoords.second;
-      break;
+  if ( direction == 'w' || direction == KEY_UP || direction == 'k' ) {
+    --newCoords.first;
+  }
+  if ( direction == 'a' || direction == KEY_LEFT || direction == 'h' ) {
+    --newCoords.second;
+  }
+  if ( direction == 's' || direction == KEY_DOWN || direction == 'j' ) {
+    ++newCoords.first;
+  }
+  if ( direction == 'd' || direction == KEY_RIGHT || direction == 'l' ) {
+    ++newCoords.second;
   }
 
   if ( ! game.GetMap().ValidCoords( newCoords ) ||

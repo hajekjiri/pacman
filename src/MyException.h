@@ -1,6 +1,6 @@
 /// MyException class
 /**
- * @file MyException.cpp
+ * @file MyException.h
  */
 
 #ifndef MYEXCEPTION_H

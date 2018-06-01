@@ -1,3 +1,4 @@
+/// Main program
 /**
  * @file main.cpp
  */
@@ -5,13 +6,13 @@
 /*
  *------------------------------------------------------------------------------
  * TODO:
- * - document new files for doxygen
  * - write documentation / tutorial
- * - possibly create some function(s) to save lines
+ * - possibly create some function(s) to save lines <--- meh
  * - last checks for memory leaks and errors before submitting
  * - remove this todo list
  *------------------------------------------------------------------------------
  */
+
 
 #include <iostream>
 #include <ncurses.h>
@@ -21,7 +22,6 @@
 #include "GameObject.h"
 
 int main() {
-
   // init ncurses
   initscr();
   start_color();
