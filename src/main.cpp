@@ -7,8 +7,9 @@
 --------------------------------------------------------------------------------
 TODO:
 - Look for:
-  - repeating code
   - non-const parameters for no reason
+  - repeating code
+- comment code
 --------------------------------------------------------------------------------
 */
 
@@ -21,7 +22,14 @@ TODO:
 #include "GameObject.h"
 #include "MyException.h"
 
-int main( int argc, const char ** argv ) {
+/**
+ * @brief The main program
+ * @param argc Amount of arguments
+ * @param argv array of arguments
+ * @return 0 => success, 1 => error
+ */
+int main( int argc, const char * const * const argv ) {
+  // const pointer to const pointer to const value^
 
   if ( argc != 2 ) {
     std::ostringstream oss;

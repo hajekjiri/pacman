@@ -36,7 +36,7 @@ class Game {
      * @brief Constructor
      * @param pathToCfg path to settings file
      */
-    Game( const char *& pathToCfg );
+    Game( const char * const pathToCfg );
 
     /// Destructor
     ~Game();

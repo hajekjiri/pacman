@@ -22,7 +22,7 @@ const int Game::MODE_SURVIVAL = 1;
 const int Game::RESULT_WIN = 1;
 const int Game::RESULT_LOSS = 2;
 
-Game::Game( const char *& pathToCfg )
+Game::Game( const char * const pathToCfg )
           : m_SettingsFile( pathToCfg ),
             m_GameState( Game::STATE_MENU ),
             m_Window( nullptr ),
@@ -281,7 +281,7 @@ void Game::Run() {
 }
 
 void Game::Play() {
-  m_InfoWin = newwin( 9, 41, m_Map.GetHeightConst() + 1, 2 );
+  m_InfoWin = newwin( 9, 50, m_Map.GetHeightConst() + 1, 2 );
   m_Result = 0;
   keypad( m_Window, true );
   while ( true ) {

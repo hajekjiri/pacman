@@ -14,7 +14,7 @@ class Setting {
     /**
      * @brief Check if given setting combination is valid, throw exception if not
      * @param key Type/key
-     * @param String vlue
+     * @param value Value
      */
     static void Validate( const std::string & key,
                           const std::string & value );
