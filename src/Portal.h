@@ -1,7 +1,6 @@
 /// Portal class
 /**
  * @file Portal.h
- * Contains information about a portal
  */
 
 #ifndef PORTAL_H
@@ -9,6 +8,7 @@
 
 #include <utility>
 
+/// Contains information about a portal
 class Portal {
   public:
     /**

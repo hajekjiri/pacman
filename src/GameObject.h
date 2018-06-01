@@ -10,7 +10,7 @@
 class GameObject {
   public:
     /**
-     * @briefConstructor
+     * @brief Constructor
      * @param c Object's character
      */
     GameObject( const char & c );

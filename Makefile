@@ -1,6 +1,6 @@
 CXX = g++
 
-CXXFLAGS = -Wall -pedantic -Wno-long-long -O0 -ggdb -std=c++14
+CXXFLAGS = -Wall -pedantic -Wno-long-long -O0 -ggdb -std=c++11
 
 HEADERFILES = ./src/Game.h ./src/MenuElement.h ./src/Menu.h             \
               ./src/MovingGameObject.h ./src/GameObject.h ./src/Map.h   \
@@ -31,13 +31,9 @@ doc: ./Doxyfile $(HEADERFILES) ./tutorial.dox
 	# generate documentation
 	doxygen ./Doxyfile
 
-lines:
-	# count number of lines
-	wc -l ./src/*.h ./src/*.cpp
-
+# get .o from .cpp
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
-
 
 ./src/CommonFunctions.o: ./src/CommonFunctions.cpp
 ./src/Game.o: ./src/Game.cpp

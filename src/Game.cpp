@@ -240,8 +240,8 @@ void Game::Run() {
       }
       case Game::STATE_END: {
         WINDOW * w = newwin( 9, 50,
-                             ( m_Map.GetHeightConst() - 11 ) / 2,
-                             m_Map.GetWidthConst() + 10 );
+                             ( m_Map.GetHeightConst() - 9 ) / 2,
+                             m_Map.GetWidthConst() + 6 );
         box( m_PauseWin, 0, 0 );
 
         std::ostringstream oss, oss2;
@@ -282,7 +282,7 @@ void Game::Run() {
 }
 
 void Game::Play() {
-  m_InfoWin = newwin( 20, 60, m_Map.GetHeightConst() + 1, 2 );
+  m_InfoWin = newwin( 9, 41, m_Map.GetHeightConst() + 1, 2 );
   m_Result = 0;
   keypad( m_Window, true );
   while ( true ) {

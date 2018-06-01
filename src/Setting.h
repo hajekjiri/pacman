@@ -1,7 +1,6 @@
 /// Setting class
 /**
  * @file Setting.h
- * class representing a setting - boolean/string/int
  */
 
 #ifndef SETTING_H
@@ -9,7 +8,8 @@
 
 #include <string>
 
- class Setting {
+/// Setting class with 3 setting interpretations => std::string, int, bool
+class Setting {
   public:
     /**
      * @brief Check if given setting combination is valid, throw exception if not

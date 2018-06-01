@@ -4,8 +4,10 @@
  */
 
 #include <algorithm>
-#include <sstream>
+#include <cstdio>
 #include <fstream>
+#include <sstream>
+#include <sys/ioctl.h>
 #include "CommonFunctions.h"
 #include "MyException.h"
 #include "Map.h"
@@ -356,4 +358,17 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
                return lhs->GetChar() < rhs->GetChar();
              } );
   is.close();
+
+  // check if terminal window is big enough
+  int minWidth = m_Width + 60;
+  int minHeight = m_Height + 11;
+  winsize size;
+  ioctl( 0, TIOCGWINSZ, &size );
+  if ( size.ws_row < minHeight || size.ws_col < minWidth ) {
+    std::ostringstream oss;
+    oss << "Your terminal window is too small.\nPlease resize it to at least "
+        << minWidth << "x" << minHeight
+        << " ( WxH ) and launch the game again";
+    throw MyException( oss.str().data() );
+  }
 }

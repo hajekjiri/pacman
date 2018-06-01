@@ -1,8 +1,7 @@
 /**
-* <div style='font-family: Courier;'>
-* @file tutorial
-* @mainpage Introduction
-* @section Objects
+ * @file tutorial.dox
+ * @mainpage Introduction
+ * @section Objects
 '<span style='color: orange;'>P</span>' => Pacman<br>
 <span style='color: red;'>A</span>, <span style='color: magenta;'>B</span>, <span style='color: cyan;'>C</span>, <span style='color: red;'>D</span>, <span style='color: magenta;'>E</span>, ..., <span style='color: cyan;'>O</span>, <span style='color: magenta;'>Q</span>, ..., <span style='color: magenta;'>Z</span> => Ghosts<br>
 [<span style='color: blue;'>0</span>-<span style='color: blue;'>9</span>] => Portals<br>
@@ -21,24 +20,24 @@
 * @section Ghost AI
 <ul>
   <li><span style='color: red;'>Red</span> ghost ( type <span style='color: red;'>A</span> )<br>
-  Strategy: chase Pacman all the time</li>
+  Strategy: chase Pacman all the time.</li>
   <li><span style='color: magenta;'>Magenta</span> ghost ( type <span style='color: magenta;'>B</span> )<br>
-  Strategy: chase Pacman as long as he's closer than &lt;ghost_aggressive_range&gt; to ghost's home coordinates, otherwise go to home coordinates</li>
+  Strategy: chase Pacman as long as he's closer than &lt;ghost_aggressive_range&gt; to ghost's home coordinates, otherwise go to home coordinates.</li>
   <li><span style='color: cyan;'>Cyan</span> ghost ( type <span style='color: cyan;'>C</span> )<br>
-  Strategy: Destroy the closest bonus coin, chase Pacman if no bonus coins are present</li>
+  Strategy: Destroy the closest bonus coin, chase Pacman if no bonus coins are present.</li>
 </ul>
 * @section Game-modes
 <ul>
   <li>Classic</li>
-  Goal: collect all coins in &lt;max_turns_classic&gt; turns
+  Goal: collect all coins in &lt;max_turns_classic&gt; turns.
   <li>Survival</li>
-  Goal: survive for &lt;max_turns_survival&gt; turns
+  Goal: survive for &lt;max_turns_survival&gt; turns.
 </ul>
 * @section Settings
 The settings file MUST be called settings.cfg,<br>
 it MUST be located in the cfg folder,<br>
-and it MUST contain all 8 of the following settings<br>
-Syntax: {setting_type}:{optional whitespace}{value}{optional whitespace}<br>
+and it MUST contain all 8 of the following settings.<br>
+Syntax:<br>{setting_type}:{optional whitespace}{value}{optional whitespace}<br>
 <ul>
   <li>map: {map file name,}<br>e.g. map: map_easy ( this will use ./cfg/map_easy as map )<br>- map file to use ( searched in the cfg folder )</li>
   <li>username: {player name}<br>e.g. username: Ghost Buster<br>- player's name</li>
@@ -57,7 +56,7 @@ Comments<br>
 </ul>
 *
 * @section Map
-Requirements:
+Requirements
 <ul>
   <li>must contain one, and only one Pacman</li>
   <li>must not contain 2 ghosts with the same character</li>
@@ -74,7 +73,8 @@ Requirements:
   <li>When Pacman is NOT lethal, he will die as soon as he steps on a ghost, or a ghost steps on him</li>
   <li>When object touches a portal, it will be teleported to portal's pair portal ( same number character, but different place )</li>
   <li>Objects cannot use portals when some other object is at the pair portal's location ( i.e. something went through the portal in the last turn )</li>
-  <li>Ghosts do not respawn. Once they die, they stay dead for the rest of the game.</li>
+  <li>Ghosts can also use portals, if it's allowed in settings</li>
+  <li>Ghosts do not respawn - once they die, they stay dead for the rest of the game</li>
+  <li>Bonus coins always respawn at the same location</li>
 </ul>
-* </div>
 */
