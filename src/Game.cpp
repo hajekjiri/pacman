@@ -134,6 +134,10 @@ void Game::LoadCfg( const std::string & pathToCfg ) {
     m_Settings.insert( { type, Setting( value ) } );
   }
   is.close();
+
+  if ( m_Settings.size() != 8 ) {
+    throw MyException( "Some settings are missing, please check the documentation" );
+  }
 }
 
 void Game::Init( const std::string & pathToCfg ) {
@@ -666,11 +670,11 @@ void Game::DrawInfo() {
   int size;
   if ( when > 0 && ( size = m_BonusCoords.size() ) > 0 ) {
     if ( size > 1 ) {
-      oss << "Bonuses ";
+      oss << "Bonus coins";
     } else {
-      oss << "Bonus ";
+      oss << "Bonus coin";
     }
-    oss << "will respawn in " << when << ( when == 1 ? " turn" : " turns" );
+    oss << " will respawn in " << when << ( when == 1 ? " turn" : " turns" );
     mvwprintw( m_InfoWin, printPos++, 0, oss.str().data() );
   }
 }

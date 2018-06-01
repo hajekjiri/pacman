@@ -1,10 +1,10 @@
 /**
 * <div style='font-family: Courier;'>
 * @file tutorial
-* @mainpage Tutorial
+* @mainpage Introduction
 * @section Objects
 '<span style='color: orange;'>P</span>' => Pacman<br>
-<span style='color: red;'>A</span>, <span style='color: magenta;'>B</span>, <span style='color: cyan;'>C</span>, <span style='color: red;'>D</span>, <span style='color: magenta;'>E</span>, ..., <span style='color: magenta;'>Z</span> - {<span style='color: orange;'>P</span>} => Ghosts<br>
+<span style='color: red;'>A</span>, <span style='color: magenta;'>B</span>, <span style='color: cyan;'>C</span>, <span style='color: red;'>D</span>, <span style='color: magenta;'>E</span>, ..., <span style='color: cyan;'>O</span>, <span style='color: magenta;'>Q</span>, ..., <span style='color: magenta;'>Z</span> => Ghosts<br>
 [<span style='color: blue;'>0</span>-<span style='color: blue;'>9</span>] => Portals<br>
 '-' => Coin<br>
 '<span style='color: green;'>*</span>' => Bonus coin<br>
@@ -15,45 +15,66 @@
 <ul>
   <li>Arrow keys</li>
   <li>WASD</li>
-  <li>HJKL ( Vim-like )</li>
+  <li>KHJL ( Vim-like )</li>
 </ul>
 *
 * @section Ghost AI
-*
+<ul>
+  <li><span style='color: red;'>Red</span> ghost ( type <span style='color: red;'>A</span> )<br>
+  Strategy: chase Pacman all the time</li>
+  <li><span style='color: magenta;'>Magenta</span> ghost ( type <span style='color: magenta;'>B</span> )<br>
+  Strategy: chase Pacman as long as he's closer than &lt;ghost_aggressive_range&gt; to ghost's home coordinates, otherwise go to home coordinates</li>
+  <li><span style='color: cyan;'>Cyan</span> ghost ( type <span style='color: cyan;'>C</span> )<br>
+  Strategy: Destroy the closest bonus coin, chase Pacman if no bonus coins are present</li>
+</ul>
 * @section Game-modes
 <ul>
   <li>Classic</li>
-  Goal: collect all coins in X amount of turns
+  Goal: collect all coins in &lt;max_turns_classic&gt; turns
   <li>Survival</li>
-  Goal: survive for X amount of turns
+  Goal: survive for &lt;max_turns_survival&gt; turns
 </ul>
 * @section Settings
-The default settings file, settings.cfg, is located in the cfg folder<br>
+The settings file MUST be called settings.cfg,<br>
+it MUST be located in the cfg folder,<br>
+and it MUST contain all 8 of the following settings<br>
+Syntax: {setting_type}:{optional whitespace}{value}{optional whitespace}<br>
+<ul>
+  <li>map: {map file name,}<br>e.g. map: map_easy ( this will use ./cfg/map_easy as map )<br>- map file to use ( searched in the cfg folder )</li>
+  <li>username: {player name}<br>e.g. username: Ghost Buster<br>- player's name</li>
+  <li>max_turns_classic: {number}<br>e.g. max_turns_classic: 100<br>- maximum amount of turns in classic mode</li>
+  <li>max_turns_survival: {number}<br>e.g. max_turns_survival: 100<br>- maximum amount of turns in survival mode</li>
+  <li>bonus_spawn_interval: {number}<br>e.g. bonus_spawn_interval:: 10<br>- amount of turns it takes to respawn bonus coin(s) after picking up ( Pacman ) or destroying ( Ghost ) the 1st bonus coin</li>
+  <li>bonus_duration: {number}<br>e.g. bonus_duration: 10<br>- for how many turns Pacman can eat a ghost after picking up a bonus coin</li>
+  <li>ghost_aggressive_range: {number}<br>e.g. ghost_aggressive_range: 10<br>- how close Pacman has to come to Ghost of type <span style='color: magenta;'>B</span> to make the ghost chase him</li>
+  <li>ghosts_portals_allowed<br>e.g. ghosts_portals_allowed: yes<br>- yes/no value indicating whether ghost are allowed to use portals when they're searching for a path</li>
+</ul>
+<br>
 Comments<br>
 <ul>
   <li>Only lines that begin with '#' are comments</li>
-  <li>All lines that are not comments must be valid according to this specification</li>
-</ul>
-Settings<br>
-Syntax: {setting_type}:{optional whitespace}{value}{optional whitespace}<br>
-<ul>
-  <li>map: {map file name,}<br>e.g. map: map_easy<br>map file to use</li>
-  <li>username: {player name}<br>e.g. username: Ghost Buster<br>player's name</li>
-  <li>max_turns_classic: {number}<br>e.g. max_turns_classic: 100<br>maximum amount of turns in classic mode</li>
-  <li>max_turns_survival: {number}<br>e.g. max_turns_survival: 100<br>maximum amount of turns in survival mode</li>
-  <li>bonus_spawn_interval: {number}<br>e.g. bonus_spawn_interval:: 10<br>Amount of turns it takes to respawn bonus(es) after picking up the 1st bonus</li>
-  <li>bonus_duration: {number}<br>e.g. bonus_duration: 10<br>For how many turns Pacman can eat a ghost after picking up a bonus</li>
-  <li>ghost_aggressive_range: {number}<br>e.g. ghost_aggressive_range: 10<br>How close Pacman has to come to Ghost of type B to make the ghost chase him</li>
+  <li>All lines that are not comments must be valid according to the following specification</li>
 </ul>
 *
 * @section Map
 Requirements:
 <ul>
-  <li>one, and only one Pacman</li>
-  <li>no 2 ghosts with the same character</li>
+  <li>must contain one, and only one Pacman</li>
+  <li>must not contain 2 ghosts with the same character</li>
   <li>all map rows have to be the same length</li>
 </ul>
 *
 * @section Rules
+<ul>
+  <li>The game is turn-based, therefore each ghost will make his one move after Pacman makes a move</li>
+  <li>Ghosts cannot move through each other<br>( this also affects their path searching and actually makes the game harder )</li>
+  <li>Pacman becomes lethal for &lt;bonus_duration&gt; turns by collecting a bonus coin ( '<span style='color: green;'>*</span>' )</li>
+  <li>When Pacman is lethal, he is able to eat 1 ghost. After eating this 1 ghost, he becomes vulnerable.</li>
+  <li>Ghosts destroy bonus coins on contact, and they also trigger the bonus coin respawn timer</li>
+  <li>When Pacman is NOT lethal, he will die as soon as he steps on a ghost, or a ghost steps on him</li>
+  <li>When object touches a portal, it will be teleported to portal's pair portal ( same number character, but different place )</li>
+  <li>Objects cannot use portals when some other object is at the pair portal's location ( i.e. something went through the portal in the last turn )</li>
+  <li>Ghosts do not respawn. Once they die, they stay dead for the rest of the game.</li>
+</ul>
 * </div>
 */
