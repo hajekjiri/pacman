@@ -3,17 +3,6 @@
  * @file main.cpp
  */
 
-/*
- *------------------------------------------------------------------------------
- * TODO:
- * - write documentation / tutorial
- * - possibly create some function(s) to save lines <--- meh
- * - last checks for memory leaks and errors before submitting
- * - remove this todo list
- *------------------------------------------------------------------------------
- */
-
-
 #include <iostream>
 #include <ncurses.h>
 #include <exception>
