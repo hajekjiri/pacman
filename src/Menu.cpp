@@ -27,7 +27,7 @@ Menu::Menu()
                        g->GetMenu().Clear();
                        WINDOW * w = newwin( 5, 40, 0, 0 );
                        g->GetSettings().clear();
-                       g->LoadCfg( Game::SETTINGS_FILE );
+                       g->LoadCfg();
                        g->GetMap().LoadFromFile( g->FindSetting( "map" ).GetStrConst(), *g );
                        mvwprintw( w, 2, 4, "Cfg reloaded!" );
                        mvwprintw( w, 4, 4, "Press any key to continue..." );

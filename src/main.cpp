@@ -3,14 +3,37 @@
  * @file main.cpp
  */
 
+/*
+--------------------------------------------------------------------------------
+TODO:
+- Look for:
+  - repeating code
+  - non-const parameters for no reason
+--------------------------------------------------------------------------------
+*/
+
 #include <iostream>
+#include <sstream>
 #include <ncurses.h>
 #include <exception>
 #include "CommonFunctions.h"
 #include "Game.h"
 #include "GameObject.h"
+#include "MyException.h"
 
-int main() {
+int main( int argc, const char ** argv ) {
+
+  if ( argc != 2 ) {
+    std::ostringstream oss;
+    if ( argc > 2 ) {
+      oss << "Too many arguments\n";
+    } else {
+      oss << "Too few arguments\n";
+    }
+    oss << "Got " << argc - 1 << ", expected 1";
+    throw MyException( oss.str().data() );
+  }
+
   // init ncurses
   initscr();
   start_color();
@@ -19,9 +42,9 @@ int main() {
   nodelay( stdscr, false );
 
   // create and play game
-  Game * g = new Game();
+  Game * g = new Game( argv[ 1 ] );
   try {
-    g->Init( Game::SETTINGS_FILE );
+    g->Init();
     g->Run();
   } catch ( const std::exception & e ) {
     delete g;

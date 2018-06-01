@@ -26,25 +26,25 @@ class Game {
     static const int STATE_END;
     static const int STATE_EXIT;
 
-    static const char * SETTINGS_FILE;
-
     static const int MODE_CLASSIC;
     static const int MODE_SURVIVAL;
 
     static const int RESULT_WIN;
     static const int RESULT_LOSS;
 
-    /// Constructor
-    Game();
+    /**
+     * @brief Constructor
+     * @param pathToCfg path to settings file
+     */
+    Game( const char *& pathToCfg );
 
     /// Destructor
     ~Game();
 
     /**
      * @brief Initialize game
-     * @param pathToCfg Path to cfg file which will be read
      */
-    void Init( const std::string & pathToCfg );
+    void Init();
 
     /// Run game
     void Run();
@@ -100,9 +100,8 @@ class Game {
 
     /**
      * @brief Load settings from cfg file
-     * @param pathToCfg Path to cfg file
      */
-    void LoadCfg( const std::string & pathToCfg );
+    void LoadCfg();
 
     /**
      * @brief Change state of the game
@@ -117,6 +116,9 @@ class Game {
     void DrawInfo();
 
   private:
+    /// Path to settings config file
+    std::string m_SettingsFile;
+
     /// State of the game
     int m_GameState;
 

@@ -159,7 +159,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
   m_Data.clear();
 
   std::ifstream is;
-  is.open( ( "./cfg/" + path ).data() );
+  is.open( ( path ).data() );
   if ( ! is ) {
     // map file does not exist
     throw MyException( std::string( "Map file '" )

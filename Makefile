@@ -19,8 +19,8 @@ compile: $(OBJECTFILES)
 	g++ -o hajekj29 $(OBJECTFILES) -lncurses
 
 run: compile hajekj29
-	# run
-	./hajekj29
+	# run with sample settings
+	./hajekj29 ./examples/settings.cfg
 
 clean:
 	# remove generated files

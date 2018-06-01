@@ -16,16 +16,15 @@ const int Game::STATE_HELP = 3;
 const int Game::STATE_END = 4;
 const int Game::STATE_EXIT = 5;
 
-const char * Game::SETTINGS_FILE = "settings.cfg";
-
 const int Game::MODE_CLASSIC = 0;
 const int Game::MODE_SURVIVAL = 1;
 
 const int Game::RESULT_WIN = 1;
 const int Game::RESULT_LOSS = 2;
 
-Game::Game()
-          : m_GameState( Game::STATE_MENU ),
+Game::Game( const char *& pathToCfg )
+          : m_SettingsFile( pathToCfg ),
+            m_GameState( Game::STATE_MENU ),
             m_Window( nullptr ),
             m_PauseWin( nullptr ),
             m_InfoWin( nullptr ),
@@ -71,9 +70,9 @@ Game::~Game() {
   }
 }
 
-void Game::LoadCfg( const std::string & pathToCfg ) {
+void Game::LoadCfg() {
   std::ifstream is;
-  is.open( ( "./cfg/" + pathToCfg ).data() );
+  is.open( ( m_SettingsFile ).data() );
   if ( ! is ) {
     // unable to open file
     throw MyException( std::string( "Unable to open cfg file" ) );
@@ -95,7 +94,7 @@ void Game::LoadCfg( const std::string & pathToCfg ) {
     } else {
       if ( lineStr.find( ':' ) == std::string::npos ) {
         std::ostringstream oss;
-        oss << "Invalid cfg file '" << pathToCfg << "' - syntax error on line "
+        oss << "Invalid cfg file '" << m_SettingsFile << "' - syntax error on line "
             << line << std::endl << lineStr;
         is.close();
         throw MyException( oss.str() );
@@ -114,7 +113,7 @@ void Game::LoadCfg( const std::string & pathToCfg ) {
     if ( is.eof() ) {
       // syntax error
       std::ostringstream oss;
-      oss << "Invalid cfg file '" << pathToCfg << "' - unexpected end of file on line "
+      oss << "Invalid cfg file '" << m_SettingsFile << "' - unexpected end of file on line "
           << line << std::endl << lineStr;
       is.close();
       throw MyException( oss.str() );
@@ -140,9 +139,9 @@ void Game::LoadCfg( const std::string & pathToCfg ) {
   }
 }
 
-void Game::Init( const std::string & pathToCfg ) {
+void Game::Init() {
   m_Menu.Init();
-  LoadCfg( pathToCfg );
+  LoadCfg();
   m_Map.LoadFromFile( FindSetting( "map" ).GetStrConst(), *this );
 }
 

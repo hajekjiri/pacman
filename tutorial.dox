@@ -34,12 +34,11 @@
   Goal: survive for &lt;max_turns_survival&gt; turns.
 </ul>
 * @section Settings
-The settings file MUST be called settings.cfg,<br>
-it MUST be located in the cfg folder,<br>
+Path to the settings file MUST be passed to the program as 1st argument,<br>
 and it MUST contain all 8 of the following settings.<br>
 Syntax:<br>{setting_type}:{optional whitespace}{value}{optional whitespace}<br>
 <ul>
-  <li>map: {map file name,}<br>e.g. map: map_easy ( this will use ./cfg/map_easy as map )<br>- map file to use ( searched in the cfg folder )</li>
+  <li>map: {map file name,}<br>e.g. map: ./examples/map_easy<br>- path to map file to use</li>
   <li>username: {player name}<br>e.g. username: Ghost Buster<br>- player's name</li>
   <li>max_turns_classic: {number}<br>e.g. max_turns_classic: 100<br>- maximum amount of turns in classic mode</li>
   <li>max_turns_survival: {number}<br>e.g. max_turns_survival: 100<br>- maximum amount of turns in survival mode</li>
