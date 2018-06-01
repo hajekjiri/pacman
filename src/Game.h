@@ -1,7 +1,6 @@
 /// Game class
 /**
  * @file Game.h
- * Represents the game itself as an object
  */
 
 #ifndef GAME_H
@@ -16,6 +15,7 @@
 #include "Portal.h"
 #include "Setting.h"
 
+/// Class representing the game itself as an object
 class Game {
   public:
     // game state declarations
@@ -41,8 +41,8 @@ class Game {
     ~Game();
 
     /**
-     * Load settings from file,
-     * use empty string(s) ( "" ) for default settings. (?)
+     * @brief Initialize game
+     * @param pathToCfg Path to cfg file which will be read
      */
     void Init( const std::string & pathToCfg );
 
@@ -52,6 +52,7 @@ class Game {
     /// Start playing the game
     void Play();
 
+    /// Check if there are still some coins left
     const bool CoinsLeft();
 
     /// Getter/Setter for m_Map
@@ -90,62 +91,81 @@ class Game {
     /// Getter/Setter for m_BonusCoords
     std::vector<std::pair<int, int> > & GetBonusCoords();
 
-    /// Function for quicker search in settings
-    const Setting FindSetting( const std::string & key ) const;
+    /**
+     * @brief Search in settings
+     * @param key Setting to search for
+     * @return Class setting with value, throw exception if not found
+     */
+    const Setting & FindSetting( const std::string & key ) const;
 
-    /// Load settings from cfg file
+    /**
+     * @brief Load settings from cfg file
+     * @param pathToCfg Path to cfg file
+     */
     void LoadCfg( const std::string & pathToCfg );
 
-    /// Change state of game
+    /**
+     * @brief Change state of the game
+     * @param state New game state
+     */
     void ChangeState( const int & state );
 
     /// Respawn bonuses
     void RespawnBonus();
 
-    /// Draw info ( score, turns, etc. )
+    /// Draw game information ( score, turns, etc. )
     void DrawInfo();
 
   private:
+    /// State of the game
     int m_GameState;
+
+    /// Game's map
     Map m_Map;
+
+    /// Main play window
     WINDOW * m_Window;
+
+    /// Pause window
     WINDOW * m_PauseWin;
+
+    /// Information window
     WINDOW * m_InfoWin;
+
+    /// Game's menu
     Menu m_Menu;
+
+    /// Container with portals
     std::vector<Portal*> m_Portals;
+
+    /// Container with ghosts
     std::vector<MovingGameObject*> m_Ghosts;
+
+    /// Pointer to Pacman
     MovingGameObject * m_Pacman;
+
+    /// Container with settings
     std::map<std::string, Setting> m_Settings;
+
+    /// Container with coordinates of bonuses
     std::vector<std::pair<int, int> > m_BonusCoords;
 
-    /**
-     * Score => amount of coins collected by player
-     */
+    /// Amount of coins collected by player
     int m_Score;
 
-    /**
-     * Turns => amount of turns made by player
-     */
+    /// Amount of turns made by player
     int m_Turns;
 
-    /**
-     * Game mode
-     */
+    /// Game mode => classic or survival
     int m_Mode;
 
-    /**
-     * Amount of turns where Pacman is able to eat ghosts
-     */
+    /// Amount of turns Pacman is able to eat ghosts
     int m_BonusTurns;
 
-    /**
-     * Turn number when bonus coin(s) are supposed to be respawned
-     */
+    /// Turn number in which bonus coin(s) are supposed to be respawned
     int m_RespawnBonusTurnNo;
 
-    /**
-     * Result of the game, win => 1, loss => -1
-     */
+    /// Result of the game, win => 1, loss => -1
     int m_Result;
 
     /// Reset game

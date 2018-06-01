@@ -22,6 +22,10 @@ BfsPathFinder::BfsPathFinder( Game * game,
   // do nothing
 }
 
+BfsPathFinder::~BfsPathFinder() {
+  // do nothing
+}
+
 const std::pair<char, int> BfsPathFinder::GetFirstStep( const std::pair<int, int> & start,
                                                         const std::pair<int, int> & end,
                                                         const bool & noBlock ) {

@@ -488,14 +488,14 @@ std::vector<std::pair<int, int> > & Game::GetBonusCoords() {
   return m_BonusCoords;
 }
 
-const Setting Game::FindSetting( const std::string & key ) const {
+const Setting & Game::FindSetting( const std::string & key ) const {
   const auto it = m_Settings.find( key );
   if ( it == m_Settings.cend() ) {
     std::ostringstream oss;
     oss << "Could not find '" << key << "' setting";
     throw MyException( oss.str() );
   }
-  return Setting( it->second );
+  return it->second;
 }
 
 void Game::ChangeState( const int & state ) {

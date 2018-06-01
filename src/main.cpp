@@ -12,6 +12,7 @@
  * - remove this todo list
  *------------------------------------------------------------------------------
  */
+ 
 #include <iostream>
 #include <ncurses.h>
 #include <exception>
@@ -20,11 +21,15 @@
 #include "GameObject.h"
 
 int main() {
+
+  // init ncurses
   initscr();
   start_color();
   noecho();
   curs_set( 0 );
   nodelay( stdscr, false );
+
+  // create and play game
   Game * g = new Game();
   try {
     g->Init( Game::SETTINGS_FILE );
