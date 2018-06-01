@@ -9,8 +9,8 @@
 #include <utility>
 #include "Game.h"
 
-#ifndef BFS_PATH_FINDER_H
-#define BFS_PATH_FINDER_H
+#ifndef BFSPATHFINDER_H
+#define BFSPATHFINDER_H
 
 /// Path finder using the bfs algorithm
 class BfsPathFinder {
@@ -126,4 +126,4 @@ class BfsPathFinder {
     const bool Search();
 };
 
-#endif // BFS_PATH_FINDER_H
+#endif // BFSPATHFINDER_H

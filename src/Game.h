@@ -15,7 +15,7 @@
 #include "Portal.h"
 #include "Setting.h"
 
-/// Class representing the game itself as an object
+/// Game as an object
 class Game {
   public:
     // game state declarations

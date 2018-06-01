@@ -4,8 +4,8 @@
   * A set of useful functions
  */
 
-#ifndef COMMON_FUNCTIONS_H
-#define COMMON_FUNCTIONS_H
+#ifndef COMMONFUNCTIONS_H
+#define COMMONFUNCTIONS_H
 
 #include <string>
 #include <utility>
@@ -33,4 +33,4 @@ const bool isGhost( const char & c );
 const bool isNextToInLine( const std::pair<int, int> & p1,
                            const std::pair<int, int> & p2 );
 
-#endif // COMMON_FUNCTIONS_H
+#endif // COMMONFUNCTIONS_H

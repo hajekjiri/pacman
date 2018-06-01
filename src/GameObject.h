@@ -1,21 +1,24 @@
 /// GameObject class
 /**
  * @file GameObject.h
- * Class representing an object
  */
 
-#ifndef GAME_OBJECT_H
-#define GAME_OBJECT_H
+#ifndef GAMEOBJECT_H
+#define GAMEOBJECT_H
 
+/// Basic game object
 class GameObject {
   public:
-    /// Constructor
+    /**
+     * @briefConstructor
+     * @param c Object's character
+     */
     GameObject( const char & c );
 
     /// Destructor
     virtual ~GameObject();
 
-    /// Getter/setter for display char
+    /// Getter/setter for m_CHar
     char & GetChar();
 
   protected:
@@ -24,4 +27,4 @@ class GameObject {
     char m_Char;
 };
 
-#endif // GAME_OBJECT_H
+#endif // GAMEOBJECT_H

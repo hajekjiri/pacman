@@ -26,8 +26,10 @@ Map::Map() {
 }
 
 Map::~Map() {
-  // do nothing
-  // Map is deleted in Game's destructor'
+  /*
+   * do nothing
+   * Map is deleted in Game's destructor
+   */
 }
 
 void Map::Draw( WINDOW * w ) {

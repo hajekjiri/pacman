@@ -1,7 +1,6 @@
 /// Menu class
 /**
  * @file Menu.h
- * Represents a menu screen
  */
 #ifndef MENU_H
 #define MENU_H
@@ -10,16 +9,13 @@
 #include <vector>
 #include "MenuElement.h"
 
+/// Menu screen
 class Menu {
   public:
     static const bool DIRECTION_UP;
     static const bool DIRECTION_DOWN;
 
     /// Constructor
-    /**
-     * Create Menu, set highlighted index to -1
-     * @param preset menu preset
-     */
     Menu();
 
     /// Destructor
@@ -28,7 +24,10 @@ class Menu {
     /// Initialize menu
     void Init();
 
-    /// Add element to menu
+    /**
+     * @brief Add element to menu
+     * @param e Element to add
+     */
     void Add( const MenuElement & e );
 
     /// Draw menu
@@ -37,14 +36,16 @@ class Menu {
     /// Clear menu
     void Clear();
 
+    /// Move up in the menu
     void MoveUp();
 
+    /// Move down in the menu
     void MoveDown();
 
     /// Getter/Setter for m_Window
     WINDOW *& GetWindow();
 
-    /// Getter/Setter for m_Options
+    /// Getter for m_Options
     const std::vector<MenuElement> & GetOptionsConst() const;
 
     /// Getter for m_HighlightedIdx
@@ -54,14 +55,14 @@ class Menu {
     /// Container for menu elements
     std::vector<MenuElement> m_Options;
 
-    /// ncurses window
+    /// Ncurses window
     WINDOW * m_Window;
 
-    /// Highlighted index
+    /// Index of highlighted element
     int m_HighlightedIdx;
 
-    /// Move in the menu
     /**
+     * @brief Move in the menu
      * @param direction DIRECTION_UP or DIRECTION_DOWN
      */
     void Move( const bool & direction );

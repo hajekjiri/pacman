@@ -1,19 +1,25 @@
 /// MovingGameObject class
 /**
  * @file MovingGameObject.h
- * Class representing a moving object
  */
 
-#ifndef MOVING_GAME_OBJECT_H
-#define MOVING_GAME_OBJECT_H
+#ifndef MOVINGGAMEOBJECT_H
+#define MOVINGGAMEOBJECT_H
 
 #include <utility>
 #include "Game.h"
 #include "GameObject.h"
 
+/// A moving object
 class MovingGameObject : public GameObject {
   public:
-    /// Constructor
+    /**
+     * @brief Constructor
+     * @param c Object's character
+     * @param coords Object's coordinates
+     * @param homeCoords Object's home coordinates
+     * @param lethal Whether the object is lethal
+     */
     MovingGameObject( const char & c,
                       const std::pair<int, int> & coords,
                       std::pair<int, int> * homeCoords,
@@ -34,37 +40,27 @@ class MovingGameObject : public GameObject {
     /// Getter/Setter for m_Carry
     GameObject *& GetCarry();
 
+    /// Move function for Pacman
     const bool MovePacman( const int & direction, Game & game );
 
+    /// Move function for Ghosts
     void MoveGhost( Game & game );
 
   private:
-    /**
-     * Position: first => y axis, second => x axis
-     */
+    /// Object's position
     std::pair<int, int> m_Coords;
 
-    /**
-     * Home position: first => y axis, second => x axis
-     * nullptr ---> no home
-     */
+    /// Object's home position, nullptr => no home
     std::pair<int, int> * m_HomeCoords;
 
-    /**
-     * Boolean value indicating whether
-     *   the object is alive
-     */
+    /// Whether the objects is alive
     bool m_Alive;
 
-    /**
-     * Boolean value indicating whether
-     * the object causes other MovingGameObject to die
-     * ( only applies to Pacman )
-     */
+    /// Whether the object causes its enemy to die, if both pacman and a ghost are lethal, pacman eats the ghost
     bool m_Lethal;
 
-    /// Object hidden behind moving object
+    /// Object hidden behind the moving object
     GameObject * m_Carry;
 };
 
-#endif // MOVING_GAME_OBJECT_H
+#endif // MOVINGGAMEOBJECT_H

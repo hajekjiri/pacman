@@ -12,7 +12,7 @@
  * - remove this todo list
  *------------------------------------------------------------------------------
  */
- 
+
 #include <iostream>
 #include <ncurses.h>
 #include <exception>

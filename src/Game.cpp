@@ -524,6 +524,10 @@ void Game::ChangeState( const int & state ) {
         wrefresh( m_Window );
         delwin( m_Window );
         m_Window = nullptr;
+        werase( m_InfoWin );
+        wrefresh( m_InfoWin );
+        delwin( m_InfoWin );
+        m_InfoWin = nullptr;
         Reset();
       }
       break;
@@ -534,6 +538,10 @@ void Game::ChangeState( const int & state ) {
       wrefresh( m_Window );
       delwin( m_Window );
       m_Window = nullptr;
+      werase( m_InfoWin );
+      wrefresh( m_InfoWin );
+      delwin( m_InfoWin );
+      m_InfoWin = nullptr;
       Reset();
       break;
   }
@@ -546,13 +554,6 @@ void Game::ChangeState( const int & state ) {
     case Game::STATE_RUNNING:
       m_Window = newwin( m_Map.GetHeightConst(), m_Map.GetWidthConst(), 1, 2 );
       break;
-  }
-
-  if ( m_GameState == Game::STATE_RUNNING && state != Game::STATE_PAUSED ) {
-    werase( m_InfoWin );
-    wrefresh( m_InfoWin );
-    delwin( m_InfoWin );
-    m_InfoWin = nullptr;
   }
 
   if ( m_GameState == Game::STATE_PAUSED && state != Game::STATE_RUNNING ) {
@@ -662,8 +663,4 @@ void Game::DrawInfo() {
     oss << "will respawn in " << when << ( when == 1 ? " turn" : " turns" );
     mvwprintw( m_InfoWin, printPos++, 0, oss.str().data() );
   }
-  oss.str( "" );
-  oss.clear();
-  oss << "respawn bonus turn no: " << m_RespawnBonusTurnNo;
-  mvwprintw( m_InfoWin, printPos++, 0, oss.str().data() );
 }
