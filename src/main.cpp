@@ -3,14 +3,6 @@
  * @file main.cpp
  */
 
-/*
---------------------------------------------------------------------------------
-TODO:
-- comment code
-- test one last time on virtual machine
---------------------------------------------------------------------------------
-*/
-
 #include <iostream>
 #include <sstream>
 #include <ncurses.h>
