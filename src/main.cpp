@@ -31,16 +31,6 @@ TODO:
 int main( int argc, const char * const * const argv ) {
   // const pointer to const pointer to const value^
 
-  if ( argc != 2 ) {
-    std::ostringstream oss;
-    if ( argc > 2 ) {
-      oss << "Too many arguments\n";
-    } else {
-      oss << "Too few arguments\n";
-    }
-    oss << "Got " << argc - 1 << ", expected 1";
-    throw MyException( oss.str().data() );
-  }
 
   // init ncurses
   initscr();
@@ -49,9 +39,22 @@ int main( int argc, const char * const * const argv ) {
   curs_set( 0 );
   nodelay( stdscr, false );
 
-  // create and play game
-  Game * g = new Game( argv[ 1 ] );
+  Game * g;
   try {
+    // check if 1st argument is correct
+    if ( argc != 2 ) {
+      std::ostringstream oss;
+      if ( argc > 2 ) {
+        oss << "Too many arguments\n";
+      } else {
+        oss << "Too few arguments\n";
+      }
+      oss << "Got " << argc - 1 << ", expected 1";
+      throw MyException( oss.str().data() );
+    }
+
+    // create and play the game
+    g = new Game( argv[ 1 ] );
     g->Init();
     g->Run();
   } catch ( const std::exception & e ) {

@@ -197,7 +197,8 @@ void Game::Run() {
             break;
           case 's':
             m_Menu.MoveDown();
-          case 'h':
+            break;
+          case 'j':
             m_Menu.MoveDown();
             break;
           case 10:

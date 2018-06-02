@@ -9,6 +9,7 @@
 #include <map>
 #include <ncurses.h>
 #include <string>
+#include <vector>
 #include "Map.h"
 #include "Menu.h"
 #include "MovingGameObject.h"
