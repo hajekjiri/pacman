@@ -1,6 +1,8 @@
 /**
  * @file tutorial.dox
  * @mainpage Introduction
+ * @section running_the_game Running the game
+ TODO
  * @section Objects
 '<span style='color: orange;'>P</span>' => Pacman<br>
 <span style='color: red;'>A</span>, <span style='color: magenta;'>B</span>, <span style='color: cyan;'>C</span>, <span style='color: red;'>D</span>, <span style='color: magenta;'>E</span>, ..., <span style='color: cyan;'>O</span>, <span style='color: magenta;'>Q</span>, ..., <span style='color: magenta;'>Z</span> => Ghosts<br>
@@ -10,14 +12,14 @@
 '#' => Wall<br>
 ' ' => Blank field
 *
-* @section Movement
+* @section movement Movement
 <ul>
   <li>Arrow keys</li>
   <li>WASD</li>
   <li>KHJL ( Vim-like )</li>
 </ul>
 *
-* @section Ghost AI
+* @section ghost_ai Ghost AI
 <ul>
   <li><span style='color: red;'>Red</span> ghost ( type <span style='color: red;'>A</span> )<br>
   Strategy: chase Pacman all the time.</li>
@@ -26,14 +28,14 @@
   <li><span style='color: cyan;'>Cyan</span> ghost ( type <span style='color: cyan;'>C</span> )<br>
   Strategy: Destroy the closest bonus coin, chase Pacman if no bonus coins are present.</li>
 </ul>
-* @section Game-modes
+* @section game_modes Game modes
 <ul>
   <li>Classic</li>
   Goal: collect all coins in &lt;max_turns_classic&gt; turns.
   <li>Survival</li>
   Goal: survive for &lt;max_turns_survival&gt; turns.
 </ul>
-* @section Settings
+* @section settings Settings
 Path to the settings file MUST be passed to the program as the first argument,<br>
 and the file MUST contain all 8 of the following settings.<br>
 Settings file can be reloaded by pressing the 'Reload cfg' button in the menu<br>
@@ -55,15 +57,14 @@ Comments<br>
   <li>All lines that are not comments must be valid according to the following specification</li>
 </ul>
 *
-* @section Map
-Requirements
+* @section map_requirements Map requirements
 <ul>
   <li>must contain one, and only one Pacman</li>
   <li>must not contain 2 ghosts with the same character</li>
   <li>all map rows have to be the same length</li>
 </ul>
 *
-* @section Rules
+* @section rules Rules
 <ul>
   <li>The game is turn-based, therefore each ghost will make his one move after Pacman makes a move</li>
   <li>Ghosts cannot move through each other<br>
@@ -81,7 +82,7 @@ Requirements
   <li>Bonus coins always respawn at the same location</li>
 </ul>
  *
- * @section Score
+ * @section score Score
  <ul>
   <li>Collect a coin ( '-' ) => +1 point</li>
   <li>Eat a ghost => +5 points</li>

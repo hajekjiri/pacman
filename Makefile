@@ -27,7 +27,7 @@ clean:
 	rm -rvf doc
 	rm -vf hajekj29 ./src/*.o ./src/*.gch
 
-doc: ./Doxyfile $(HEADERFILES) ./tutorial.dox
+doc: ./Doxyfile $(HEADERFILES) ./introduction.dox
 	# generate documentation
 	doxygen ./Doxyfile
 
