@@ -379,7 +379,7 @@ void MovingGameObject::MoveGhost( Game & game ) {
              game.GetMap().GetData()[ elem->GetCoordsConst().first ][ elem->GetCoordsConst().second ]->GetChar() > '9') {
           std::ostringstream oss;
           oss << "Ghost '" << m_Char << "' attempted to go through portal '" << elem->GetIdConst()
-              << "' while some other moving object was on the other end";
+              << "' while some other moving object was at the other end";
           throw MyException( oss.str().data() );
         }
         oldCoords = m_Coords;

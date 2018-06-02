@@ -26,7 +26,7 @@ class MovingGameObject : public GameObject {
                       const bool & lethal );
 
     /// Destructor
-    virtual ~MovingGameObject();
+    ~MovingGameObject();
 
     /// Getter/Setter for m_Coords
     std::pair<int, int> & GetCoords();

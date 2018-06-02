@@ -7,7 +7,6 @@
 --------------------------------------------------------------------------------
 TODO:
 - Look for:
-  - non-const parameters for no reason
   - repeating code
 - comment code
 --------------------------------------------------------------------------------
@@ -31,8 +30,7 @@ TODO:
 int main( int argc, const char * const * const argv ) {
   // const pointer to const pointer to const value^
 
-
-  // init ncurses
+  // initialize ncurses
   initscr();
   start_color();
   noecho();

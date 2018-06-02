@@ -276,8 +276,11 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
     ++col;
   }
 
-  // map size is checked in the following m_Width assignment
-  m_Width = ( --CheckSize() )->size();
+  // check map size, save iterator to last row
+  auto itLast = CheckSize();
+
+  // set width and height
+  m_Width = ( --itLast )->size();
   m_Height = rowAmt;
 
   if ( ! pacmanExists ) {

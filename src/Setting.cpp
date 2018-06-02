@@ -8,15 +8,6 @@
 #include "MyException.h"
 #include "Setting.h"
 
-Setting::Setting( const std::string & key )
-                : m_Value( key ) {
-  // do nothing
-}
-
-Setting::~Setting() {
-  // do nothing
-}
-
 void Setting::Validate( const std::string & key,
                         const std::string & value ) {
   if ( key == "map" ) {
@@ -64,7 +55,14 @@ void Setting::Validate( const std::string & key,
   throw MyException( oss.str().data() );
 }
 
+Setting::Setting( const std::string & key )
+                : m_Value( key ) {
+  // do nothing
+}
 
+Setting::~Setting() {
+  // do nothing
+}
 
 const std::string & Setting::GetStrConst() const {
   return m_Value;
