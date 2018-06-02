@@ -9,7 +9,7 @@
 #include "MovingGameObject.h"
 #include "MyException.h"
 
-BfsPathFinder::BfsPathFinder( Game * game,
+BfsPathFinder::BfsPathFinder( Game * const game,
                               const bool & usePortals,
                               const bool & noBlock,
                               const std::pair<int, int> & start,

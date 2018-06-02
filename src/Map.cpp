@@ -354,7 +354,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
   // sort ghosts by character
   std::sort( game.GetGhosts().begin(),
              game.GetGhosts().end(),
-             []( MovingGameObject * lhs, MovingGameObject * rhs ) {
+             []( MovingGameObject * const lhs, MovingGameObject * const rhs ) {
                return lhs->GetChar() < rhs->GetChar();
              } );
   is.close();

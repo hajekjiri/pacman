@@ -24,7 +24,7 @@ void strTrim( std::string & s );
  * @param s String to write to file
  * @param pathToFile Path to log file
  */
-void dumpToFile( const char * s, const char * pathToFile = "./log.txt" );
+void dumpToFile( const char * const s, const char * const pathToFile = "./log.txt" );
 
 /// Is character a ghost?
 const bool isGhost( const char & c );

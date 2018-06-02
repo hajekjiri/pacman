@@ -23,7 +23,7 @@ class Map {
     ~Map();
 
     /**
-     *@brief Draw map into a window
+     * @brief Draw map into a window
      * @param w Window to draw the map into
      */
     void Draw( WINDOW * w );

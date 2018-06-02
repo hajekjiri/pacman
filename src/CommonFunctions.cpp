@@ -9,13 +9,13 @@
 #include "MyException.h"
 
 void strLTrim( std::string & s ) {
-  s.erase( s.begin(), find_if( s.begin(), s.end(), []( int c ) {
+  s.erase( s.begin(), find_if( s.begin(), s.end(), []( const int & c ) {
     return ! std::isspace( c );
   } ) );
 }
 
 void strRTrim( std::string & s ) {
-  s.erase( find_if( s.rbegin(), s.rend(), []( int c ) {
+  s.erase( find_if( s.rbegin(), s.rend(), []( const int & c ) {
     return ! std::isspace( c );
   } ).base(), s.end() );
 }
@@ -25,7 +25,7 @@ void strTrim( std::string & s ) {
   strRTrim( s );
 }
 
-void dumpToFile( const char * s, const char * pathToFile ) {
+void dumpToFile( const char * const s, const char * const pathToFile ) {
   std::ofstream os;
   os.open( pathToFile, std::ios_base::app );
 

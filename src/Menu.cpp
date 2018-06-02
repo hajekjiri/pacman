@@ -112,11 +112,11 @@ void Menu::Move( const bool & direction ) {
 }
 
 void Menu::MoveUp() {
-  Move( false );
+  Move( Menu::DIRECTION_UP );
 }
 
 void Menu::MoveDown() {
-  Move( true );
+  Move( Menu::DIRECTION_DOWN );
 }
 
 WINDOW *& Menu::GetWindow() {

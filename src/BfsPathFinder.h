@@ -23,7 +23,7 @@ class BfsPathFinder {
      * @param start Start coordinates
      * @param end End coordinates
      */
-    BfsPathFinder( Game * game,
+    BfsPathFinder( Game * const game,
                    const bool & usePortals,
                    const bool & noBlock,
                    const std::pair<int, int> & start = { 0, 0 },
