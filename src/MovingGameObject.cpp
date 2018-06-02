@@ -12,7 +12,7 @@
 
 MovingGameObject::MovingGameObject( const char & c,
                                     const std::pair<int, int> & coords,
-                                    std::pair<int, int> * homeCoords,
+                                    std::pair<int, int> * const homeCoords,
                                     const bool & lethal )
                                   : GameObject( c ),
                                     m_Coords( coords ),

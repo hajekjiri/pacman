@@ -25,7 +25,7 @@ class MyException : public std::exception {
      * @brief Function telling us what happened
      * @return Error message
      */
-    const char * what() const throw();
+    const char * what() const throw() override;
 
   private:
     /// Error message
