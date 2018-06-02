@@ -12,6 +12,7 @@ const bool Menu::DIRECTION_DOWN = true;
 Menu::Menu()
           : m_Window( nullptr ),
             m_HighlightedIdx( -1 ) {
+  // add buttons to menu
   Add( MenuElement( "Classic mode",
                      []( Game & g ) {
                        g.ChangeState( Game::STATE_RUNNING );
@@ -51,6 +52,7 @@ Menu::~Menu() {
 void Menu::Init() {
   m_Window = newwin( ( 3 * m_Options.size() ) + 2,
                      26, 4, 10 );
+  // allow reading arrow keys
   keypad( m_Window, true );
 }
 
@@ -71,13 +73,14 @@ void Menu::Draw() {
      int posX = ( 26 - elem.GetNameConst().size() ) / 2;
      if ( index++ == m_HighlightedIdx ) {
        posX -= 2;
+       // print with highlight
        wattron( m_Window, A_REVERSE );
        mvwprintw( m_Window, posY, posX, ( "[ " + elem.GetNameConst() + " ]" ).data() );
      } else {
+       // print normally
        mvwprintw( m_Window, posY, posX, elem.GetNameConst().data() );
      }
      wattroff( m_Window, A_REVERSE );
-     wmove( m_Window, 0, 0 );
      posY += 3;
    }
    wrefresh( m_Window );
@@ -92,6 +95,7 @@ void Menu::Move( const bool & direction ) {
   switch( direction ) {
     case Menu::DIRECTION_UP:
       if ( m_HighlightedIdx == 0 ) {
+        // moving up from first element gets you to last element
         m_HighlightedIdx = static_cast<int>( m_Options.size() - 1 );
       } else {
         --m_HighlightedIdx;
@@ -99,6 +103,7 @@ void Menu::Move( const bool & direction ) {
       break;
     case Menu::DIRECTION_DOWN:
       if ( m_HighlightedIdx == static_cast<int>( m_Options.size() - 1 ) ) {
+        // moving down from last element gets you to first element
         m_HighlightedIdx = 0;
       } else {
         ++m_HighlightedIdx;

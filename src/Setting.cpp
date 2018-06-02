@@ -10,6 +10,12 @@
 
 void Setting::Validate( const std::string & key,
                         const std::string & value ) {
+  /*
+   * go through all possible setting types and
+   *  check if conversion to desired value is possible
+   *  ( if not, the converting method will throw an exception )
+   */
+
   if ( key == "map" ) {
     // do nothing
     return;
@@ -50,9 +56,10 @@ void Setting::Validate( const std::string & key,
     return;
   }
 
+
   std::ostringstream oss;
   oss << "Invalid cfg file - unknown setting '" << key << "'";
-  throw MyException( oss.str().data() );
+  throw MyException( oss.str() );
 }
 
 Setting::Setting( const std::string & key )
@@ -75,13 +82,14 @@ const int Setting::GetIntConst() const {
   } catch ( std::exception & e ) {
     std::ostringstream oss;
     oss << "Invalid cfg file - could not convert '" << m_Value << "' to integer";
-    throw MyException( oss.str().data() );
+    throw MyException( oss.str() );
   }
   return res;
 }
 
 const bool Setting::GetBoolConst() const {
   std::string value = m_Value;
+  // transform string to lowercase
   std::transform( value.begin(),
                   value.end(),
                   value.begin(),

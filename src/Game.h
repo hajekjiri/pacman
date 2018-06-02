@@ -26,11 +26,19 @@ class Game {
     static const int STATE_END;
     static const int STATE_EXIT;
 
+    static const int STATE_LOWEST;
+    static const int STATE_HIGHEST;
+
+    // game mode declarations
     static const int MODE_CLASSIC;
     static const int MODE_SURVIVAL;
 
+    // game result declarations
     static const int RESULT_WIN;
     static const int RESULT_LOSS;
+
+    // amount of settings expected inside config file
+    static const int AMOUNT_OF_SETTINGS;
 
     /**
      * @brief Constructor
@@ -161,7 +169,7 @@ class Game {
     /// Game mode => classic or survival
     int m_Mode;
 
-    /// Amount of turns Pacman is able to eat ghosts
+    /// Amount of turns Pacman is lethal ( able to eat ghosts )
     int m_BonusTurns;
 
     /// Turn number in which bonus coin(s) are supposed to be respawned

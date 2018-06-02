@@ -33,11 +33,11 @@ class BfsPathFinder {
     ~BfsPathFinder();
 
     /**
-     * @brief Get first step of returned path
+     * @brief Find path and get first step
      * @param start Start coordinates
      * @param end End coordinates
      * @param noBlock Boolean value, true => ignore moving object collisions
-     * @return Pair - first step ( 'w', 'a', 's', 'd', 'n' ), and distance, returns { 'n', -1 } if no path was found
+     * @return Pair - first step ( 'w', 'a', 's', 'd', 'n' ), and distance. Returns { 'n', -1 } if no path was found
      */
     const std::pair<char, int> GetFirstStep( const std::pair<int, int> & start,
                                              const std::pair<int, int> & end,
@@ -72,7 +72,7 @@ class BfsPathFinder {
     /// Ignore collisions with objects
     bool m_NoBlock;
 
-    /// Container with all of the connections
+    /// Container with all of the connections <child, parent>
     std::map<std::pair<int, int>, std::pair<int, int>, PairIntCmp> m_Connections;
 
     /// Container with visited nodes
@@ -96,7 +96,7 @@ class BfsPathFinder {
     const bool Visited( const std::pair<int, int> & n ) const;
 
     /**
-     * @brief Insert node to visited list
+     * @brief Insert node to visited list ( std::set )
      * @param n Node to insert
      */
     void Visit( const std::pair<int, int> & n );

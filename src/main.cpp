@@ -7,6 +7,7 @@
 --------------------------------------------------------------------------------
 TODO:
 - comment code
+- test one last time on virtual machine
 --------------------------------------------------------------------------------
 */
 
@@ -46,10 +47,10 @@ int main( int argc, const char * const * const argv ) {
         oss << "Too few arguments\n";
       }
       oss << "Got " << argc - 1 << ", expected 1";
-      throw MyException( oss.str().data() );
+      throw MyException( oss.str() );
     }
 
-    // create and play the game
+    // create, initialize, and play the game
     g = new Game( argv[ 1 ] );
     g->Init();
     g->Run();

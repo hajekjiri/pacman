@@ -80,4 +80,12 @@ Requirements
   <li>Ghosts do not respawn - once they die, they stay dead for the rest of the game</li>
   <li>Bonus coins always respawn at the same location</li>
 </ul>
+ *
+ * @section Score
+ <ul>
+  <li>Collect a coin ( '-' ) => +1 point</li>
+  <li>Eat a ghost => +5 points</li>
+  <li>Win classic mode => +( <maximum turns> - <turns elapsed> ) points</li>
+  <li>Win/lose survival mode => +<turns elapsed> points</li>
+ </ul>
 */

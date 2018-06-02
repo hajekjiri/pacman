@@ -16,6 +16,7 @@ class Game;
 /// Game map
 class Map {
   public:
+    // color declarations
     static const int COLOR_PACMAN;
     static const int COLOR_GHOST_A;
     static const int COLOR_GHOST_B;
@@ -63,7 +64,7 @@ class Map {
 
     /**
      * @brief Check map size
-     * @return Iterator to last row
+     * @return Iterator to last non-empty row
      */
     std::vector<std::vector<GameObject*> >::iterator CheckSize();
 

@@ -25,6 +25,7 @@ const int Map::COLOR_BONUS_COIN = 8;
 const int Map::COLOR_PORTAL = 9;
 
 Map::Map() {
+  // initialize color pairs
   init_pair( Map::COLOR_PACMAN, COLOR_YELLOW, COLOR_BLACK );
   init_pair( Map::COLOR_GHOST_A, COLOR_RED, COLOR_BLACK );
   init_pair( Map::COLOR_GHOST_B, COLOR_MAGENTA, COLOR_BLACK );
@@ -52,6 +53,7 @@ void Map::Draw( WINDOW * w ) {
       std::ostringstream oss;
       oss << insideElem->GetChar();
 
+      // print different objects with different colors
       switch( insideElem->GetChar() ) {
         case 'P':
           mvwprintw_color( w, i, j, oss.str().data(), Map::COLOR_PACMAN );
@@ -86,6 +88,7 @@ void Map::Draw( WINDOW * w ) {
     ++i;
     j = 0;
   }
+  wrefresh( w );
 }
 
 std::vector<std::vector<GameObject*> > & Map::GetData() {
@@ -101,6 +104,7 @@ const int & Map::GetWidthConst() const {
 }
 
 const bool Map::ValidCoords( const std::pair<int, int> & coords ) const {
+  // check if coordinates are out of range
   if ( coords.first < 0 || coords.first >= m_Height ||
        coords.second < 0 || coords.second >= m_Width ) {
     return false;
@@ -110,29 +114,33 @@ const bool Map::ValidCoords( const std::pair<int, int> & coords ) const {
 
 std::vector<std::vector<GameObject*> >::iterator Map::CheckSize() {
   if ( m_Data.size() == 0 ) {
-    throw MyException( std::string( "Invalid map - 0 rows" ) );
+    throw MyException( "Invalid map - 0 rows" );
   }
   int row = 0;
   auto it = m_Data.begin();
   size_t size = it->size();
   auto itEnd = m_Data.end();
+  // place end iterator past the last non-empty row
   while( ( --itEnd )->size() == 0 ) {
     // do nothing
   }
   ++itEnd;
+
+  // check if all rows are the same length
   for ( ; it != itEnd; ++it, ++row ) {
     if ( it->size() != size ) {
-      throw MyException( std::string( "Invalid map. Rows 0 and " )
-                         + std::to_string( row )
-                         + " are not the same length ( "
-                         + std::to_string( size ) + " x "
-                         + std::to_string( it->size() ) + " )" );
+      std::ostringstream oss;
+      oss << "Invalid map. Rows 0 and " << row << " are not the same length ( " << size << " x " <<  it->size() << " )";
+      throw MyException( oss.str() );
     }
   }
-  return it;
+
+  // return iterator to last non-empty row
+  return --it;
 }
 
 void Map::LoadFromFile( const std::string & path, Game & game ) {
+  // delete all game objects
   if ( game.GetPacman() ) {
     delete game.GetPacman()->GetCarry();
   }
@@ -140,10 +148,12 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
     delete elem->GetCarry();
   }
   game.GetGhosts().clear();
+
   for ( const auto & elem : game.GetPortals() ) {
     delete elem;
   }
   game.GetPortals().clear();
+
   game.GetBonusCoords().clear();
 
   for ( const auto & outsideElem : m_Data ) {
@@ -156,26 +166,51 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
   std::ifstream is;
   is.open( ( path ).data() );
   if ( ! is ) {
-    // map file does not exist
-    throw MyException( std::string( "Map file '" )
-                       + path + "' does not exist" );
+    std::ostringstream oss;
+    oss << "Could not open map file '" << path << "'";
+    throw MyException( oss.str() );
   }
+
+  // read character
   char c;
+
+  // row index for writing
   int rowIndex = 0;
+
+  /*
+   * column index for writing,
+   *  also number of columns after we read the whole file
+   */
   int col = 0;
+
+  // flag
   bool newLine = true;
+
+  // separate variable for amount of rows
   int rowAmt = 0;
+
+  // special portals container
   std::vector<Portal*> portals;
+
+  // another flag
   bool pacmanExists = false;
   while ( ! is.eof() ) {
     is.get( c );
+
+    // check for read error
     if ( is.bad() ) {
       is.close();
-      throw MyException( std::string( "Error while reading map from from file" ) );
+      std::ostringstream oss;
+      oss << "Error while reading map from from file '" << path << "'";
+      throw MyException( oss.str() );
     }
+
+    // handle newline
     if ( c == '\n' ) {
       ++rowIndex;
       col = 0;
+
+      // set newline flag
       newLine = true;
       continue;
     }
@@ -185,31 +220,49 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
     bool valid = false;
 
     if ( c == 'P' ) {
+      // if Pacman already exists
       if ( pacmanExists ) {
-        throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
-                           + std::to_string( rowIndex ) + "," + std::to_string( col )
-                           + std::string( " ( duplicate Pacman )" ) );
+        std::ostringstream oss;
+        oss << "Invalid character '" << c
+            << "' in map @ { " << rowIndex << ", " << col
+            << " }\n(duplicate Pacman )";
+        throw MyException( oss.str() );
       }
       pacmanExists = true;
+
+      // create object
       mo = new MovingGameObject( c, { rowIndex, col }, nullptr, false );
+
+      // set flag
       valid = true;
+
+      // set game's pointer to Pacman
       game.GetPacman() = mo;
     }
 
     if ( c >= 'A' && c <= 'Z' && c != 'P' ) {
       std::pair<int, int> * home;
+      // if ghost is of type B, set home coordinates
       if ( ( ( ( c - 'A' ) % 3 ) + 'A' ) == 'B' ) {
         home = new std::pair<int, int>( { rowIndex, col } );
       } else {
         home = nullptr;
       }
       mo = new MovingGameObject( c, { rowIndex, col }, home, true );
+      /*
+       * if somehow char c qualifies for more objects ( impossible ),
+       *  throw an exception
+       */
       if ( valid ) {
         is.close();
-        throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
-                           + std::to_string( rowIndex ) + "," + std::to_string( col ) );
+        std::ostringstream oss;
+        oss << "Invalid character '" << c
+            << "' in map @ { " << rowIndex << ", " << col << " }";
+        throw MyException( oss.str() );
       }
       valid = true;
+
+      // push ghost to game data
       game.GetGhosts().push_back( mo );
     }
 
@@ -217,8 +270,10 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
       o = new GameObject( c );
       if ( valid ) {
         is.close();
-        throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
-                           + std::to_string( rowIndex ) + "," + std::to_string( col ) );
+        std::ostringstream oss;
+        oss << "Invalid character '" << c
+            << "' in map @ { " << rowIndex << ", " << col << " }";
+        throw MyException( oss.str() );
       }
       valid = true;
       portals.push_back( new Portal( c, { rowIndex, col } ) );
@@ -229,8 +284,10 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
       game.GetBonusCoords().push_back( { rowIndex, col } );
       if ( valid ) {
         is.close();
-        throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
-                           + std::to_string( rowIndex ) + "," + std::to_string( col ) );
+        std::ostringstream oss;
+        oss << "Invalid character '" << c
+            << "' in map @ { " << rowIndex << ", " << col << " }";
+        throw MyException( oss.str() );
       }
       valid = true;
     }
@@ -239,22 +296,33 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
       o = new GameObject( c );
       if ( valid ) {
         is.close();
-        throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
-                           + std::to_string( rowIndex ) + "," + std::to_string( col ) );
+        std::ostringstream oss;
+        oss << "Invalid character '" << c
+            << "' in map @ { " << rowIndex << ", " << col << " }";
+        throw MyException( oss.str() );
       }
       valid = true;
     }
 
     if ( ! valid ) {
       is.close();
-      throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
-                         + std::to_string( rowIndex ) + "," + std::to_string( col ) );
+      std::ostringstream oss;
+      oss << "Invalid character '" << c
+          << "' in map @ { " << rowIndex << ", " << col << " }";
+      throw MyException( oss.str() );
     }
 
     if ( newLine ) {
-      // increment row amount once an object is being pushed to the row
+      /*
+       * increment row amount once an object is being pushed to the row
+       * ( => do not count empty rows towards height )
+       */
       ++rowAmt;
+
+      // push empty row to map's data
       m_Data.push_back( std::vector<GameObject*>() );
+
+      // unset newline flag
       newLine = false;
     }
 
@@ -264,26 +332,29 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
       m_Data[ rowIndex ].push_back( mo );
     } else {
       is.close();
-      throw MyException( std::string( "Invalid character '" ) + c + "' in map @ "
-                         + std::to_string( rowIndex ) + "," + std::to_string( col ) );
+      std::ostringstream oss;
+      oss << "Invalid character '" << c
+          << "' in map @ { " << rowIndex << ", " << col << " }";
+      throw MyException( oss.str() );
     }
 
     ++col;
   }
 
-  // check map size, save iterator to last row
+  // check map size, save iterator to last non-empty row
   auto itLast = CheckSize();
 
   // set width and height
-  m_Width = ( --itLast )->size();
+  m_Width = itLast->size();
   m_Height = rowAmt;
 
+  // check if Pacman exists
   if ( ! pacmanExists ) {
     is.close();
-    throw MyException( std::string( "Invalid map - Pacman ( char 'P' )not found" ) );
+    throw MyException( "Invalid map - Pacman ( 'P' ) not found" );
   }
 
-  // portals - check for duplicates
+  // check for excessive portals
   for ( const auto & outsideElem : portals ) {
     int timesFound = 0;
     for ( const auto & insideElem : portals ) {
@@ -300,7 +371,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
     }
   }
 
-  // portals - pairing
+  // find and setup pair portals
   for ( const auto & outsideElem : portals ) {
     bool found = false;
     for ( const auto & insideElem : portals ) {
@@ -312,6 +383,7 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
         break;
       }
     }
+    // another impossible check
     if ( ! found ) {
       std::ostringstream oss;
       oss << "Portal pairing - pair for portal '" << outsideElem->GetIdConst()
@@ -330,11 +402,9 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
     game.GetPortals().push_back( elem );
   }
 
-  std::ostringstream oss;
-  oss << "Ghosts 1:\n";
+  // check for duplicate ghosts
   for ( const auto & outsideElem : game.GetGhosts() ) {
     int times = 0;
-    oss << outsideElem->GetChar() << std::endl;
     for ( const auto & insideElem : game.GetGhosts() ) {
       if ( outsideElem->GetChar() == insideElem->GetChar() ) {
         ++times;
@@ -349,7 +419,11 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
     }
   }
 
-  // sort ghosts by character
+  /*
+   * sort ghosts by character
+   * => this makes the ghosts move in order
+   *    ( ghosts with lower characters move first )
+   */
   std::sort( game.GetGhosts().begin(),
              game.GetGhosts().end(),
              []( MovingGameObject * const lhs, MovingGameObject * const rhs ) {
@@ -367,6 +441,6 @@ void Map::LoadFromFile( const std::string & path, Game & game ) {
     oss << "Your terminal window is too small.\nPlease resize it to at least "
         << minWidth << "x" << minHeight
         << " ( WxH ) and launch the game again";
-    throw MyException( oss.str().data() );
+    throw MyException( oss.str() );
   }
 }
