@@ -12,9 +12,8 @@
 const int Game::STATE_RUNNING = 0;
 const int Game::STATE_PAUSED = 1;
 const int Game::STATE_MENU = 2;
-const int Game::STATE_HELP = 3;
-const int Game::STATE_END = 4;
-const int Game::STATE_EXIT = 5;
+const int Game::STATE_END = 3;
+const int Game::STATE_EXIT = 4;
 
 const int Game::MODE_CLASSIC = 0;
 const int Game::MODE_SURVIVAL = 1;
@@ -205,37 +204,6 @@ void Game::Run() {
               m_Menu.GetOptionsConst().at( m_Menu.GetHighlightedIdxConst() ).GetActionConst( this );
             break;
         }
-        break;
-      }
-      case Game::STATE_HELP: {
-        nodelay( stdscr, false );
-        WINDOW * w = newwin( 20, 60, 0, 0 );
-        box( w, 0, 0 );
-        int posY = 3;
-        int posX = 3;
-        std::string text = "* Movement: arrow keys";
-        mvwprintw( w, posY, posX, text.data() );
-        posY += 2;
-        text = "* Goal: collect all coins ( '-' )";
-        mvwprintw( w, posY, posX, text.data() );
-        posY += 2;
-        text = "* Run away from ghosts ( [A-Z]-{P} )";
-        mvwprintw( w, posY, posX, text.data() );
-        posY += 2;
-        text = "* Press 'm' to go back to menu ( 'm' )";
-        mvwprintw( w, posY, posX, text.data() );
-
-        while ( true ) {
-          int k = wgetch( w );
-          if ( k == 'm' ) {
-            werase( w );
-            wrefresh( w );
-            delwin( w );
-            ChangeState( STATE_MENU );
-            break;
-          }
-        }
-
         break;
       }
       case Game::STATE_END: {

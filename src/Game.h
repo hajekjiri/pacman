@@ -23,7 +23,6 @@ class Game {
     static const int STATE_RUNNING;
     static const int STATE_PAUSED;
     static const int STATE_MENU;
-    static const int STATE_HELP;
     static const int STATE_END;
     static const int STATE_EXIT;
 

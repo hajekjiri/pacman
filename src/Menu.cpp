@@ -38,10 +38,6 @@ Menu::Menu()
                        delwin( w );
                        g->GetMenu().Draw();
                      } ) );
-  Add( MenuElement( "Help",
-                    []( Game * g ) {
-                      g->ChangeState( Game::STATE_HELP );
-                    } ) );
   Add( MenuElement( "Exit",
                     []( Game * g ) {
                       g->ChangeState( Game::STATE_EXIT );
