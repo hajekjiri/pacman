@@ -16,6 +16,16 @@ class Game;
 /// Game map
 class Map {
   public:
+    static const int COLOR_PACMAN;
+    static const int COLOR_GHOST_A;
+    static const int COLOR_GHOST_B;
+    static const int COLOR_GHOST_C;
+    static const int COLOR_WALL;
+    static const int COLOR_BLANK;
+    static const int COLOR_COIN;
+    static const int COLOR_BONUS_COIN;
+    static const int COLOR_PORTAL;
+
     /// Constructor
     Map();
 

@@ -14,17 +14,26 @@
 #include "Game.h"
 #include "MovingGameObject.h"
 
+const int Map::COLOR_PACMAN = 1;
+const int Map::COLOR_GHOST_A = 2;
+const int Map::COLOR_GHOST_B = 3;
+const int Map::COLOR_GHOST_C = 4;
+const int Map::COLOR_WALL = 5;
+const int Map::COLOR_BLANK = 6;
+const int Map::COLOR_COIN = 7;
+const int Map::COLOR_BONUS_COIN = 8;
+const int Map::COLOR_PORTAL = 9;
+
 Map::Map() {
-  init_pair( 1, COLOR_WHITE, COLOR_WHITE );
-  init_pair( 2, COLOR_BLUE, COLOR_WHITE );
-  init_pair( 3, COLOR_YELLOW, COLOR_BLACK );
-  init_pair( 4, COLOR_RED, COLOR_BLACK );
-  init_pair( 5, COLOR_MAGENTA, COLOR_BLACK );
-  init_pair( 6, COLOR_CYAN, COLOR_BLACK );
-  init_pair( 7, COLOR_GREEN, COLOR_BLACK );
-  init_pair( 8, COLOR_BLACK, COLOR_BLACK );
-  init_pair( 9, COLOR_WHITE, COLOR_BLACK );
-  init_pair( 10, COLOR_BLACK, COLOR_WHITE );
+  init_pair( Map::COLOR_PACMAN, COLOR_YELLOW, COLOR_BLACK );
+  init_pair( Map::COLOR_GHOST_A, COLOR_RED, COLOR_BLACK );
+  init_pair( Map::COLOR_GHOST_B, COLOR_MAGENTA, COLOR_BLACK );
+  init_pair( Map::COLOR_GHOST_C, COLOR_CYAN, COLOR_BLACK );
+  init_pair( Map::COLOR_WALL, COLOR_BLACK, COLOR_WHITE );
+  init_pair( Map::COLOR_BLANK, COLOR_BLACK, COLOR_BLACK );
+  init_pair( Map::COLOR_COIN, COLOR_WHITE, COLOR_BLACK );
+  init_pair( Map::COLOR_BONUS_COIN, COLOR_GREEN, COLOR_BLACK );
+  init_pair( Map::COLOR_PORTAL, COLOR_BLUE, COLOR_WHITE );
 }
 
 Map::~Map() {
@@ -45,29 +54,19 @@ void Map::Draw( WINDOW * w ) {
 
       switch( insideElem->GetChar() ) {
         case 'P':
-          wattron( w, COLOR_PAIR( 3 ) );
-          mvwprintw( w, i, j, oss.str().data() );
-          wattroff( w, COLOR_PAIR( 3 ) );
+          mvwprintw_color( w, i, j, oss.str().data(), Map::COLOR_PACMAN );
           break;
         case '*':
-          wattron( w, COLOR_PAIR( 7 ) );
-          mvwprintw( w, i, j, oss.str().data() );
-          wattroff( w, COLOR_PAIR( 7 ) );
+          mvwprintw_color( w, i, j, oss.str().data(), Map::COLOR_BONUS_COIN );
           break;
         case ' ':
-          wattron( w, COLOR_PAIR( 8 ) );
-          mvwprintw( w, i, j, oss.str().data() );
-          wattroff( w, COLOR_PAIR( 8 ) );
+          mvwprintw_color( w, i, j, oss.str().data(), Map::COLOR_BLANK );
           break;
         case '-':
-          wattron( w, COLOR_PAIR( 9 ) );
-          mvwprintw( w, i, j, oss.str().data() );
-          wattroff( w, COLOR_PAIR( 9 ) );
+          mvwprintw_color( w, i, j, oss.str().data(), Map::COLOR_COIN );
           break;
         case '#':
-          wattron( w, COLOR_PAIR( 10 ) );
-          mvwprintw( w, i, j, oss.str().data() );
-          wattroff( w, COLOR_PAIR( 10 ) );
+          mvwprintw_color( w, i, j, oss.str().data(), Map::COLOR_WALL );
           break;
         default:
           mvwprintw( w, i, j, oss.str().data() );
@@ -75,16 +74,12 @@ void Map::Draw( WINDOW * w ) {
       }
 
       if ( isGhost( insideElem->GetChar() ) ) {
-        int colorPairNo = ( ( insideElem->GetChar() - 'A' ) % 3 ) + 4;
-        wattron( w, COLOR_PAIR( colorPairNo ) );
-        mvwprintw( w, i, j, oss.str().data() );
-        wattroff( w, COLOR_PAIR( colorPairNo ) );
+        int colorPairNo = ( ( insideElem->GetChar() - 'A' ) % 3 ) + Map::COLOR_GHOST_A;
+        mvwprintw_color( w, i, j, oss.str().data(), colorPairNo );
       }
       if ( insideElem->GetChar() >= '0' &&
            insideElem->GetChar() <= '9' ) {
-        wattron( w, COLOR_PAIR( 2 ) );
-        mvwprintw( w, i, j, oss.str().data() );
-        wattroff( w, COLOR_PAIR( 2 ) );
+        mvwprintw_color( w, i, j, oss.str().data(), Map::COLOR_PORTAL );
       }
       ++j;
     }

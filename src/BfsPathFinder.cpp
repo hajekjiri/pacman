@@ -73,6 +73,12 @@ const std::pair<char, int> BfsPathFinder::GetFirstStep( const std::pair<int, int
 }
 
 const bool BfsPathFinder::ObjectIsValid( const char & c ) const {
+  if ( c == 'P' &&
+       m_Game->GetPacman()->GetCarry()->GetChar() >= '0' &&
+       m_Game->GetPacman()->GetCarry()->GetChar() <= '9' &&
+       m_Game->GetMap().GetData()[ m_End.first ][ m_End.second ]->GetChar() == '*' ) {
+    return false;
+  }
   if ( c == ' ' || c == '-' || c == '*' || c == 'P' ) {
     return true;
   }

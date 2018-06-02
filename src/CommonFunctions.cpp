@@ -57,3 +57,13 @@ const bool isNextToInLine( const std::pair<int, int> & p1,
   }
   return false;
 }
+
+void mvwprintw_color( WINDOW * w,
+                      const int & y,
+                      const int & x,
+                      const char * const s,
+                      const int & color ) {
+  wattron( w, COLOR_PAIR( color ) );
+  mvwprintw( w, y, x, s );
+  wattroff( w, COLOR_PAIR( color ) );
+}
