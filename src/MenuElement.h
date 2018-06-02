@@ -20,13 +20,13 @@ class MenuElement {
      * @param f Function executed when the button is pressed
      */
     MenuElement( const std::string & name,
-                 const std::function<void( Game * )> & f );
+                 const std::function<void( Game & )> & f );
 
     /// Destructor
     ~MenuElement();
 
     /// Getter for m_Action
-    void GetActionConst( Game * g ) const;
+    void DoAction( Game & g ) const;
 
     /// Getter for m_Name
     const std::string & GetNameConst() const;
@@ -36,7 +36,7 @@ class MenuElement {
     std::string m_Name;
 
     /// Element's action, executed when the element is pressed
-    std::function<void( Game * )> m_Action;
+    std::function<void( Game & )> m_Action;
 };
 
 #endif // MENUELEMENT_H

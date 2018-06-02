@@ -13,22 +13,22 @@ Menu::Menu()
           : m_Window( nullptr ),
             m_HighlightedIdx( -1 ) {
   Add( MenuElement( "Classic mode",
-                     []( Game * g ) {
-                       g->ChangeState( Game::STATE_RUNNING );
-                       g->GetMode() = Game::MODE_CLASSIC;
+                     []( Game & g ) {
+                       g.ChangeState( Game::STATE_RUNNING );
+                       g.GetMode() = Game::MODE_CLASSIC;
                      } ) );
   Add( MenuElement( "Survival mode",
-                     []( Game * g ) {
-                       g->ChangeState( Game::STATE_RUNNING );
-                       g->GetMode() = Game::MODE_SURVIVAL;
+                     []( Game & g ) {
+                       g.ChangeState( Game::STATE_RUNNING );
+                       g.GetMode() = Game::MODE_SURVIVAL;
                      } ) );
   Add( MenuElement( "Reload cfg",
-                     []( Game * g ) {
-                       g->GetMenu().Clear();
+                     []( Game & g ) {
+                       g.GetMenu().Clear();
                        WINDOW * w = newwin( 5, 40, 0, 0 );
-                       g->GetSettings().clear();
-                       g->LoadCfg();
-                       g->GetMap().LoadFromFile( g->FindSetting( "map" ).GetStrConst(), *g );
+                       g.GetSettings().clear();
+                       g.LoadCfg();
+                       g.GetMap().LoadFromFile( g.FindSetting( "map" ).GetStrConst(), g );
                        mvwprintw( w, 2, 4, "Cfg reloaded!" );
                        mvwprintw( w, 4, 4, "Press any key to continue..." );
                        wrefresh( w );
@@ -36,11 +36,11 @@ Menu::Menu()
                        werase( w );
                        wrefresh( w );
                        delwin( w );
-                       g->GetMenu().Draw();
+                       g.GetMenu().Draw();
                      } ) );
   Add( MenuElement( "Exit",
-                    []( Game * g ) {
-                      g->ChangeState( Game::STATE_EXIT );
+                    []( Game & g ) {
+                      g.ChangeState( Game::STATE_EXIT );
                     } ) );
 }
 

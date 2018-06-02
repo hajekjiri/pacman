@@ -201,7 +201,7 @@ void Game::Run() {
             m_Menu.MoveDown();
             break;
           case 10:
-              m_Menu.GetOptionsConst().at( m_Menu.GetHighlightedIdxConst() ).GetActionConst( this );
+              m_Menu.GetOptionsConst().at( m_Menu.GetHighlightedIdxConst() ).DoAction( *this );
             break;
         }
         break;
