@@ -1,5 +1,7 @@
 CXX = g++
 
+LD = g++
+
 CXXFLAGS = -Wall -pedantic -Wno-long-long -O0 -ggdb -std=c++11
 
 HEADERFILES = ./src/Game.h ./src/MenuElement.h ./src/Menu.h             \
@@ -14,11 +16,13 @@ OBJECTFILES = ./src/main.o ./src/Game.o ./src/MenuElement.o ./src/Menu.o \
 
 all: doc compile
 
-compile: $(OBJECTFILES)
+hajekj29: $(OBJECTFILES)
 	# link, save output to 'hajekj29'
-	g++ -o hajekj29 $(OBJECTFILES) -lncurses
+	$(LD) -o hajekj29 $^ -lncurses
 
-run: compile hajekj29
+compile: hajekj29
+
+run: hajekj29
 	# run with sample settings
 	./hajekj29 ./examples/settings.cfg
 
@@ -41,15 +45,15 @@ lines2:
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-./src/CommonFunctions.o: ./src/CommonFunctions.cpp
-./src/Game.o: ./src/Game.cpp
-./src/GameObject.o: ./src/GameObject.cpp
+./src/CommonFunctions.o: ./src/CommonFunctions.cpp ./src/CommonFunctions.h
+./src/Game.o: ./src/Game.cpp ./src/Game.h
+./src/GameObject.o: ./src/GameObject.cpp ./src/GameObject.h
 ./src/main.o: ./src/main.cpp
-./src/Map.o: ./src/Map.cpp
-./src/MenuElement.o: ./src/MenuElement.cpp
-./src/Menu.o: ./src/Menu.cpp
-./src/MovingGameObject.o: ./src/MovingGameObject.cpp
-./src/Portal.o: ./src/Portal.cpp
-./src/MyException.o: ./src/MyException.cpp
-./src/BfsPathFinder.o: ./src/BfsPathFinder.cpp
-./src/Setting.o: ./src/Setting.cpp
+./src/Map.o: ./src/Map.cpp ./src/Map.h
+./src/MenuElement.o: ./src/MenuElement.cpp ./src/MenuElement.h
+./src/Menu.o: ./src/Menu.cpp ./src/Menu.h
+./src/MovingGameObject.o: ./src/MovingGameObject.cpp ./src/MovingGameObject.h
+./src/Portal.o: ./src/Portal.cpp ./src/Portal.h
+./src/MyException.o: ./src/MyException.cpp ./src/MyException.h
+./src/BfsPathFinder.o: ./src/BfsPathFinder.cpp ./src/BfsPathFinder.h
+./src/Setting.o: ./src/Setting.cpp ./src/Setting.h
