@@ -63,7 +63,7 @@ Syntax:<br>{setting_type}:{optional whitespace}{value}{optional whitespace}<br>
   <li>ghost_aggressive_range: {number}<br>e.g. ghost_aggressive_range: 10<br>
   - how close Pacman has to come to Ghost of type <span style='color: magenta;'>B</span> to make the ghost chase him</li>
   <li>ghosts_portals_allowed<br>e.g. ghosts_portals_allowed: yes<br>
-  - yes/no value indicating whether ghost are allowed to use portals when they're searching for a path</li>
+  - yes/no value indicating whether ghosts are allowed to use portals when they're searching for a path</li>
 </ul>
 <br>
 Comments<br>
@@ -82,16 +82,16 @@ Comments<br>
 * @section rules Rules
 <ul>
   <li>The game is turn-based, therefore each ghost will make his one move after Pacman makes a move</li>
+  <li>Pacman always moves first</li>
   <li>Ghosts move in order => the ghost with the lowest character moves first</li>
-  <li>Ghosts cannot move through each other<br>
-    ( this also affects their path searching and actually makes the game harder )</li>
+  <li>Ghosts cannot move through each other ( this also affects their path searching )</li>
   <li>Previous point also implies that sometimes path just doesn't exist. In that case, the ghost does not move.</li>
   <li>Pacman becomes lethal for &lt;bonus_duration&gt; turns by collecting a bonus coin ( '<span style='color: green;'>*</span>' )</li>
   <li>Ghosts destroy bonus coins on contact, and they also trigger the bonus coin respawn timer<br>
     ( Bonus coins will respawn in &lt;bonus_spawn_interval&gt; turns after collecting the 1st bonus coin from the current set )</li>
   <li>When Pacman is lethal, he is able to eat 1 ghost. After eating this 1 ghost, Pacman is no longer lethal.</li>
   <li>When Pacman is NOT lethal, he will die as soon as he comes in contact with a ghost</li>
-  <li>When object touches a portal, it will be teleported to portal's pair portal ( same character id, but different place )</li>
+  <li>When an object touches a portal, it will be teleported to portal's pair portal ( same character id, but different place )</li>
   <li>Objects cannot use portals when some other object is at the pair portal's location ( i.e. something went through the portal in the last turn )</li>
   <li>Ghosts can also use portals, if it's allowed in settings</li>
   <li>Ghosts do not respawn => once they die, they stay dead for the rest of the game</li>
@@ -102,7 +102,7 @@ Comments<br>
  <ul>
   <li>Collect a coin ( '-' ) => +1 point</li>
   <li>Eat a ghost => +5 points</li>
-  <li>Win classic mode => +( <maximum turns> - <turns elapsed> ) points</li>
-  <li>Win/lose survival mode => +<turns elapsed> points</li>
+  <li>Win classic mode => +( &lt;maximum turns&gt; - &lt;turns elapsed&gt; ) points</li>
+  <li>Win/lose survival mode => + &lt;turns elapsed&gt; points</li>
  </ul>
 */
