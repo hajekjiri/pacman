@@ -44,7 +44,7 @@
 * @section settings Settings
 Path to the settings file MUST be passed to the program as the first argument,<br>
 and the file MUST contain all 8 of the following settings.<br>
-Settings file can be reloaded by pressing the 'Reload cfg' button in the menu<br>
+Settings file can be reloaded by pressing the 'Reload cfg' button in the game menu<br>
 Syntax:<br>{setting_type}:{optional whitespace}{value}{optional whitespace}<br>
 <ul>
   <li>map: {map file name,}<br>e.g. map: ./examples/map_easy<br>
@@ -102,7 +102,7 @@ Comments<br>
  <ul>
   <li>Collect a coin ( '-' ) => +1 point</li>
   <li>Eat a ghost => +5 points</li>
-  <li>Win classic mode => +( &lt;maximum turns&gt; - &lt;turns elapsed&gt; ) points</li>
-  <li>Win/lose survival mode => + &lt;turns elapsed&gt; points</li>
+  <li>Win in classic mode => +( &lt;maximum turns&gt; - &lt;turns elapsed&gt; ) points</li>
+  <li>Win/lose in survival mode => + &lt;turns elapsed&gt; points</li>
  </ul>
 */
