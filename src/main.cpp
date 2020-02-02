@@ -21,6 +21,11 @@
 int main( int argc, const char * const * const argv ) {
   // const pointer to const pointer to const value^
 
+  if ( argc != 2 ) {
+    std::cout << "Usage:" << std::endl << argv[0] << " <path-to-config>" << std::endl;
+    return 1;
+  }
+
   // initialize ncurses
   initscr();
   start_color();
@@ -31,16 +36,7 @@ int main( int argc, const char * const * const argv ) {
   Game * g;
   try {
     // check if 1st argument is correct
-    if ( argc != 2 ) {
-      std::ostringstream oss;
-      if ( argc > 2 ) {
-        oss << "Too many arguments\n";
-      } else {
-        oss << "Too few arguments\n";
-      }
-      oss << "Got " << argc - 1 << ", expected 1";
-      throw MyException( oss.str() );
-    }
+    
 
     // create, initialize, and play the game
     g = new Game( argv[ 1 ] );
