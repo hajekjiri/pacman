@@ -1,6 +1,8 @@
 # Pacman
 ## About
-This project is an implementation of the Pacman game in C++ using ncurses for the Programming and Algorithmics 2 course at the [FIT, Czech Technical University in Prague](https://fit.cvut.cz/en).
+A turn-based game inspired by the original Pacman implemented in C++11 using ncurses. I encourage you to read the [documentation](#documentation) before playing.
+
+This project was a part of the Programming and Algorithmics 2 course at [FIT CTU in Prague](https://fit.cvut.cz/) ([English site here](https://old.fit.cvut.cz/en)).
 
 ## Getting started
 ### Requirements
@@ -46,7 +48,7 @@ make doc
 Examples are located in the [`examples`](examples) folder. Currently, there is one config file and a couple of maps that should give you an idea on how to build maps. Refer to the Doxygen-generated documentation for more information.
 
 ### Cleaning up
-You can use
+Use
 ```
 make clean
 ```
