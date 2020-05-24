@@ -26,7 +26,7 @@ to compile and link all files.
 
 ### Running the project
 ```
-./hajekj29 <path-to-config>
+./pacman <path-to-config>
 ```
 
 An example configuration file can be found at [`examples/settings.cfg`](examples/settings.cfg). You can run the game with this example using
@@ -35,7 +35,7 @@ make run
 ```
 which is equivalent to
 ```
-./hajekj29 ./examples/settings.cfg
+./pacman ./examples/settings.cfg
 ```
 
 ### Documentation

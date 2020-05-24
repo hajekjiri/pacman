@@ -16,20 +16,20 @@ OBJECTFILES = ./src/main.o ./src/Game.o ./src/MenuElement.o ./src/Menu.o \
 
 all: doc compile
 
-hajekj29: $(OBJECTFILES)
-	# link, save output to 'hajekj29'
-	$(LD) -o hajekj29 $^ -lncurses
+pacman: $(OBJECTFILES)
+	# link, save output to 'pacman'
+	$(LD) -o pacman $^ -lncurses
 
-compile: hajekj29
+compile: pacman
 
-run: hajekj29
+run: pacman
 	# run with sample settings
-	./hajekj29 ./examples/settings.cfg
+	./pacman ./examples/settings.cfg
 
 clean:
 	# remove generated files
 	rm -rvf doc
-	rm -vf hajekj29 ./src/*.o ./src/*.gch
+	rm -vf pacman ./src/*.o ./src/*.gch
 
 doc: ./Doxyfile $(HEADERFILES) ./introduction.dox
 	# generate documentation
