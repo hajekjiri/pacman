@@ -41,19 +41,7 @@ lines:
 lines2:
 	gcc -fpreprocessed -dD -E ./src/*.h ./src/*.cpp | sed '/^\s*$$/d' | wc -l
 
-# get .o from .cpp
-%.o: %.cpp
+# get .o from .cpp and .h
+%.o: %.cpp %.h
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-./src/CommonFunctions.o: ./src/CommonFunctions.cpp ./src/CommonFunctions.h
-./src/Game.o: ./src/Game.cpp ./src/Game.h
-./src/GameObject.o: ./src/GameObject.cpp ./src/GameObject.h
-./src/main.o: ./src/main.cpp
-./src/Map.o: ./src/Map.cpp ./src/Map.h
-./src/MenuElement.o: ./src/MenuElement.cpp ./src/MenuElement.h
-./src/Menu.o: ./src/Menu.cpp ./src/Menu.h
-./src/MovingGameObject.o: ./src/MovingGameObject.cpp ./src/MovingGameObject.h
-./src/Portal.o: ./src/Portal.cpp ./src/Portal.h
-./src/MyException.o: ./src/MyException.cpp ./src/MyException.h
-./src/BfsPathFinder.o: ./src/BfsPathFinder.cpp ./src/BfsPathFinder.h
-./src/Setting.o: ./src/Setting.cpp ./src/Setting.h
