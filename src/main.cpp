@@ -22,7 +22,7 @@ int main( int argc, const char * const * const argv ) {
   // const pointer to const pointer to const value^
 
   if ( argc != 2 ) {
-    std::cout << "Usage:" << std::endl << argv[0] << " <path-to-config>" << std::endl;
+    std::cout << "Usage:" << std::endl << argv[0] << " /path/to/config" << std::endl;
     return 1;
   }
 
@@ -35,10 +35,7 @@ int main( int argc, const char * const * const argv ) {
 
   Game * g;
   try {
-    // check if 1st argument is correct
-    
-
-    // create, initialize, and play the game
+    // create, initialize, and run the game
     g = new Game( argv[ 1 ] );
     g->Init();
     g->Run();
