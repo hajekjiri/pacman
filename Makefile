@@ -35,12 +35,6 @@ doc: ./Doxyfile $(HEADERFILES) ./introduction.dox
 	# generate documentation
 	doxygen ./Doxyfile
 
-lines:
-	wc -l ./src/*.h ./src/*.cpp
-
-lines2:
-	gcc -fpreprocessed -dD -E ./src/*.h ./src/*.cpp | sed '/^\s*$$/d' | wc -l
-
 # get .o from .cpp and .h
 %.o: %.cpp %.h
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
